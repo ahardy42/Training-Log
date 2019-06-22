@@ -5,6 +5,7 @@
 // *** Dependencies
 // =============================================================
 var express = require("express");
+var exphbs  = require('express-handlebars');
 
 // Sets up the Express App
 // =============================================================
@@ -17,6 +18,10 @@ var db = require("./models");
 // Sets up the Express app to handle data parsing
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
+
+// sets up app to use handlebars as a view engine
+app.engine('handlebars', exphbs());
+app.set('view engine', 'handlebars');
 
 // Static directory
 app.use(express.static("public"));
