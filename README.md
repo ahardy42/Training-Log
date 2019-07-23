@@ -1,4 +1,4 @@
-# Training-Log
+# Training-Log (in progress... not currently deployed)
 ## Introductory Training Log
 
 ### who it’s for: 
@@ -21,15 +21,15 @@ The web app was built using an MVC design pattern.  This is a full-stack app wri
 Dependencies: 
 
 - express: server code
-- handlebars: dynamically created front-end
+- React: dynamically created front-end
 - passport: user authentication using the local strategy
-- mysql2: communicating with the database
-- sequelize: ORM for database management
+- mongoDB: database for athlete / coach / user data storage
+- mongoose: ODM for database management
 
 Front-End libraries: 
 
 - Bootstrap
-- jQuery
+- Animate.css
 
 ### User Information
 
