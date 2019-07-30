@@ -1,41 +1,37 @@
-// *****************************************************************************
-// Server.js - This file is the initial starting point for the Node/Express server.
-//
-// ******************************************************************************
-// *** Dependencies
-// =============================================================
-var express = require("express");
-var exphbs  = require('express-handlebars');
+// dependencies
+const express = require("express");
+const mongoose = require("mongoose");
+const routes = require("./routes/apiRoutes");
 
-// Sets up the Express App
-// =============================================================
-var app = express();
-var PORT = process.env.PORT || 8080;
+// Sets an initial port. heroku uses the process.env.PORT option
+const PORT = process.env.PORT || 8080;
+const MONGODB_URI = process.env.MONGODB_URI || "mongodb://localhost/TrainingLog";
 
-// Requiring our models for syncing
-var db = require("./models");
+const app = express();
 
-// Sets up the Express app to handle data parsing
+// Parse request body as JSON
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 
-// sets up app to use handlebars as a view engine
-app.engine('handlebars', exphbs());
-app.set('view engine', 'handlebars');
-
-// Static directory
+// Serve static files from the React app
 app.use(express.static("public"));
+if (process.env.NODE_ENV === "production") {
+  app.use(express.static("client/build"));
+}
 
-// Routes
-// =============================================================
-require("./routes/api-routes.js")(app);
-require("./routes/html-routes.js")(app);
+// set up routes
+app.use("/", routes);
 
-// Syncing our sequelize models and then starting our Express app
-// =============================================================
-// force: true will drop db if it exists and create a whole new one.
-db.sequelize.sync().then(function() {
-  app.listen(PORT, function() {
-    console.log("App listening on PORT " + PORT);
-  });
+// route for sending the index.html after any API routes
+app.get("*", function(req, res) {
+  res.sendFile(path.join(__dirname, "./client/build/index.html"));
+});
+
+// =============================================================================
+// LISTENERS
+// =============================================================================
+mongoose.connect(MONGODB_URI, { useNewUrlParser: true });
+
+app.listen(PORT, function () {
+  console.log("==> 🌎  Listening on port %s. Visit http://localhost:%s/ in your browser.", PORT, PORT);
 });
