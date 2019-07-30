@@ -1,4 +1,5 @@
 module.exports = {
-    Users = require("./Users"),
-    Training = require("./Training")
+    User = require("./User"),
+    Athlete = require("./Athlete"),
+    Coach = require("./Coach")
 }
