@@ -6,37 +6,40 @@ const db = require("../models/Index");
 //                                         API routes
 // =====================================================================================
 
+// /api/users
 // add a user
-router.post("/api/users", (req, res) => {
+router.post("/users", (req, res) => {
 
 });
 
 // delete a user
-router.delete("/api/users/:userId", (req, res) => {
+router.delete("/users/:userId", (req, res) => {
 
 });
 
 // get all training for a user
-router.get("/api/training/:athleteId", (req, res) => {
+router.get("/training/:athleteId", (req, res) => {
     db.Athlete
 });
 
 // add a training for a user
-router.post("/api/training", (req, res) => {
+router.post("/training", (req, res) => {
 
 });
 
 // update a training for a user
-router.put("/api/training/:trainingId", (req, res) => {
+router.put("/training/:trainingId", (req, res) => {
 
 });
 
 // delete a training for a user
-router.delete("/api/training/:trainingId", (req, res) => {
+router.delete("/training/:trainingId", (req, res) => {
 
 });
 
 // get all athletes for the coach
-router.get("/api/athletes/:coachId", (req,res) => {
+router.get("/athletes/:coachId", (req,res) => {
 
 });
+
+module.exports = router;
