@@ -33,12 +33,13 @@ router.post("/signup", (req, res) => {
           username: req.body.username,
           password: req.body.password
         })
+        
         newUser.password = newUser.generateHash(req.body.password);
         newUser.save((err) => {
           if (err) throw err;
           console.log("user saved!");
           // redirects to the login route as a post route *307*
-          res.redirect(307, "/auth/login");
+          res.redirect(307, "/api/users");
         });  
       }
     })
