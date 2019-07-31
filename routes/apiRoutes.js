@@ -11,24 +11,7 @@ const db = require("../models/Index");
 // add a user
 router.post("/users", authenticate.isLoggedIn, (req, res) => {
     // create a user immediately after signup and then redirect to login
-    console.log(req.user.type);
-    if (req.user.type === "Coach") {
-        db.Coach.create(req.body, (err) => {
-            if (err) throw err;
-            console.log("user created");
-        });
-    } else {
-        let newAthlete = {
-            username: req.user.username,
-            name: `${req.user.firstName} ${req.user.lastName}`,
-            team: req.user.team
-        };
-
-        db.Athlete.create(newAthlete, err => {
-            if (err) throw err;
-            res.redirect(303, "/api/training");
-        });
-    }
+    
 });
 
 // delete a user
@@ -57,7 +40,7 @@ router.get("/training", authenticate.isLoggedIn, (req, res) => {
 
 // add a training for a user
 router.post("/training", authenticate.isLoggedIn, (req, res) => {
-    db.Athlete.findById(req.user.id, (err, athlete) => {
+    db.Athlete.findOne({username: req.user.username}, (err, athlete) => {
         if (err) throw err;
         athlete.training.push(req.body);
         athlete.save((err, athlete) => {
@@ -69,7 +52,7 @@ router.post("/training", authenticate.isLoggedIn, (req, res) => {
 
 // update a training for a user
 router.put("/training/:trainingId", authenticate.isLoggedIn, (req, res) => {
-    db.Athlete.findById(req.user.id, (err, athlete) => {
+    db.Athlete.findOne({username: req.user.username}, (err, athlete) => {
         if (err) throw err;
         let training = athlete.training.id(req.params.trainingId);
         training.set(req.body); // need to have req.body match exactly the structure of the training subdoc
@@ -82,7 +65,7 @@ router.put("/training/:trainingId", authenticate.isLoggedIn, (req, res) => {
 
 // delete a training for a user
 router.delete("/training/:trainingId", authenticate.isLoggedIn, (req, res) => {
-    db.Athlete.findById(req.user.id, (err, athlete) => {
+    db.Athlete.findOne({username: req.user.username}, (err, athlete) => {
         if (err) throw err;
         athlete.training.id(req.params.trainingId).remove();
         athlete.save((err, athlete) => {

@@ -13,7 +13,7 @@ const authenticate = require("../config/middleware/authenticate");
 router.post("/login", passport.authenticate("local"), (req, res) => {
     console.log("sign in successful");
     // send the front end the user for now
-    res.redirect(307, "/api/users");
+    res.json(req.user);
 });
 
 // /auth/signup
@@ -28,12 +28,33 @@ router.post("/signup", (req, res) => {
         return res.json("user already exists");
       }
       if (!user) {
+        // create the user and has the password
         let newUser = new db.User(req.body);
-        console.log("new user is",newUser);
         newUser.password = newUser.generateHash(req.body.password);
         newUser.save((err) => {
           if (err) throw err;
-          console.log("user saved!");
+          // here we create a new user in the Coach or Athlete collection!
+          if (req.body.type === "Coach") {
+            let newCoach = {
+              username: req.body.username,
+              name: `${req.body.firstName} ${req.body.lastName}`,
+              team: req.body.team
+            }
+            db.Coach.create(newCoach, (err) => {
+                if (err) throw err;
+                console.log("user created");
+            });
+        } else {
+            let newAthlete = {
+                username: req.body.username,
+                name: `${req.body.firstName} ${req.body.lastName}`,
+                team: req.body.team
+            };
+            db.Athlete.create(newAthlete, err => {
+                if (err) throw err;
+                console.log("user created");
+            });
+        }
           // redirects to the login route as a post route *307*
           res.redirect(307, "/auth/login");
         });  

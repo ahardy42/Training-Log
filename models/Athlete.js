@@ -43,6 +43,10 @@ const athleteSchema = new Schema({
         type: String,
         required: true
     },
+    type: {
+        type: String,
+        default: "Athlete"
+    },
     training: [trainingSchema]
 });
 

@@ -2,6 +2,11 @@ const mongoose = require("mongoose");
 const Schema = mongoose.Schema;
 
 const coachSchema = new Schema({
+    username: {
+        type: String,
+        required: true,
+        unique: true
+    },
     name: {
         type: String,
         required: true
@@ -9,6 +14,10 @@ const coachSchema = new Schema({
     team: {
         type: String,
         required: true
+    },
+    type: {
+        type: String,
+        default: "Coach"
     },
     athletes: [{
         type: Schema.Types.ObjectId,
