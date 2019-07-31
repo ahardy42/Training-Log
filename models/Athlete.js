@@ -30,6 +30,11 @@ const trainingSchema = new Schema({
 })
 
 const athleteSchema = new Schema({
+    username: {
+        type: String,
+        required: true,
+        unique: true
+    },
     name: {
         type: String,
         required: true

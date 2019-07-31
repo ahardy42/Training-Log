@@ -19,13 +19,14 @@ router.post("/users", authenticate.isLoggedIn, (req, res) => {
         });
     } else {
         let newAthlete = {
+            username: req.user.username,
             name: `${req.user.firstName} ${req.user.lastName}`,
             team: req.user.team
         };
 
         db.Athlete.create(newAthlete, err => {
             if (err) throw err;
-            console.log("user created");
+            res.redirect(303, "/api/training");
         });
     }
 });
@@ -47,8 +48,8 @@ router.delete("/users/:userId", authenticate.isLoggedIn, (req, res) => {
 });
 
 // get all training for a user
-router.get("/training/", authenticate.isLoggedIn, (req, res) => {
-    db.Athlete.findById(req.user.id, (err, athlete) => {
+router.get("/training", authenticate.isLoggedIn, (req, res) => {
+    db.Athlete.findOne({username: req.user.username}, (err, athlete) => {
         if (err) throw err;
         res.json(athlete);
     });
@@ -92,7 +93,7 @@ router.delete("/training/:trainingId", authenticate.isLoggedIn, (req, res) => {
 });
 
 // get all athletes for the coach
-router.get("/athletes/", authenticate.isLoggedIn, (req,res) => {
+router.get("/athletes", authenticate.isLoggedIn, (req,res) => {
     db.Coach.findById(req.user.id)
     .populate("athletes")
     .exec( (err, coach) => {
