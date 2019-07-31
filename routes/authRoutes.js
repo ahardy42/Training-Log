@@ -1,6 +1,6 @@
 const express = require('express');
 const router = express.Router();
-const db = require("../models");
+const db = require("../models/Index");
 const passport = require("../config/passport");
 const authenticate = require("../config/middleware/authenticate");
 
@@ -13,15 +13,14 @@ const authenticate = require("../config/middleware/authenticate");
 router.post("/login", passport.authenticate("local"), (req, res) => {
     console.log("sign in successful");
     // send the front end the user for now
-    res.json({
-      user: req.user,
-      loggedIn: true
-    });
+    res.redirect(307, "/api/users");
 });
 
 // /auth/signup
 // route to signup the user
 router.post("/signup", (req, res) => {
+    console.log("route was hit");
+    console.log(req.body);
     db.User.findOne({username: req.body.username}, (err, user) => {
       if (err) throw err;
       if (user) {
@@ -29,17 +28,14 @@ router.post("/signup", (req, res) => {
         return res.json("user already exists");
       }
       if (!user) {
-        let newUser = new db.User({
-          username: req.body.username,
-          password: req.body.password
-        })
-        
+        let newUser = new db.User(req.body);
+        console.log("new user is",newUser);
         newUser.password = newUser.generateHash(req.body.password);
         newUser.save((err) => {
           if (err) throw err;
           console.log("user saved!");
           // redirects to the login route as a post route *307*
-          res.redirect(307, "/api/users");
+          res.redirect(307, "/auth/login");
         });  
       }
     })

@@ -15,12 +15,17 @@ router.post("/users", authenticate.isLoggedIn, (req, res) => {
     if (req.user.type === "Coach") {
         db.Coach.create(req.body, (err) => {
             if (err) throw err;
-            res.redirect("/auth/login");
+            console.log("user created");
         });
     } else {
-        db.Athlete.create(req.body, err => {
+        let newAthlete = {
+            name: `${req.user.firstName} ${req.user.lastName}`,
+            team: req.user.team
+        };
+
+        db.Athlete.create(newAthlete, err => {
             if (err) throw err;
-            res.redirect("/auth/login");
+            console.log("user created");
         });
     }
 });
