@@ -2,6 +2,34 @@ const mongoose = require("mongoose");
 const bcrypt = require('bcrypt');
 const Schema = mongoose.Schema;
 
+const trainingSchema = new Schema({
+    date: {
+        type: Date,
+        required: true,
+        default: Date.now()
+    },
+    duration: {
+        type: Number,
+        required: true
+    },
+    mode: {
+        type: String,
+        required: true
+    },
+    intensity: {
+        type: Number,
+        required: true
+    },
+    comment: {
+        type: String,
+        require: false
+    },
+    coachComment: {
+        type: String,
+        require: false
+    }
+});
+
 const userSchema = new Schema({
     firstName: {
         type: String,
@@ -30,6 +58,7 @@ const userSchema = new Schema({
         type: String,
         required: true
     },
+    training: [trainingSchema],
     type: {
         type: String,
         required: true,

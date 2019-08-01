@@ -19,8 +19,6 @@ router.post("/login", passport.authenticate("local"), (req, res) => {
 // /auth/signup
 // route to signup the user
 router.post("/signup", (req, res) => {
-    console.log("route was hit");
-    console.log(req.body);
     db.User.findOne({username: req.body.username}, (err, user) => {
       if (err) throw err;
       if (user) {
@@ -33,28 +31,6 @@ router.post("/signup", (req, res) => {
         newUser.password = newUser.generateHash(req.body.password);
         newUser.save((err) => {
           if (err) throw err;
-          // here we create a new user in the Coach or Athlete collection!
-          if (req.body.type === "Coach") {
-            let newCoach = {
-              username: req.body.username,
-              name: `${req.body.firstName} ${req.body.lastName}`,
-              team: req.body.team
-            }
-            db.Coach.create(newCoach, (err) => {
-                if (err) throw err;
-                console.log("user created");
-            });
-        } else {
-            let newAthlete = {
-                username: req.body.username,
-                name: `${req.body.firstName} ${req.body.lastName}`,
-                team: req.body.team
-            };
-            db.Athlete.create(newAthlete, err => {
-                if (err) throw err;
-                console.log("user created");
-            });
-        }
           // redirects to the login route as a post route *307*
           res.redirect(307, "/auth/login");
         });  
