@@ -13,9 +13,9 @@ const Input = props => {
         );
     } else if (props.action === "check") {
         return (
-            <div class="form-check">
-                <input class="form-check-input" type={props.action} value=""/>
-                <label class="form-check-label">
+            <div className="form-check">
+                <input className="form-check-input" type={props.action} value=""/>
+                <label className="form-check-label">
                     {`Pick your ${props.usedFor}`}
                 </label>
             </div>
