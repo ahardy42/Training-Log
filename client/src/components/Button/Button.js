@@ -1,8 +1,8 @@
 import React from 'react';
 
-const Button = (props) => {
+const Button = ({action, children, handleClick, ...props}) => {
     return(
-        <button type={props.action} className="btn btn-success">{props.action}</button>
+        <button type={action} onClick={handleClick} id={props.id} className={`btn btn-success ${props.isDisabled}`}>{children}</button>
     )
 }
 
