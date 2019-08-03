@@ -19,7 +19,7 @@ router.delete("/users/:userId", authenticate.isLoggedIn, (req, res) => {
 router.get("/training", authenticate.isLoggedIn, (req, res) => {
     db.User.findById(req.user.id, (err, athlete) => {
         if (err) throw err;
-        res.json(athlete.training);
+        res.json(athlete);
     });
 });
 

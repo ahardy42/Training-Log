@@ -1,7 +1,8 @@
 import React from 'react';
-import {Link} from 'react-router-dom';
-import Button from '../../components/Button/Button';
-import Input from '../../components/Input/Input';
+import {Redirect} from 'react-router-dom';
+import Login from '../../pages/Login/Login';
+import Signup from '../../pages/Signup/Signup';
+import Reset from '../../pages/Reset/Reset';
 
 class Auth extends React.Component {
     constructor(props) {
@@ -13,15 +14,16 @@ class Auth extends React.Component {
             firstName: "",
             lastName: "",
             email: "",
-            team: "",
+            team: "unattached",
             isCoach: false,
             isSamePassword: false,
-            allowSubmit: false,
+            allowSubmit: false
         }
     }
     handleInputChange = (event) => {
         event.preventDefault();
         const {name, value, id} = event.target;
+        console.log("name", name, "\nvalue", value);
         this.setState({
             [name]: value
         }, () => {
@@ -29,6 +31,12 @@ class Auth extends React.Component {
                 this.checkPassword();
             }
             this.allowSubmit();
+        });
+    }
+    handleCheck = (event) => {
+        const {checked, name} = event.target;
+        this.setState({
+            [name]: checked
         });
     }
     checkPassword = () => {
@@ -53,75 +61,53 @@ class Auth extends React.Component {
             );
         }
     }
-    handleClick = (event) => {
+    login = event => {
         event.preventDefault();
-        let {id} = event.target;
-        console.log(id);
-        const {username, password, email, firstName, lastName, team, isCoach} = this.state;
-        if (id === "login") {
-            let userInfo = {
-                username: username,
-                password: password
-            }
-            this.props.submit(userInfo);
-        } else if (id === "signup") {
-            let userInfo = {
-                username: username,
-                password: password,
-                email: email,
-                firstName: firstName,
-                lastName: lastName,
-                team: team,
-                type: isCoach ? "Coach" : "Athlete"
-            }
-            this.props.submit(userInfo);
-        } else {
-
+        const {username, password} = this.state;
+        let userInfo = {
+            username: username,
+            password: password
         }
+        this.props.submit(userInfo);
+    }
+    signup = event => {
+        event.preventDefault();
+        const { username, password, email, firstName, lastName, team, isCoach } = this.state;
+        let userInfo = {
+            username: username,
+            password: password,
+            email: email,
+            firstName: firstName,
+            lastName: lastName,
+            team: team,
+            type: isCoach ? "Coach" : "Athlete"
+        }
+        this.props.submit(userInfo);
+    }
+    reset = event => {
+        // need to setup mailer route
     }
     render() {
-        if (this.props.action === "login") {
+        if (this.props.isLoggedIn) {
             return (
-                <div className="container">
-                    <form>
-                        <Input action="username" name="username" id="loginUsername" handleInputChange={this.handleInputChange}>username</Input>
-                        <Input action="password" name="password" id="loginPassword" handleInputChange={this.handleInputChange}>password</Input>
-                        <Button action="submit" id="login" handleClick={this.handleClick}>Login!</Button>
-                    </form>
-                    <Link to="/signup">New User?</Link>
-                    <Link to="/reset">Forgot username or password?</Link>
-                </div>
-            );
-        } else if (this.props.action === "signup") {
-            return (
-                <div className="container">
-                    <form>
-                        <Input action="text" name="firstName" id="firstName" handleInputChange={this.handleInputChange}>First Name</Input>
-                        <Input action="text" name="lastName" id="lastName" handleInputChange={this.handleInputChange}>Last Name</Input> 
-                        <Input action="email" name="email" id="signupEmail" handleInputChange={this.handleInputChange}>Email address</Input>
-                        <Input action="username" name="username" id="signupUsername" handleInputChange={this.handleInputChange}>enter username</Input>
-                        <Input action="password" name="password" id="signupPassword" handleInputChange={this.handleInputChange}>enter your password</Input>
-                        <Input action="password" name="passwordRepeat" id="confirmPassword" handleInputChange={this.handleInputChange}>re-enter your password</Input>
-                        <Input action="select" name="team" id="signupTeam">What team are you on?</Input>
-                        <Input action="checkbox" name="isCoach" id="isCoach">Are you a coach?</Input>
-                        {this.state.allowSubmit ? (<Button action="button" id="signup" handleClick={this.handleClick}>Sign Up!</Button>) : (<Button action="button" isDisabled="disabled" id="signup" handleClick={this.handleClick}>Sign Up!</Button>)}
-                        
-                    </form>
-                    <Link to="/login">Already a User?</Link>
-                    <Link to="/reset">Forgot username or password?</Link>
-                </div>
+                <Redirect to="/" />
             );
         } else {
-            return (
-                <div className="container">
-                    <form>
-                        <Input action="email" name="" id="resetEmail" handleInputChange={this.handleInputChange}>Enter your email address</Input>
-                        <Button action="submit" id="reset" handleClick={this.handleClick}>Reset Password</Button>
-                    </form>
-                </div>
-            );
+            if (this.props.action === "login") {
+                return (
+                    <Login handleClick={this.login} handleInputChange={this.handleInputChange}/>
+                );
+            } else if (this.props.action === "signup") {
+                return (
+                    <Signup handleCheck={this.handleCheck} handleClick={this.signup} handleInputChange={this.handleInputChange} allowSubmit={this.state.allowSubmit}/>
+                );
+            } else {
+                return (
+                    <Reset handleClick={this.reset} handleInputChange={this.handleInputChange}/>
+                );
+            }
         }
-    }
+        }
 }
 
 export default Auth;

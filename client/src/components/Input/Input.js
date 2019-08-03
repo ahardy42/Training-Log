@@ -4,8 +4,8 @@ const Input = ({action, id, children, handleInputChange, ...props}) => {
     if (action === "select") {
         return (
             <div className="form-group">
-                <label fo={id}>{children}</label>
-                <select className="form-control" id={id}>
+                <label htmlFor={id}>{children}</label>
+                <select className="form-control" name={props.name} id={id} onChange={handleInputChange}>
                     <option>unattached</option>
                     <option>SNSC</option>
                 </select>
@@ -14,7 +14,7 @@ const Input = ({action, id, children, handleInputChange, ...props}) => {
     } else if (action === "checkbox") {
         return (
             <div className="form-check">
-                <input className="form-check-input" name={props.name} id={id} type={action} value={props.isChecked}/>
+                <input className="form-check-input" name={props.name} id={id} type={action} onChange={props.handleCheck}/>
                 <label className="form-check-label" htmlFor={id}>
                     {children}
                 </label>
