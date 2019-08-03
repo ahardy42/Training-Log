@@ -20,6 +20,10 @@ const trainingSchema = new Schema({
         type: Number,
         required: true
     },
+    feeling: {
+        type: Number,
+        required: true
+    },
     comment: {
         type: String,
         require: false

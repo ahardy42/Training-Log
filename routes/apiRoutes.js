@@ -8,12 +8,20 @@ const db = require("../models/Index");
 // =====================================================================================
 
 // delete a user
-router.delete("/users/:userId", authenticate.isLoggedIn, (req, res) => {
+router.delete("/users", authenticate.isLoggedIn, (req, res) => {
     // delete the user and cascade delete any training / athletes
     db.User.deleteOne({_id: req.user.id}, err => {
        if (err) throw err;
     });
 });
+
+// update a user's info
+router.put("/users", authenticate.isLoggedIn, (req, res) => {
+    db.User.findByIdAndUpdate(req.user.id, req.body, (err, user) => {
+        if (err) throw err;
+        res.json(user);
+    });
+})
 
 // get all training for a user
 router.get("/training", authenticate.isLoggedIn, (req, res) => {
@@ -83,5 +91,7 @@ router.get("/athletes", authenticate.isLoggedIn, (req,res) => {
         res.json("only coaches can hit this route");
     }
 });
+
+// add comment on training for a coach
 
 module.exports = router;
