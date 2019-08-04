@@ -24,7 +24,7 @@ class CalendarDiv extends React.Component {
         this.setState({
             calObject: calendar().detailed(currYear, currMonth)
         }, () => {
-            this.filterTrainingByTimeframe();
+            this.getTraining();
         });
     }
     todaysDate = () => {
@@ -68,21 +68,48 @@ class CalendarDiv extends React.Component {
     }
     getTraining = () => {
         // filter training so that only training in the current timeframe is saved to this state
-        
+        let {calendar} = this.state.calObject;
+        let firstDay = calendar[0][0];
+        let lastWeek = calendar[calendar.length-1];
+        let lastDay = lastWeek[lastWeek.length-1]
+        let startTime = Date.parse(firstDay.date);
+        let endTime = Date.parse(lastDay.date);
+        fetch(`/api/training/${startTime}/${endTime}`)
+        .then(response => {
+            return response.json();
+        })
+        .then(json => {
+            let updatedJson = this.reformatTrainingDate(json);
+            this.setState({
+                trainingInTimeFrame: updatedJson
+            })
+        })
     }
-    reformatTrainingDate = (date) => {
-        return new Date(date);
+    reformatTrainingDate = (jsonArray) => {
+        let newJsonArray = jsonArray.map(training => {
+            let options = {
+                weekday: 'short',
+                month: 'short',
+                day: '2-digit',
+                year: 'numeric'
+            };
+            let formattedDate = Date(training.date).toLocaleString("default", options);
+            training.date = formattedDate;
+            return training;
+        });
+        return newJsonArray;
     }
     componentDidMount = () => {
         // filter the training based on the current timeframe. this will eventually be swapped
         // to a more specific timeframe API search which will require less state setting functions
-        this.getTraining()
+        this.getTraining();
     }
     render() {
         return (
             this.state.display === "calendar" ? 
                 (
                     <Calendar
+                        getTraining={this.getTraining}
                         training={this.state.trainingInTimeFrame}
                         timeFrame={this.state.timeFrame}
                         calObject={this.state.calObject}

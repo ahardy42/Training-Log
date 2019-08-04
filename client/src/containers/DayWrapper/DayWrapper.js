@@ -6,8 +6,8 @@ class DayWrapper extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            isActive: this.props.isActive,
-            training: this.props.training
+            isActive: false,
+            training: []
         }
     }
     handleTrainingClick = () => {
@@ -22,24 +22,23 @@ class DayWrapper extends React.Component {
     updateTraining = () => {
         // will hit API to update training
     }
-    displayTraining = () => {
-        // will display any training for the current day
-        // let {training, date} = this.props;
-        // let todayTraining = training.filter(element => {
-        //     return new Date(element.date).toDateString().filter(0,15) === date.toDateString().filter(0,15);
-        // });
-        
-        // this.setState({
-        //     todayTraining: todayTraining
-        // })
-    }
-    componentDidMount() {
-        console.log(this.props);
-        // this.displayTraining();
+    componentWillReceiveProps(nextProps){
+        // not sure 100% why i needed this... maybe because the CalendarDiv was rendering after this?
+        console.log(nextProps);
+        if(nextProps.training !== this.props.training){
+            // check to see if the training happened on this day...
+            let todayTraining = nextProps.training.filter(element => {
+                return element.date.slice(0,15) === nextProps.date.toDateString().slice(0,15);
+            });
+            this.setState({
+                training: todayTraining
+            });
+        }
     }
     render() {
         return (
             <Day
+                training={this.state.training}
                 isActive={this.state.isActive}
                 date={this.props.date}
                 day={this.props.day}

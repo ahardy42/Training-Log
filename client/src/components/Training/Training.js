@@ -3,7 +3,9 @@ import Button from '../Button/Button';
 
 const Training = (props) => {
     return (
-        <Button handleClick={props.handleClick}>{props.activity}</Button>
+        <li className="list-group-item">
+            <Button handleClick={props.handleClick}>{props.activity}</Button>
+        </li>
     )
 }
 
