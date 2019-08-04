@@ -23,10 +23,10 @@ class Athlete extends React.Component {
                 <div className="row">
                     {/* calendar and stats */}
                     <div className="col-7">
-                        <CalendarDiv />
+                        <CalendarDiv userTraining={this.props.athlete.training}/>
                     </div>
                     <div className="col-5">
-                        <Stats />
+                        <Stats userTraining={this.props.athlete.training}/>
                     </div>
                 </div>
             </div>

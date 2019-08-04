@@ -2,7 +2,7 @@ import React from 'react';
 
 const Stats = ({userTraining}) => {
     return (
-        <div id="stats" userTraining={userTraining}>
+        <div id="stats">
             Training bar graph goes here
         </div>
     );
