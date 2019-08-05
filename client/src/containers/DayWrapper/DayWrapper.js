@@ -7,38 +7,33 @@ class DayWrapper extends React.Component {
         super(props);
         this.state = {
             isActive: false,
-            training: []
+            hasTraining: false,
+            trainingIds: []
         }
     }
-    handleTrainingClick = () => {
-        // will open a modal
-    }
-    addTraining = () => {
-        // will hit API to add training
-    }
-    deleteTraining = () => {
-        // will hit API to delete training
-    }
-    updateTraining = () => {
-        // will hit API to update training
+    handleDayClick = () => {
+        // will open a modal on the athlete page to display training...
+
     }
     componentWillReceiveProps(nextProps){
         // not sure 100% why i needed this... maybe because the CalendarDiv was rendering after this?
-        console.log(nextProps);
         if(nextProps.training !== this.props.training){
             // check to see if the training happened on this day...
             let todayTraining = nextProps.training.filter(element => {
                 return element.date.slice(0,15) === nextProps.date.toDateString().slice(0,15);
             });
-            this.setState({
-                training: todayTraining
-            });
+            if (todayTraining.length) {
+                this.setState({
+                    hasTraining: true,
+                    trainingIds: todayTraining.map(training => training._id)
+                });
+            }
         }
     }
     render() {
         return (
             <Day
-                training={this.state.training}
+                hasTraining={this.state.hasTraining}
                 isActive={this.state.isActive}
                 date={this.props.date}
                 day={this.props.day}
