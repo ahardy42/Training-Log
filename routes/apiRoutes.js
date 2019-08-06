@@ -31,6 +31,20 @@ router.get("/training", authenticate.isLoggedIn, (req, res) => {
     });
 });
 
+// get specific timeframe of training for a user params are unix time
+router.get("/training/:startTime/:endTime", authenticate.isLoggedIn, (req, res) => {
+    let startTime = parseInt(req.params.startTime);
+    let endTime = parseInt(req.params.endTime);
+    db.User.findById(req.user.id, (err, athlete) => {
+        if (err) throw err;
+        let training = athlete.training;
+        let filteredTraining = training.filter(element => {
+            return element.date >= startTime && element.date <= endTime;
+        })
+        res.json(filteredTraining);
+    });
+})
+
 // add a training for a user
 router.post("/training", authenticate.isLoggedIn, (req, res) => {
     if (req.user.type === "Athlete") {

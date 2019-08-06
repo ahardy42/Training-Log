@@ -90,11 +90,24 @@ class App extends React.Component {
       });
   }
   componentDidMount = () => {
-    if (this.state.isLoggedIn && this.state.user.type === "Coach") {
-      this.loadAthletes();
-    } else if (this.state.isLoggedIn && this.state.user.type === "Athlete") {
-      this.loadTraining();
-    } 
+    // check if user is logged in and update state
+    fetch("/auth/profile")
+      .then(response => {
+        return response.json();
+      })
+      .then(json => {
+        if (json) {
+          this.setState({
+            isLoggedIn: true,
+            user: json
+          }, () => {
+            console.log(json);
+            if (this.state.user.type === "Coach") {
+              this.loadAthletes();
+            }
+          });
+        }
+      });
   }
   render() {
     return (

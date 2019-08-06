@@ -4,9 +4,9 @@ const Schema = mongoose.Schema;
 
 const trainingSchema = new Schema({
     date: {
-        type: Date,
+        type: Number,
         required: true,
-        default: Date.now()
+        default: Date.now() //milliseconds since Jan 1 1970
     },
     duration: {
         type: Number,
