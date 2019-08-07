@@ -25,28 +25,8 @@
   }
 
   .calendar__day.training {
-    animation-name: glow;
-    animation-duration: 2s;
-    animation-direction: alternate;
-    animation-fill-mode: forwards;
-    animation-iteration-count: infinite;
-  }
-
-  .calendar__day.training:hover {
-    animation-name: none;
-    background-color: rgba(0, 128, 0, 1);
-    color: rgba(255, 255, 255, 1);
-  }
-
-  @keyframes glow {
-    0% {
-      background-color: rgba(0, 128, 0, 0);
-      color: rgba(0, 128, 0, 1);
-    }
-    100% {
-      background-color: rgba(0, 128, 0, 1);
-      color: rgba(255, 255, 255, 1);
-    }
+    background-color: rgba(0, 128, 0, 0);
+    color: rgb(252, 255, 255);
   }
 
   /* COSMETIC STYLING */

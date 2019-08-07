@@ -4,15 +4,37 @@ import calendar from 'calendar-js';
 // const calendar = require('calendar-js');
 
 const dateHelpers = {
-    // timeframe will be a string: either "month" or "week" to begin
-    nextMonth: (timeframe, calObject) => {
+    createInitObject: function(calObject, isIncrement) {
+        let month = moment(calObject.month, "MMMM").month();
+        let year = moment(calObject.year, "YYYY").year();
+        let obj = {};
+        if (isIncrement) { // called from nextMonth with true
+            return Object.assign({
+                months: month === 11 ? 0 : month + 1,
+                years: month === 11 ? year + 1 : year
+            }, obj);
+        } else {
+            return Object.assign({ // called from prevMonth with false
+                months: month === 0 ? 11 : month - 1,
+                years: month === 0 ? year - 1 : year
+            }, obj);
+        }
     },
-    lastMonth: (timeframe, calObject) => {
-        
+    nextMonth: function(calObject) {
+        // creates a new calObj for one month in ahead of the current month
+        let obj = this.createInitObject(calObject, true);
+        console.log(obj);
+        return this.initialize(obj);
     },
-    initialize: () => {
+    prevMonth: function(calObject) {
+        // creates a new calObj for one month less than current month
+        let obj = this.createInitObject(calObject, false);
+        return this.initialize(obj);
+    },
+    initialize: function(obj) {
         // function runs to set the state of Athlete
-        let now = moment().toObject();
+        let now = obj ? obj : moment().toObject();
+        console.log(now);
         let calObject = calendar().detailed(parseInt(now.years), parseInt(now.months), (data, calendar) => {
             let bool = moment().startOf('day').format() === moment(data.date).startOf('day').format();
             let training = [];
@@ -25,11 +47,11 @@ const dateHelpers = {
         // add some unix start and stop times in the calObject for API searching
         let i = calObject.calendar.length - 1;
         let j = calObject.calendar[i].length -1;
-        calObject.startUnix = moment(calObject.calendar[0][0].date).startOf('day').valueOf();
+        calObject.startUnix = moment(calObject.calendar[0][0].date).startOf('day').valueOf(); // gets value in ms
         calObject.endUnix = moment(calObject.calendar[i][j].date).endOf('day').valueOf();
         return calObject;
     },
-    insertTrainingIntoCalObject: (training, calObject) => {
+    insertTrainingIntoCalObject: function(training, calObject) {
         // will add training to each day object where there is training
         let reformattedTraining = training.map(activity => {
             return Object.assign({
@@ -40,8 +62,6 @@ const dateHelpers = {
         let updatedCalendar = calObject.calendar.map(week => {
             for (let i = 0; i < week.length; i++) {
                 week[i].training = reformattedTraining.filter(activity => {
-                    console.log(activity.reformattedDate, week[i].customDate);
-                    console.log(activity.reformattedDate === week[i].customDate);
                     return activity.reformattedDate === week[i].customDate;
                 });
             }

@@ -23,7 +23,7 @@ router.put("/users", authenticate.isLoggedIn, (req, res) => {
     });
 })
 
-// get all training for a user
+// get all training for a user 
 router.get("/training", authenticate.isLoggedIn, (req, res) => {
     db.User.findById(req.user.id, (err, athlete) => {
         if (err) throw err;
@@ -31,7 +31,7 @@ router.get("/training", authenticate.isLoggedIn, (req, res) => {
     });
 });
 
-// get specific timeframe of training for a user params are unix time
+// get specific timeframe of training for a user params are unix time in ms
 router.get("/training/:startTime/:endTime", authenticate.isLoggedIn, (req, res) => {
     let startTime = parseInt(req.params.startTime);
     let endTime = parseInt(req.params.endTime);

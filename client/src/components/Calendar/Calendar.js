@@ -4,7 +4,7 @@ import Header from './Header';
 import Week from './Week';
 import './Calendar.css';
 
-const Calendar = ({calObject, previousMonth, nextMonth, todaysDate}) => {
+const Calendar = ({calObject, previousMonth, nextMonth, todaysDate, viewTraining}) => {
 
     return (
         <div className="wrapper">
@@ -12,7 +12,7 @@ const Calendar = ({calObject, previousMonth, nextMonth, todaysDate}) => {
             <div className="calendar">
                 <Header weekArray={calObject.weekdaysAbbr}/>
                 {calObject.calendar.map((week, index) => {
-                    return <Week week={week} key={index}/>
+                    return <Week week={week} key={index} viewTraining={viewTraining}/>
                 })}
             </div>
         </div>

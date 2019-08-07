@@ -1,6 +1,6 @@
 import React from 'react';
 import Button from '../../components/Button/Button';
-import CalendarDiv from '../../containers/CalendarDiv/CalendarDiv';
+import Calendar from '../../components/Calendar/Calendar';
 import Stats from '../../components/Stats/Stats';
 import TrainingModal from '../../components/TrainingModal/TrainingModal';
 import API from '../../utils/API';
@@ -11,26 +11,38 @@ class Athlete extends React.Component {
         super(props);
         this.state = {
             modalStyle: {display: "none"},
-            isAddTraining: false,
             calObject: dateHelpers.initialize(), // calObject stores calendar info as well as training
+            isAdd: false,
             selectedTraining: [],
             trainingStats: []
         }
     }
     openModal = () => {
-        let style = {
-            display: "block"
-        }
+        let style = {display: "block"}
         this.setState({
             modalStyle: style
         });
     }
     closeModal = () => {
-        let style = {
-            display: "none"
-        }
+        let style = {display: "none"}
         this.setState({
-            modalStyle: style
+            modalStyle: style,
+            isAdd: false
+        });
+    }
+    openTrainingViewModal = (event, training) => {
+        console.log(training);
+        // this.setState({
+        //     selectedTraining: trainingArray
+        // }, () => {
+        //     this.openModal();
+        // });
+    }
+    openTrainingAddModal = () => {
+        this.setState({
+            isAdd: true
+        }, () => {
+            this.openModal();
         });
     }
     addTraining = () => {
@@ -43,21 +55,52 @@ class Athlete extends React.Component {
     updateTraining = () => {
         // will hit API to update training
     }
-    viewTraining = () => {
-        // onclick handler for buttons to view training in modal
-    }
-    changeTimeframe = () => {
-        // change from week to month
-    }
     forwardInTimeframe = () => {
-        // go forward one full timeframe unit
+        // go forward one full timeframe unit, then populate the object with training from the DB
+        let {calObject} = this.state;
+        let forwardCalObject = dateHelpers.nextMonth(calObject);
+        console.log(forwardCalObject);
+        API.getTraining(forwardCalObject.startUnix, forwardCalObject.endUnix)
+        .then(training => {
+            let updatedCalObject = dateHelpers.insertTrainingIntoCalObject(training, forwardCalObject);
+            console.log(updatedCalObject);
+            this.setState({
+                calObject: updatedCalObject
+            });
+        })
+        .catch(err => {
+            console.log(err);
+        })
     }
     backwardInTimeframe = () => {
         // go backward one full timeframe unit
-        
+        let {calObject} = this.state;
+        let backwardCalObject = dateHelpers.prevMonth(calObject);
+        API.getTraining(backwardCalObject.startUnix, backwardCalObject.endUnix)
+        .then(training => {
+            let updatedCalObject = dateHelpers.insertTrainingIntoCalObject(training, backwardCalObject);
+            console.log(updatedCalObject);
+            this.setState({
+                calObject: updatedCalObject
+            });
+        })
+        .catch(err => {
+            console.log(err);
+        })
     }
-    displayCurrentTimeSpan = () => {
-        
+    currentTimeframe = () => {
+        let currentCalObject = dateHelpers.initialize();
+        API.getTraining(currentCalObject.startUnix, currentCalObject.endUnix)
+        .then(training => {
+            let updatedCalObject = dateHelpers.insertTrainingIntoCalObject(training, currentCalObject);
+            console.log(updatedCalObject);
+            this.setState({
+                calObject: updatedCalObject
+            });
+        })
+        .catch(err => {
+            console.log(err);
+        })
     }
     componentDidMount = () => {
         // get training within the current timeframe and add it to the days that it happened (in the calObject)
@@ -80,22 +123,27 @@ class Athlete extends React.Component {
     render() {
         return (
             <div className="container">
-                <TrainingModal style={this.state.modalStyle} handleClose={this.closeModal} isAdd={this.state.isAddTraining} training={this.state.selectedTraining}/>
+                <TrainingModal
+                    style={this.state.modalStyle}
+                    handleClose={this.closeModal}
+                    isAdd={this.state.isAddTraining}
+                    training={this.state.selectedTraining}
+                />
                 <div className="row">
                     {/* buttons to toggle view / add training */}
                     <div className="col justify-content-center">
-                        <Button action="button" handleClick={this.openModal}>Add Training</Button>
+                        <Button action="button" handleClick={this.openTrainingAddModal}>Add Training</Button>
                     </div>
                 </div>
                 <div className="row">
                     {/* calendar and stats */}
                     <div className="col-7">
-                        <CalendarDiv 
+                        <Calendar
                             display={this.state.display}
-                            viewTraining={this.viewTraining}
+                            viewTraining={this.openTrainingViewModal}
                             nextMonth={this.forwardInTimeframe}
-                            lastMonth={this.backwardInTimeframe}
-                            todaysDate={this.displayCurrentTimeFrame}
+                            previousMonth={this.backwardInTimeframe}
+                            todaysDate={this.currentTimeframe}
                             calObject={this.state.calObject}
                         />
                     </div>

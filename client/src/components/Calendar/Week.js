@@ -2,12 +2,13 @@ import React from 'react';
 import Day from './Day';
 import './Calendar.css';
 
-const Week = ({week}) => {
+const Week = ({week, viewTraining}) => {
     return (
         <div className="calendar__week">
             {week.map(day => {
                 return (
                     <Day
+                        handleClick={viewTraining}
                         customDate={day.customDate}
                         isToday={day.isToday}
                         day={day.day} 
