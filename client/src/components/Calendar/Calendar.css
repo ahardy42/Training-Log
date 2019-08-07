@@ -25,7 +25,7 @@
   }
 
   .calendar__day.training {
-    background-color: rgba(0, 128, 0, 0);
+    background-color: rgba(0, 128, 0, 1);
     color: rgb(252, 255, 255);
   }
 

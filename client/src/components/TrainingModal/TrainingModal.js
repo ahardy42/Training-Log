@@ -17,7 +17,7 @@ const TrainingModal = (props) => {
                         </Button>
                     </div>
                     <div className="modal-body">
-                        {props.isAdd ? <TrainingForm training={props.training}/> : <TrainingView training={props.training}/>}
+                        {props.isAdd ? <TrainingForm training={props.training}/> : <TrainingView trainingArray={props.training}/>}
                     </div>
                     <div className="modal-footer">
                         <Button action="button" handleClick={props.handleClose}>Close</Button>

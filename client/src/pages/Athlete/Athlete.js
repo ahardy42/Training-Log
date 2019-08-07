@@ -32,11 +32,11 @@ class Athlete extends React.Component {
     }
     openTrainingViewModal = (event, training) => {
         console.log(training);
-        // this.setState({
-        //     selectedTraining: trainingArray
-        // }, () => {
-        //     this.openModal();
-        // });
+        this.setState({
+            selectedTraining: training
+        }, () => {
+            this.openModal();
+        });
     }
     openTrainingAddModal = () => {
         this.setState({
@@ -47,7 +47,7 @@ class Athlete extends React.Component {
     }
     addTraining = () => {
         // will hit API to add training
-
+        
     }
     deleteTraining = () => {
         // will hit API to delete training
@@ -65,6 +65,7 @@ class Athlete extends React.Component {
             let updatedCalObject = dateHelpers.insertTrainingIntoCalObject(training, forwardCalObject);
             console.log(updatedCalObject);
             this.setState({
+                trainingStats: training,
                 calObject: updatedCalObject
             });
         })
@@ -81,6 +82,7 @@ class Athlete extends React.Component {
             let updatedCalObject = dateHelpers.insertTrainingIntoCalObject(training, backwardCalObject);
             console.log(updatedCalObject);
             this.setState({
+                trainingStats: training,
                 calObject: updatedCalObject
             });
         })
@@ -95,6 +97,7 @@ class Athlete extends React.Component {
             let updatedCalObject = dateHelpers.insertTrainingIntoCalObject(training, currentCalObject);
             console.log(updatedCalObject);
             this.setState({
+                trainingStats: training,
                 calObject: updatedCalObject
             });
         })
@@ -112,6 +115,7 @@ class Athlete extends React.Component {
             let updatedCalObject = dateHelpers.insertTrainingIntoCalObject(training, calObject);
             console.log(updatedCalObject);
             this.setState({
+                trainingStats: training,
                 calObject: updatedCalObject
             });
         })
@@ -124,6 +128,9 @@ class Athlete extends React.Component {
         return (
             <div className="container">
                 <TrainingModal
+                    addTraining={this.addTraining}
+                    deleteTraining={this.deleteTraining}
+                    updateTraining={this.updateTraining}
                     style={this.state.modalStyle}
                     handleClose={this.closeModal}
                     isAdd={this.state.isAddTraining}
