@@ -20,13 +20,36 @@
 
   .calendar__day.active {
     font-weight: bold;
-    color: red;
-    background-color: gray;
+    color: green;
+    border: 2px solid green;
+  }
+
+  .calendar__day.training {
+    animation-name: glow;
+    animation-duration: 2s;
+    animation-direction: alternate;
+    animation-fill-mode: forwards;
+    animation-iteration-count: infinite;
+  }
+
+  .calendar__day.training:hover {
+    animation-name: none;
+    background-color: rgba(0, 128, 0, 1);
+    color: rgba(255, 255, 255, 1);
+  }
+
+  @keyframes glow {
+    0% {
+      background-color: rgba(0, 128, 0, 0);
+      color: rgba(0, 128, 0, 1);
+    }
+    100% {
+      background-color: rgba(0, 128, 0, 1);
+      color: rgba(255, 255, 255, 1);
+    }
   }
 
   /* COSMETIC STYLING */
-
-  
 
   @media screen and (min-width: 850px) {
     .menu__icon {

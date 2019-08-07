@@ -4,15 +4,15 @@ import Header from './Header';
 import Week from './Week';
 import './Calendar.css';
 
-const Calendar = ({timeFrame, currDay, calObject, previousMonth, nextMonth, todaysDate, training, ...props}) => {
+const Calendar = ({calObject, previousMonth, nextMonth, todaysDate}) => {
 
     return (
         <div className="wrapper">
-            <ToolBar month={calObject.month} year={calObject.year} timeFrame={timeFrame} previousMonth={previousMonth} nextMonth={nextMonth} todaysDate={todaysDate}/>
+            <ToolBar month={calObject.month} year={calObject.year} nextMonth={nextMonth} previousMonth={previousMonth} todaysDate={todaysDate}/>
             <div className="calendar">
-                <Header weekArray={calObject.weekdays}/>
+                <Header weekArray={calObject.weekdaysAbbr}/>
                 {calObject.calendar.map((week, index) => {
-                    return <Week week={week} currDay={currDay} key={index} training={training}/>
+                    return <Week week={week} key={index}/>
                 })}
             </div>
         </div>
