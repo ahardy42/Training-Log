@@ -71,7 +71,7 @@ router.put("/training/:trainingId", authenticate.isLoggedIn, (req, res) => {
             training.set(req.body); // need to have req.body match exactly the structure of the training subdoc
             athlete.save((err, athlete) => {
                 if (err) throw err;
-                res.json(athlete);
+                res.json(athlete.training);
             });
         });
     } else {
@@ -87,7 +87,7 @@ router.delete("/training/:trainingId", authenticate.isLoggedIn, (req, res) => {
             athlete.training.id(req.params.trainingId).remove();
             athlete.save((err, athlete) => {
                 if (err) throw err;
-                res.json(athlete);
+                res.json(athlete.training);
             });
         });
     } else {
