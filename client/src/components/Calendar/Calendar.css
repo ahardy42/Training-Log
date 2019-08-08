@@ -20,13 +20,16 @@
 
   .calendar__day.active {
     font-weight: bold;
-    color: red;
-    background-color: gray;
+    color: green;
+    border: 2px solid green;
+  }
+
+  .calendar__day.training {
+    background-color: rgba(0, 128, 0, 1);
+    color: rgb(252, 255, 255);
   }
 
   /* COSMETIC STYLING */
-
-  
 
   @media screen and (min-width: 850px) {
     .menu__icon {

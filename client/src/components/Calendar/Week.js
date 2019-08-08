@@ -1,17 +1,20 @@
 import React from 'react';
-import DayWrapper from '../../containers/DayWrapper/DayWrapper';
+import Day from './Day';
 import './Calendar.css';
 
-const Week = ({week, training}) => {
+const Week = ({week, viewTraining}) => {
     return (
         <div className="calendar__week">
             {week.map(day => {
                 return (
-                    <DayWrapper
+                    <Day
+                        handleClick={viewTraining}
+                        customDate={day.customDate}
+                        isToday={day.isToday}
                         day={day.day} 
                         date={day.date}
                         key={day.day}
-                        training={training}
+                        training={day.training}
                     />
                 )
             })}

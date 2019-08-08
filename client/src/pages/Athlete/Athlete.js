@@ -1,62 +1,199 @@
 import React from 'react';
 import Button from '../../components/Button/Button';
-import CalendarDiv from '../../containers/CalendarDiv/CalendarDiv';
+import Calendar from '../../components/Calendar/Calendar';
 import Stats from '../../components/Stats/Stats';
-import TrainingModal from '../../components/TrainingModal/TrainingModal';
+import TrainingModal from '../../containers/TrainingModal/TrainingModal';
+import API from '../../utils/API';
+import dateHelpers from '../../utils/dateHelpers';
 
 class Athlete extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            toggleButton: "Graph",
             modalStyle: {display: "none"},
-            isAddTraining: false
+            calObject: dateHelpers.initialize(), // calObject stores calendar info as well as training
+            isAdd: false,
+            selectedTraining: [],
+            trainingStats: []
         }
     }
     openModal = () => {
-        let style = {
-            display: "block"
-        }
+        let style = {display: "block"}
         this.setState({
             modalStyle: style
         });
     }
-    closeModal = () => {
-        let style = {
-            display: "none"
+    closeModal = (e) => {
+        let {className} = e.target; 
+        let bool = className.includes("btn");
+        if (className === "modal" || bool) {
+            let style = { display: "none" }
+            this.setState({
+                modalStyle: style,
+                isAdd: false
+            });
         }
+    }
+    openTrainingViewModal = (event, training) => {
+        console.log(training);
         this.setState({
-            modalStyle: style
+            selectedTraining: training
+        }, () => {
+            this.openModal();
         });
     }
-    addTraining = () => {
-        // will hit API to add training
-
+    openTrainingAddModal = () => {
+        this.setState({
+            isAdd: true
+        }, () => {
+            this.openModal();
+        });
     }
-    deleteTraining = () => {
-        // will hit API to delete training
+    switchToEdit = () => {
+        this.setState({
+            isAdd: true
+        });
     }
-    updateTraining = () => {
-        // will hit API to update training
+    addTraining = training => {
+        // will hit API to add training and then update the calObject with new training
+        console.log(training);
+        API.addTraining(training).then(training => {
+            let updatedCalObject = dateHelpers.insertTrainingIntoCalObject(training, this.state.calObject);
+            this.setState({
+                calObject: updatedCalObject
+            });
+        })
+        .catch(err => {
+            console.log(err);
+        });
+    }
+    deleteTraining = id => {
+        // will hit API to delete training and then update the calObject with new training
+        API.deleteTraining(id).then(training => {
+            let updatedCalObject = dateHelpers.insertTrainingIntoCalObject(training, this.state.calObject);
+            this.setState({
+                calObject: updatedCalObject
+            });
+        })
+        .catch(err => {
+            console.log(err);
+        });
+    }
+    updateTraining = (training, id) => {
+        // will hit API to update training and then update the calObject with new training
+        API.updateTraining(training, id).then(training => {
+            let updatedCalObject = dateHelpers.insertTrainingIntoCalObject(training, this.state.calObject);
+            this.setState({
+                trainingStats: training,
+                calObject: updatedCalObject
+            });
+        })
+        .catch(err => {
+            console.log(err);
+        });
+    }
+    forwardInTimeframe = () => {
+        // go forward one full timeframe unit, then populate the object with training from the DB
+        let {calObject} = this.state;
+        let forwardCalObject = dateHelpers.nextMonth(calObject);
+        console.log(forwardCalObject);
+        API.getTraining(forwardCalObject.startUnix, forwardCalObject.endUnix)
+        .then(training => {
+            let updatedCalObject = dateHelpers.insertTrainingIntoCalObject(training, forwardCalObject);
+            console.log(updatedCalObject);
+            this.setState({
+                trainingStats: training,
+                calObject: updatedCalObject
+            });
+        })
+        .catch(err => {
+            console.log(err);
+        })
+    }
+    backwardInTimeframe = () => {
+        // go backward one full timeframe unit
+        let {calObject} = this.state;
+        let backwardCalObject = dateHelpers.prevMonth(calObject);
+        API.getTraining(backwardCalObject.startUnix, backwardCalObject.endUnix)
+        .then(training => {
+            let updatedCalObject = dateHelpers.insertTrainingIntoCalObject(training, backwardCalObject);
+            console.log(updatedCalObject);
+            this.setState({
+                trainingStats: training,
+                calObject: updatedCalObject
+            });
+        })
+        .catch(err => {
+            console.log(err);
+        })
+    }
+    currentTimeframe = () => {
+        let currentCalObject = dateHelpers.initialize();
+        API.getTraining(currentCalObject.startUnix, currentCalObject.endUnix)
+        .then(training => {
+            let updatedCalObject = dateHelpers.insertTrainingIntoCalObject(training, currentCalObject);
+            console.log(updatedCalObject);
+            this.setState({
+                trainingStats: training,
+                calObject: updatedCalObject
+            });
+        })
+        .catch(err => {
+            console.log(err);
+        })
+    }
+    componentDidMount = () => {
+        // get training within the current timeframe and add it to the days that it happened (in the calObject)
+        let {calObject} = this.state;
+        let startTime = calObject.startUnix;
+        let endTime = calObject.endUnix;
+        API.getTraining(startTime, endTime)
+        .then(training => {
+            let updatedCalObject = dateHelpers.insertTrainingIntoCalObject(training, calObject);
+            console.log(updatedCalObject);
+            this.setState({
+                trainingStats: training,
+                calObject: updatedCalObject
+            });
+        })
+        .catch(err => {
+            console.log(err);
+        })
+        
     }
     render() {
         return (
             <div className="container">
-                <TrainingModal style={this.state.modalStyle} handleClose={this.closeModal} isAdd={this.state.isAddTraining} training={this.props.athlete.training}/>
+                <TrainingModal
+                    switchToEdit={this.switchToEdit}
+                    addTraining={this.addTraining}
+                    deleteTraining={this.deleteTraining}
+                    updateTraining={this.updateTraining}
+                    style={this.state.modalStyle}
+                    handleClose={this.closeModal}
+                    isAdd={this.state.isAdd}
+                    training={this.state.selectedTraining}
+                />
                 <div className="row">
                     {/* buttons to toggle view / add training */}
                     <div className="col justify-content-center">
-                        <Button action="button">{this.state.toggleButton}</Button>
-                        <Button action="button" handleClick={this.openModal}>Add Training</Button>
+                        <Button action="button" handleClick={this.openTrainingAddModal}>Add Training</Button>
                     </div>
                 </div>
                 <div className="row">
                     {/* calendar and stats */}
                     <div className="col-7">
-                        <CalendarDiv userTraining={this.props.athlete.training}/>
+                        <Calendar
+                            display={this.state.display}
+                            viewTraining={this.openTrainingViewModal}
+                            nextMonth={this.forwardInTimeframe}
+                            previousMonth={this.backwardInTimeframe}
+                            todaysDate={this.currentTimeframe}
+                            calObject={this.state.calObject}
+                        />
                     </div>
                     <div className="col-5">
-                        <Stats userTraining={this.props.athlete.training}/>
+                        <Stats userTraining={this.state.trainingStats}/>
                     </div>
                 </div>
             </div>
