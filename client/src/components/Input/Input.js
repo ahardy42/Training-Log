@@ -11,7 +11,7 @@ const Input = ({action, id, children, handleInputChange, ...props}) => {
                 </select>
             </div>
         );
-    } else if (action === "checkbox") {
+    } else if (action === "checkbox"|| action === "radio") {
         return (
             <div className="form-check">
                 <input className="form-check-input" name={props.name} id={id} type={action} onChange={props.handleCheck}/>

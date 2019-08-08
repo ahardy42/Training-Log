@@ -30,10 +30,12 @@ const API = {
         return updatedTraining;
     },
     findAthletes: async team => {
-        
+        let response = await fetch("/athletes");
+        let teamArray = response.json();
+        return teamArray;
     },
     addComment: async (id, comment) => {
-
+        // 
     }
 }
 

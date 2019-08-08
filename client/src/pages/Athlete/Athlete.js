@@ -23,12 +23,16 @@ class Athlete extends React.Component {
             modalStyle: style
         });
     }
-    closeModal = () => {
-        let style = {display: "none"}
-        this.setState({
-            modalStyle: style,
-            isAdd: false
-        });
+    closeModal = (e) => {
+        let {className} = e.target; 
+        let bool = className.includes("btn");
+        if (className === "modal" || bool) {
+            let style = { display: "none" }
+            this.setState({
+                modalStyle: style,
+                isAdd: false
+            });
+        }
     }
     openTrainingViewModal = (event, training) => {
         console.log(training);
@@ -45,15 +49,46 @@ class Athlete extends React.Component {
             this.openModal();
         });
     }
-    addTraining = () => {
-        // will hit API to add training
-        
+    switchToEdit = () => {
+        this.setState({
+            isAdd: true
+        });
     }
-    deleteTraining = () => {
-        // will hit API to delete training
+    addTraining = training => {
+        // will hit API to add training and then update the calObject with new training
+        API.addTraining(training).then(training => {
+            let updatedCalObject = dateHelpers.insertTrainingIntoCalObject(training, this.state.calObject);
+            this.setState({
+                calObject: updatedCalObject
+            });
+        })
+        .catch(err => {
+            console.log(err);
+        });
     }
-    updateTraining = () => {
-        // will hit API to update training
+    deleteTraining = id => {
+        // will hit API to delete training and then update the calObject with new training
+        API.deleteTraining(id).then(training => {
+            let updatedCalObject = dateHelpers.insertTrainingIntoCalObject(training, this.state.calObject);
+            this.setState({
+                calObject: updatedCalObject
+            });
+        })
+        .catch(err => {
+            console.log(err);
+        });
+    }
+    updateTraining = (training, id) => {
+        // will hit API to update training and then update the calObject with new training
+        API.updateTraining(training, id).then(training => {
+            let updatedCalObject = dateHelpers.insertTrainingIntoCalObject(training, this.state.calObject);
+            this.setState({
+                calObject: updatedCalObject
+            });
+        })
+        .catch(err => {
+            console.log(err);
+        });
     }
     forwardInTimeframe = () => {
         // go forward one full timeframe unit, then populate the object with training from the DB
@@ -128,12 +163,13 @@ class Athlete extends React.Component {
         return (
             <div className="container">
                 <TrainingModal
+                    switchToEdit={this.switchToEdit}
                     addTraining={this.addTraining}
                     deleteTraining={this.deleteTraining}
                     updateTraining={this.updateTraining}
                     style={this.state.modalStyle}
                     handleClose={this.closeModal}
-                    isAdd={this.state.isAddTraining}
+                    isAdd={this.state.isAdd}
                     training={this.state.selectedTraining}
                 />
                 <div className="row">
