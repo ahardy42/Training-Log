@@ -2,7 +2,7 @@ import React from 'react';
 import Button from '../../components/Button/Button';
 import Calendar from '../../components/Calendar/Calendar';
 import Stats from '../../components/Stats/Stats';
-import TrainingModal from '../../components/TrainingModal/TrainingModal';
+import TrainingModal from '../../containers/TrainingModal/TrainingModal';
 import API from '../../utils/API';
 import dateHelpers from '../../utils/dateHelpers';
 
@@ -56,6 +56,7 @@ class Athlete extends React.Component {
     }
     addTraining = training => {
         // will hit API to add training and then update the calObject with new training
+        console.log(training);
         API.addTraining(training).then(training => {
             let updatedCalObject = dateHelpers.insertTrainingIntoCalObject(training, this.state.calObject);
             this.setState({
@@ -83,6 +84,7 @@ class Athlete extends React.Component {
         API.updateTraining(training, id).then(training => {
             let updatedCalObject = dateHelpers.insertTrainingIntoCalObject(training, this.state.calObject);
             this.setState({
+                trainingStats: training,
                 calObject: updatedCalObject
             });
         })

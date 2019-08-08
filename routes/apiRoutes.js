@@ -50,10 +50,11 @@ router.post("/training", authenticate.isLoggedIn, (req, res) => {
     if (req.user.type === "Athlete") {
         db.User.findById(req.user.id, (err, athlete) => {
             if (err) throw err;
+            console.log("training object:",req.body);
             athlete.training.push(req.body);
             athlete.save((err, athlete) => {
                 if (err) throw err;
-                res.json(athlete);
+                res.json(athlete.training);
             });
         });
     } else {

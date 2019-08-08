@@ -23,7 +23,6 @@ class Auth extends React.Component {
     handleInputChange = (event) => {
         event.preventDefault();
         const {name, value, id} = event.target;
-        console.log("name", name, "\nvalue", value);
         this.setState({
             [name]: value
         }, () => {
@@ -41,7 +40,6 @@ class Auth extends React.Component {
     }
     checkPassword = () => {
         const {passwordRepeat, password} = this.state;
-        console.log("password repeat is", passwordRepeat, "\n password is",password);
         this.setState({            
             isSamePassword: password === passwordRepeat ? true : false
         },() => {

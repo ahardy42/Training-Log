@@ -7,7 +7,7 @@ const API = {
     addTraining: async training => {
         let response = await fetch("/api/training", {
             method: "POST",
-            body: training,
+            body: JSON.stringify(training),
             headers: {"content-type" : "application/json"}
         });
         let newTraining = await response.json();
@@ -16,7 +16,7 @@ const API = {
     editTraining: async (training, id) => {
         let response = await fetch(`/api/training/${id}`, {
             method: "PUT",
-            body: training,
+            body: JSON.stringify(training),
             headers: {"content-type" : "application/json"}
         });
         let updatedTraining = await response.json();
