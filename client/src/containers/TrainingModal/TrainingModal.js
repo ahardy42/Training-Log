@@ -123,7 +123,7 @@ class TrainingModal extends React.Component {
                         </div>
                         <div className="modal-body">
                             {
-                                training.length > 1 ? (
+                                (training.length > 1 && !isEdit) ? (
                                     <Pagination length={training.length} page={this.state.trainingPage} previousPage={this.previousPage} nextPage={this.nextPage} />
                                 ) : null
                             }
@@ -139,6 +139,8 @@ class TrainingModal extends React.Component {
                                     />
                                 ) : (
                                         <TrainingView
+                                            nextPage={this.nextPage}
+                                            previousPage={this.previousPage}
                                             trainingArray={training}
                                             index={this.state.trainingPage}
                                         />
