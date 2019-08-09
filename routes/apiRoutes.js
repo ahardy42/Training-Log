@@ -2,6 +2,7 @@ const express = require('express');
 const router = express.Router();
 const authenticate = require("../config/middleware/authenticate");
 const db = require("../models/Index");
+const mongoose = require("mongoose");
 
 // =====================================================================================
 //                                         API routes
@@ -43,6 +44,22 @@ router.get("/training/:startTime/:endTime", authenticate.isLoggedIn, (req, res) 
         })
         res.json(filteredTraining);
     });
+});
+
+// get trainingStats object for charts.js components
+router.get("/stats/", authenticate.isLoggedIn, (req, res) => {
+    let startTime = parseInt(req.params.startTime);
+    let endTime = parseInt(req.params.endTime);
+    db.User.aggregate()
+    .match({_id: mongoose.Types.ObjectId(req.user.id)})
+    .unwind("$training")
+    .group({_id: "$training.mode", total: {$sum: "$training.duration"}})
+    .exec((err, stats) => {
+        if (err) console.log(err);
+        console.log(stats);
+        res.json(stats);
+    })
+
 })
 
 // add a training for a user

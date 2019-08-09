@@ -4,6 +4,11 @@ const API = {
         let training = await response.json();
         return training;
     },
+    getTrainingStats: async (startTime, endTime) => {
+        let response = await fetch(`/api/stats/${startTime}/${endTime}`);
+        let stats = await response.json();
+        return stats;
+    },
     addTraining: async training => {
         let response = await fetch("/api/training", {
             method: "POST",
