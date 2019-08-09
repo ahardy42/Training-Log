@@ -13,6 +13,7 @@ class Athlete extends React.Component {
             modalStyle: {display: "none"},
             calObject: dateHelpers.initialize(), // calObject stores calendar info as well as training
             isAdd: false,
+            isEdit: false,
             selectedTraining: [],
             trainingStats: []
         }
@@ -22,11 +23,6 @@ class Athlete extends React.Component {
         this.setState({
             modalStyle: style
         });
-    }
-    clickOutsideCloseModal = (e) => {
-        if (e.target.className === "modal") {
-            this.closeModal();
-        }
     }
     closeModal = (e) => {
         let style = { display: "none" }

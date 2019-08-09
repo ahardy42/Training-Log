@@ -17,7 +17,8 @@ class TrainingModal extends React.Component {
             intensity: 0,
             feeling: 0,
             comment: "",
-            coachComment: ""
+            coachComment: "",
+            id: ""
         }
     }
     nextPage = () => {
@@ -33,6 +34,19 @@ class TrainingModal extends React.Component {
         });
     }
     handleEditClick = () => {
+        // set state to the current training values
+        let {training} = this.props;
+        let {trainingPage} = this.state;
+        let {date, duration, mode, intensity, feeling, comment, _id} = training[trainingPage];
+        this.setState({
+            date: date,
+            duration: duration,
+            mode: mode,
+            intensity: intensity,
+            feeling: feeling,
+            comment: comment,
+            id: _id
+        });
         // change the parent state to isAdd === true
         this.props.switchToEdit();
     }
@@ -66,12 +80,10 @@ class TrainingModal extends React.Component {
             feeling: feeling,
             comment: comment
         }
-        console.log(training);
         this.props.addTraining(training);
         this.modalCloseReset(event);
     }
     modalCloseReset = (event) => {
-        // reset state when you close the modal (you changed your mind)
         this.props.handleClose(event);
         this.setState({
             date: new Date(),
@@ -84,9 +96,9 @@ class TrainingModal extends React.Component {
         });
     }
     render() {
-        let {style, training, isAdd, deleteTraining, updateTraining, handleClickOutsideModal} = this.props;
+        let {style, training, isAdd, isEdit} = this.props;
         return (
-            <div className="modal" style={style} tabIndex="-1" role="dialog" onClick={handleClickOutsideModal}>
+            <div className="modal" style={style} tabIndex="-1" role="dialog">
                 <div className="modal-dialog" role="document">
                     <div className="modal-content">
                         <div className="modal-header">
@@ -104,9 +116,8 @@ class TrainingModal extends React.Component {
                             {
                                 isAdd ? (
                                     <TrainingForm
+                                        state={this.state}
                                         selectedDate={this.state.date}
-                                        trainingArray={training}
-                                        index={this.state.trainingPage}
                                         handleInputChange={this.handleInputChange}
                                         handleChange={this.handleChange}
                                         handleCheck={this.handleCheck}
@@ -123,7 +134,16 @@ class TrainingModal extends React.Component {
                         <div className="modal-footer">
                             <Button action="button" handleClick={this.modalCloseReset}>Close</Button>
                             {isAdd ?
-                                (<Button action="button" handleClick={this.handleAdd}>Add Training</Button>) :
+                                (<Button action="button" handleClick={this.handleAdd}>Add Training</Button>) 
+                                :
+                            isEdit ? 
+                                (
+                                <>
+                                    <Button action="button" handleClick={this.handleAdd}>Submit Updated Training</Button>
+                                    <Button action="button" handleClick={this.handleAdd}>Delete Training</Button>
+                                </>
+                                ) 
+                                :
                                 (<Button action="button" handleClick={this.handleEditClick}>Edit Training</Button>)}
                             
                         </div>

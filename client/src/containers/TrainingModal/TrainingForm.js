@@ -4,16 +4,13 @@ import Input from '../../components/Input/Input';
 import PickerWrapper from "./PickerWrapper";
 import "react-datepicker/dist/react-datepicker.css";
 
-const TrainingForm = ({ handleInputChange, index, trainingArray, handleCheck, handleChange}) => {
-    let reformattedDate, comment, duration, feeling, intensity, mode;
-    if (trainingArray.length) {
-        ({reformattedDate, comment, duration, feeling, intensity, mode} = trainingArray[index]);
-    } // using any existing training as a value placeholder
+const TrainingForm = ({ handleInputChange, state, handleCheck, handleChange}) => {
+    let {date, comment, duration, feeling, intensity, mode} = state;
     return (
         <form>
             <div className="form-row">
                 <div className="col">
-                    <PickerWrapper handleChange={handleChange} currValue={reformattedDate ? reformattedDate : null}/>
+                    <PickerWrapper handleChange={handleChange} currValue={date}/>
                 </div>
             </div>
             <div className="form-row">
