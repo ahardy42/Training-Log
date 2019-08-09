@@ -28,7 +28,8 @@ class Athlete extends React.Component {
         let style = { display: "none" }
         this.setState({
             modalStyle: style,
-            isAdd: false
+            isAdd: false,
+            isEdit: false,
         });
     }
     openTrainingViewModal = (event, training) => {
@@ -48,7 +49,7 @@ class Athlete extends React.Component {
     }
     switchToEdit = () => {
         this.setState({
-            isAdd: true
+            isEdit: true
         });
     }
     addTraining = training => {
@@ -78,7 +79,7 @@ class Athlete extends React.Component {
     }
     updateTraining = (training, id) => {
         // will hit API to update training and then update the calObject with new training
-        API.updateTraining(training, id).then(training => {
+        API.editTraining(training, id).then(training => {
             let updatedCalObject = dateHelpers.insertTrainingIntoCalObject(training, this.state.calObject);
             this.setState({
                 trainingStats: training,
@@ -170,6 +171,7 @@ class Athlete extends React.Component {
                     handleClose={this.closeModal}
                     handleClickOutsideModal={this.clickOutsideCloseModal}
                     isAdd={this.state.isAdd}
+                    isEdit={this.state.isEdit}
                     training={this.state.selectedTraining}
                 />
                 <div className="row">

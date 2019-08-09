@@ -71,16 +71,19 @@ class TrainingModal extends React.Component {
         });
     }
     handleAdd = (event) => {
-        let {date, duration, mode, intensity, feeling, comment} = this.state;
-        let training = {
-            date: date,
-            duration: duration,
-            mode: mode,
-            intensity: intensity,
-            feeling: feeling,
-            comment: comment
-        }
+        let training = this.createTrainingObject();
         this.props.addTraining(training);
+        this.modalCloseReset(event);
+    }
+    handleEdit = (event) => {
+        let {id} = this.state;
+        let training = this.createTrainingObject();
+        this.props.updateTraining(training, id);
+        this.modalCloseReset(event);
+    }
+    handleDelete = (event) => {
+        let {id} = this.state;
+        this.props.deleteTraining(id);
         this.modalCloseReset(event);
     }
     modalCloseReset = (event) => {
@@ -94,6 +97,17 @@ class TrainingModal extends React.Component {
             comment: "",
             coachComment: ""
         });
+    }
+    createTrainingObject = () => {
+        let {date, duration, mode, intensity, feeling, comment} = this.state;
+        return {
+            date: date,
+            duration: duration,
+            mode: mode,
+            intensity: intensity,
+            feeling: feeling,
+            comment: comment
+        };
     }
     render() {
         let {style, training, isAdd, isEdit} = this.props;
@@ -114,7 +128,7 @@ class TrainingModal extends React.Component {
                                 ) : null
                             }
                             {
-                                isAdd ? (
+                                (isAdd || isEdit) ? (
                                     <TrainingForm
                                         state={this.state}
                                         selectedDate={this.state.date}
@@ -139,8 +153,8 @@ class TrainingModal extends React.Component {
                             isEdit ? 
                                 (
                                 <>
-                                    <Button action="button" handleClick={this.handleAdd}>Submit Updated Training</Button>
-                                    <Button action="button" handleClick={this.handleAdd}>Delete Training</Button>
+                                    <Button action="button" handleClick={this.handleEdit}>Submit Updated Training</Button>
+                                    <Button action="button" handleClick={this.handleDelete}>Delete Training</Button>
                                 </>
                                 ) 
                                 :
