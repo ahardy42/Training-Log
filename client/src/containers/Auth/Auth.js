@@ -93,7 +93,7 @@ class Auth extends React.Component {
         } else {
             if (this.props.action === "login") {
                 return (
-                    <Login handleClick={this.login} handleInputChange={this.handleInputChange}/>
+                    <Login handleClick={this.login} handleInputChange={this.handleInputChange} values={this.state}/>
                 );
             } else if (this.props.action === "signup") {
                 return (

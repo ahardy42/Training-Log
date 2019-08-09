@@ -84,9 +84,9 @@ class TrainingModal extends React.Component {
         });
     }
     render() {
-        let {style, training, isAdd, deleteTraining, updateTraining} = this.props;
+        let {style, training, isAdd, deleteTraining, updateTraining, handleClickOutsideModal} = this.props;
         return (
-            <div className="modal" style={style} tabIndex="-1" role="dialog">
+            <div className="modal" style={style} tabIndex="-1" role="dialog" onClick={handleClickOutsideModal}>
                 <div className="modal-dialog" role="document">
                     <div className="modal-content">
                         <div className="modal-header">
@@ -113,13 +113,19 @@ class TrainingModal extends React.Component {
                                         handleSelect={this.handleSelect}
                                     />
                                 ) : (
-                                        <TrainingView trainingArray={training} index={this.state.trainingPage} />
+                                        <TrainingView
+                                            trainingArray={training}
+                                            index={this.state.trainingPage}
+                                        />
                                     )
                             }
                         </div>
                         <div className="modal-footer">
                             <Button action="button" handleClick={this.modalCloseReset}>Close</Button>
-                            <Button action="button" handleClick={this.handleAdd}>{isAdd ? "Add Training" : "Edit Training"}</Button>
+                            {isAdd ?
+                                (<Button action="button" handleClick={this.handleAdd}>Add Training</Button>) :
+                                (<Button action="button" handleClick={this.handleEditClick}>Edit Training</Button>)}
+                            
                         </div>
                     </div>
                 </div>

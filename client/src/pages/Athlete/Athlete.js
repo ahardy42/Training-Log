@@ -23,16 +23,17 @@ class Athlete extends React.Component {
             modalStyle: style
         });
     }
-    closeModal = (e) => {
-        let {className} = e.target; 
-        let bool = className.includes("btn");
-        if (className === "modal" || bool) {
-            let style = { display: "none" }
-            this.setState({
-                modalStyle: style,
-                isAdd: false
-            });
+    clickOutsideCloseModal = (e) => {
+        if (e.target.className === "modal") {
+            this.closeModal();
         }
+    }
+    closeModal = (e) => {
+        let style = { display: "none" }
+        this.setState({
+            modalStyle: style,
+            isAdd: false
+        });
     }
     openTrainingViewModal = (event, training) => {
         console.log(training);
@@ -171,6 +172,7 @@ class Athlete extends React.Component {
                     updateTraining={this.updateTraining}
                     style={this.state.modalStyle}
                     handleClose={this.closeModal}
+                    handleClickOutsideModal={this.clickOutsideCloseModal}
                     isAdd={this.state.isAdd}
                     training={this.state.selectedTraining}
                 />
