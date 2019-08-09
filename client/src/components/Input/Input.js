@@ -5,7 +5,7 @@ const Input = ({action, id, children, handleInputChange, ...props}) => {
         return (
             <div className="form-group">
                 <label htmlFor={id}>{children}</label>
-                <select className="form-control" name={props.name} id={id} onChange={handleInputChange}>
+                <select className="form-control" value={props.value} name={props.name} id={id} onChange={handleInputChange}>
                     <option>unattached</option>
                     <option>SNSC</option>
                 </select>
@@ -14,7 +14,7 @@ const Input = ({action, id, children, handleInputChange, ...props}) => {
     } else if (action === "checkbox"|| action === "radio") {
         return (
             <div className="form-check">
-                <input className="form-check-input" name={props.name} id={id} type={action} onChange={props.handleCheck}/>
+                <input className="form-check-input" value={props.value} checked={props.checked} name={props.name} id={id} type={action} onChange={props.handleCheck}/>
                 <label className="form-check-label" htmlFor={id}>
                     {children}
                 </label>
@@ -22,9 +22,9 @@ const Input = ({action, id, children, handleInputChange, ...props}) => {
         );
     } else {
         return (
-            <div className="form-group">
+            <div className={`form-group ${props.className || ""}`}>
                 <label htmlFor={id}>{children}</label>
-                <input type={action} className="form-control" name={props.name} id={id} placeholder={`Enter ${action}`} onChange={handleInputChange}/>
+                <input type={action} className="form-control" value={props.value} name={props.name} id={id} placeholder={`Enter ${action}`} onChange={handleInputChange}/>
             </div>
         );
     }

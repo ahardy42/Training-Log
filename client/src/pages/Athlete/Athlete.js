@@ -13,6 +13,7 @@ class Athlete extends React.Component {
             modalStyle: {display: "none"},
             calObject: dateHelpers.initialize(), // calObject stores calendar info as well as training
             isAdd: false,
+            isEdit: false,
             selectedTraining: [],
             trainingStats: []
         }
@@ -24,15 +25,12 @@ class Athlete extends React.Component {
         });
     }
     closeModal = (e) => {
-        let {className} = e.target; 
-        let bool = className.includes("btn");
-        if (className === "modal" || bool) {
-            let style = { display: "none" }
-            this.setState({
-                modalStyle: style,
-                isAdd: false
-            });
-        }
+        let style = { display: "none" }
+        this.setState({
+            modalStyle: style,
+            isAdd: false,
+            isEdit: false,
+        });
     }
     openTrainingViewModal = (event, training) => {
         console.log(training);
@@ -51,7 +49,7 @@ class Athlete extends React.Component {
     }
     switchToEdit = () => {
         this.setState({
-            isAdd: true
+            isEdit: true
         });
     }
     addTraining = training => {
@@ -81,7 +79,7 @@ class Athlete extends React.Component {
     }
     updateTraining = (training, id) => {
         // will hit API to update training and then update the calObject with new training
-        API.updateTraining(training, id).then(training => {
+        API.editTraining(training, id).then(training => {
             let updatedCalObject = dateHelpers.insertTrainingIntoCalObject(training, this.state.calObject);
             this.setState({
                 trainingStats: training,
@@ -171,7 +169,9 @@ class Athlete extends React.Component {
                     updateTraining={this.updateTraining}
                     style={this.state.modalStyle}
                     handleClose={this.closeModal}
+                    handleClickOutsideModal={this.clickOutsideCloseModal}
                     isAdd={this.state.isAdd}
+                    isEdit={this.state.isEdit}
                     training={this.state.selectedTraining}
                 />
                 <div className="row">

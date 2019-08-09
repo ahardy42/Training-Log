@@ -15,6 +15,13 @@ class PickerWrapper extends React.Component {
             this.props.handleChange(this.state.date);
         });
     }
+    componentDidMount() {
+        if (this.props.currValue) {
+            this.setState({
+                date: new Date(this.props.currValue)
+            });
+        }
+    }
     render() {
         return (
             <div className="form-group">
