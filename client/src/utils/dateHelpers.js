@@ -44,20 +44,18 @@ const dateHelpers = {
                 training: training
             }, data);
         });
-        // add some unix start and stop times in the calObject for API searching
-        let i = calObject.calendar.length - 1;
-        let j = calObject.calendar[i].length -1;
-        calObject.startUnix = moment(calObject.calendar[0][0].date).startOf('day').valueOf(); // gets value in ms
-        calObject.endUnix = moment(calObject.calendar[i][j].date).endOf('day').valueOf();
+        // add month number into calObject for API searching
+        calObject.monthNum = new Date(`${calObject.month} ${calObject.year}`).getMonth() + 1
         return calObject;
     },
-    insertTrainingIntoCalObject: function(training, calObject) {
+    insertTrainingIntoCalObject: function (training, calObject) {
         // will add training to each day object where there is training
         let reformattedTraining = training.map(activity => {
             return Object.assign({
                 reformattedDate: moment(activity.date).format("MM/DD/YYYY")
             }, activity);
         });
+        console.log(reformattedTraining);
         // loop through the calendar nested array and add the training array for each day that matches the formatted date
         let updatedCalendar = calObject.calendar.map(week => {
             for (let i = 0; i < week.length; i++) {

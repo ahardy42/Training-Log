@@ -25,46 +25,80 @@ router.put("/users", authenticate.isLoggedIn, (req, res) => {
 })
 
 // get all training for a user, or training for a set timeframe need to work on this!
-/*
-router.get("/training/:year?/:month?/:week?", authenticate.isLoggedIn, (req, res) => {
-    let {year, month, week} = req.params;
-    db.User.findById(req.user.id, (err, athlete) => {
-        if (err) throw err;
-        res.json(athlete);
+router.get("/training/:year?/:month?", authenticate.isLoggedIn, (req, res) => {
+    let {year, month} = req.params;
+    year = parseInt(year);
+    month = parseInt(month);
+    let date = {};
+    if (month) {
+        date.start = new Date(`${month}/01/${year}`);
+        date.end = month === "12" ? new Date(`01/01/${year + 1}`) : new Date(`${month + 1}/01/${year}`);
+    } else {
+        date.start = new Date(`01/01/${year}`);
+        date.end = new Date(`01/01/${year + 1}`);
+    }
+    console.log(date);
+    db.User.findOne({$and : [{_id : req.user.id}, {'training.date' : {$gte : date.start}}, {'training.date' : {$lt : date.end}}]}, "training", (err, training) => {
+        if (err) console.log(err);
+        res.json(training || []);
     });
 });
-*/
 
 // get specific timeframe of training for a user params are unix time in ms
-router.get("/training/:startTime/:endTime", authenticate.isLoggedIn, (req, res) => {
-    let startTime = parseInt(req.params.startTime);
-    let endTime = parseInt(req.params.endTime);
-    db.User.findById(req.user.id, (err, athlete) => {
-        if (err) throw err;
-        let training = athlete.training;
-        let filteredTraining = training.filter(element => {
-            return element.date >= startTime && element.date <= endTime;
-        })
-        res.json(filteredTraining);
-    });
-});
+// router.get("/training/:startTime/:endTime", authenticate.isLoggedIn, (req, res) => {
+//     let startTime = parseInt(req.params.startTime);
+//     let endTime = parseInt(req.params.endTime);
+//     db.User.findById(req.user.id, (err, athlete) => {
+//         if (err) throw err;
+//         let training = athlete.training;
+//         let filteredTraining = training.filter(element => {
+//             return element.date >= startTime && element.date <= endTime;
+//         })
+//         res.json(filteredTraining);
+//     });
+// });
 
 // get trainingStats object for charts.js components
-router.get("/stats/:startTime/:endTime", authenticate.isLoggedIn, (req, res) => {
-    let startTime = parseInt(req.params.startTime);
-    let endTime = parseInt(req.params.endTime);
+router.get("/stats/:year?/:month?", authenticate.isLoggedIn, (req, res) => {
+    let {year, month} = req.params;
+    year = parseInt(year);
+    month = parseInt(month);
+    let date = {};
+    if (month) {
+        date.start = new Date(`${month}/01/${year}`);
+        date.end = month === "12" ? new Date(`01/01/${year + 1}`) : new Date(`${month + 1}/01/${year}`);
+    } else {
+        date.start = new Date(`01/01/${year}`);
+        date.end = new Date(`01/01/${year + 1}`);
+    }
+    console.log(date);
     db.User.aggregate()
     .match({_id: mongoose.Types.ObjectId(req.user.id)})
     .unwind("$training")
-    .match({$and: [{"training.date" : {$gte : startTime}}, {"training.date" : {$lte : endTime}}]})
+    .match({$and: [{"training.date" : {$gte : date.start}}, {"training.date" : {$lte : date.end}}]})
     .group({_id: "$training.mode", total: {$sum: "$training.duration"}})
     .exec((err, stats) => {
         if (err) console.log(err);
         console.log(stats);
         res.json(stats);
     })
+});
 
-})
+// router.get("/stats/:startTime/:endTime", authenticate.isLoggedIn, (req, res) => {
+//     let startTime = parseInt(req.params.startTime);
+//     let endTime = parseInt(req.params.endTime);
+//     db.User.aggregate()
+//     .match({_id: mongoose.Types.ObjectId(req.user.id)})
+//     .unwind("$training")
+//     .match({$and: [{"training.date" : {$gte : startTime}}, {"training.date" : {$lte : endTime}}]})
+//     .group({_id: "$training.mode", total: {$sum: "$training.duration"}})
+//     .exec((err, stats) => {
+//         if (err) console.log(err);
+//         console.log(stats);
+//         res.json(stats);
+//     })
+
+// })
 
 // add a training for a user
 router.post("/training", authenticate.isLoggedIn, (req, res) => {
