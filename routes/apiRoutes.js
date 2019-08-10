@@ -24,11 +24,12 @@ router.put("/users", authenticate.isLoggedIn, (req, res) => {
     });
 })
 
-// get all training for a user 
-router.get("/training", authenticate.isLoggedIn, (req, res) => {
+// get all training for a user, or training for a set timeframe
+router.get("/training/:year?/:month?/:week?", authenticate.isLoggedIn, (req, res) => {
+    let {year, month, week} = req.params;
     db.User.findById(req.user.id, (err, athlete) => {
         if (err) throw err;
-        res.json(athlete);
+        res.json(training);
     });
 });
 
