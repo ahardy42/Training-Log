@@ -47,12 +47,13 @@ router.get("/training/:startTime/:endTime", authenticate.isLoggedIn, (req, res) 
 });
 
 // get trainingStats object for charts.js components
-router.get("/stats/", authenticate.isLoggedIn, (req, res) => {
+router.get("/stats/:startTime/:endTime", authenticate.isLoggedIn, (req, res) => {
     let startTime = parseInt(req.params.startTime);
     let endTime = parseInt(req.params.endTime);
     db.User.aggregate()
     .match({_id: mongoose.Types.ObjectId(req.user.id)})
     .unwind("$training")
+    .match({$and: [{"training.date" : {$gte : startTime}}, {"training.date" : {$lte : endTime}}]})
     .group({_id: "$training.mode", total: {$sum: "$training.duration"}})
     .exec((err, stats) => {
         if (err) console.log(err);
