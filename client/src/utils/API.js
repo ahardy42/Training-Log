@@ -1,11 +1,23 @@
 const API = {
-    getTraining: async (startTime, endTime) => {
-        let response = await fetch(`/api/training/${startTime}/${endTime}`);
+    getTraining: async (year, month) => {
+        let date;
+        if (month) {
+            date = `${year}/${month}`;
+        } else {
+            date = year;
+        }
+        let response = await fetch(`/api/training/${date}`);
         let training = await response.json();
-        return training;
+        return training.training ? training.training : null; // training is an array even when you only return training...
     },
-    getTrainingStats: async (startTime, endTime) => {
-        let response = await fetch(`/api/stats/${startTime}/${endTime}`);
+    getTrainingStats: async (year, month) => {
+        let date;
+        if (month) {
+            date = `${year}/${month}`;
+        } else {
+            date = year;
+        }
+        let response = await fetch(`/api/stats/${date}`);
         let stats = await response.json();
         console.log(stats);
         return stats;

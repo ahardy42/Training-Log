@@ -67,7 +67,7 @@ class TrainingModal extends React.Component {
     }
     handleChange = (date) => {
         this.setState({
-            date: date.valueOf() // sets the unix time!
+            date: date 
         });
     }
     handleAdd = (event) => {
