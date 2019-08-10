@@ -1,7 +1,7 @@
 import React from 'react';
 import Button from '../../components/Button/Button';
 import Calendar from '../../components/Calendar/Calendar';
-import Stats from '../../components/Stats/Stats';
+import Stats from '../../containers/Stats/Stats';
 import TrainingModal from '../../containers/TrainingModal/TrainingModal';
 import API from '../../utils/API';
 import dateHelpers from '../../utils/dateHelpers';
@@ -54,110 +54,135 @@ class Athlete extends React.Component {
     }
     addTraining = training => {
         // will hit API to add training and then update the calObject with new training
-        console.log(training);
+        let {calObject} = this.state;
+        let {startUnix, endUnix} = calObject;
+        API.getTrainingStats(startUnix, endUnix)
+        .then(stats => {
+            this.setState({trainingStats: stats});
+        })
+        .catch(err => console.log(err));
         API.addTraining(training).then(training => {
-            let updatedCalObject = dateHelpers.insertTrainingIntoCalObject(training, this.state.calObject);
+            let updatedCalObject = dateHelpers.insertTrainingIntoCalObject(training, calObject);
             this.setState({
                 calObject: updatedCalObject
             });
         })
-        .catch(err => {
-            console.log(err);
-        });
+        .catch(err => console.log(err));
     }
     deleteTraining = id => {
         // will hit API to delete training and then update the calObject with new training
+        let {calObject} = this.state;
+        let {startUnix, endUnix} = calObject;
+        API.getTrainingStats(startUnix, endUnix)
+        .then(stats => {
+            this.setState({trainingStats: stats});
+        })
+        .catch(err => console.log(err));
         API.deleteTraining(id).then(training => {
-            let updatedCalObject = dateHelpers.insertTrainingIntoCalObject(training, this.state.calObject);
+            let updatedCalObject = dateHelpers.insertTrainingIntoCalObject(training, calObject);
             this.setState({
                 calObject: updatedCalObject
             });
         })
-        .catch(err => {
-            console.log(err);
-        });
+        .catch(err => console.log(err));
     }
     updateTraining = (training, id) => {
         // will hit API to update training and then update the calObject with new training
+        let {calObject} = this.state;
+        let {startUnix, endUnix} = calObject;
+        API.getTrainingStats(startUnix, endUnix)
+        .then(stats => {
+            this.setState({trainingStats: stats});
+        })
+        .catch(err => console.log(err));
         API.editTraining(training, id).then(training => {
-            let updatedCalObject = dateHelpers.insertTrainingIntoCalObject(training, this.state.calObject);
+            let updatedCalObject = dateHelpers.insertTrainingIntoCalObject(training, calObject);
             this.setState({
-                trainingStats: training,
                 calObject: updatedCalObject
             });
         })
-        .catch(err => {
-            console.log(err);
-        });
+        .catch(err => console.log(err));
     }
     forwardInTimeframe = () => {
         // go forward one full timeframe unit, then populate the object with training from the DB
         let {calObject} = this.state;
         let forwardCalObject = dateHelpers.nextMonth(calObject);
-        console.log(forwardCalObject);
-        API.getTraining(forwardCalObject.startUnix, forwardCalObject.endUnix)
+        let {startUnix, endUnix} = forwardCalObject;
+        API.getTrainingStats(startUnix, endUnix)
+        .then(stats => {
+            this.setState({trainingStats: stats});
+        })
+        .catch(err => console.log(err));
+        API.getTraining(startUnix, endUnix)
         .then(training => {
             let updatedCalObject = dateHelpers.insertTrainingIntoCalObject(training, forwardCalObject);
             console.log(updatedCalObject);
             this.setState({
-                trainingStats: training,
                 calObject: updatedCalObject
             });
         })
-        .catch(err => {
-            console.log(err);
-        })
+        .catch(err => console.log(err));
     }
     backwardInTimeframe = () => {
         // go backward one full timeframe unit
         let {calObject} = this.state;
         let backwardCalObject = dateHelpers.prevMonth(calObject);
-        API.getTraining(backwardCalObject.startUnix, backwardCalObject.endUnix)
+        let {startUnix, endUnix} = backwardCalObject;
+        API.getTrainingStats(startUnix, endUnix)
+        .then(stats => {
+            this.setState({trainingStats: stats});
+        })
+        .catch(err => console.log(err));
+        API.getTraining(startUnix, endUnix)
         .then(training => {
             let updatedCalObject = dateHelpers.insertTrainingIntoCalObject(training, backwardCalObject);
             console.log(updatedCalObject);
             this.setState({
-                trainingStats: training,
                 calObject: updatedCalObject
             });
         })
-        .catch(err => {
-            console.log(err);
-        })
+        .catch(err => console.log(err));
     }
     currentTimeframe = () => {
         let currentCalObject = dateHelpers.initialize();
-        API.getTraining(currentCalObject.startUnix, currentCalObject.endUnix)
+        let {startUnix, endUnix} = currentCalObject;
+        API.getTrainingStats(startUnix, endUnix)
+        .then(stats => {
+            this.setState({trainingStats: stats});
+        })
+        .catch(err => console.log(err));
+        API.getTraining(startUnix, endUnix)
         .then(training => {
             let updatedCalObject = dateHelpers.insertTrainingIntoCalObject(training, currentCalObject);
-            console.log(updatedCalObject);
             this.setState({
-                trainingStats: training,
                 calObject: updatedCalObject
             });
         })
-        .catch(err => {
-            console.log(err);
-        })
+        .catch(err => console.log(err));
     }
     componentDidMount = () => {
         // get training within the current timeframe and add it to the days that it happened (in the calObject)
         let {calObject} = this.state;
         let startTime = calObject.startUnix;
         let endTime = calObject.endUnix;
+        API.getTrainingStats(startTime, endTime)
+        .then(stats => {
+            this.setState({trainingStats: stats});
+        })
+        .catch(err => console.log(err));
         API.getTraining(startTime, endTime)
         .then(training => {
             let updatedCalObject = dateHelpers.insertTrainingIntoCalObject(training, calObject);
-            console.log(updatedCalObject);
             this.setState({
-                trainingStats: training,
                 calObject: updatedCalObject
             });
         })
-        .catch(err => {
-            console.log(err);
-        })
-        
+        .catch(err => console.log(err)); 
+    }
+    updateTrainingAndStats = (training, someCalObject) => {
+        // function to run in pretty much all of the above setStates
+        // work this out later... basically, need to pass the calObject and training through the API functions
+        // then use the calObject in the api to update it. will reduce some of the redundancy above.
     }
     render() {
         return (
