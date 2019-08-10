@@ -24,14 +24,16 @@ router.put("/users", authenticate.isLoggedIn, (req, res) => {
     });
 })
 
-// get all training for a user, or training for a set timeframe
+// get all training for a user, or training for a set timeframe need to work on this!
+/*
 router.get("/training/:year?/:month?/:week?", authenticate.isLoggedIn, (req, res) => {
     let {year, month, week} = req.params;
     db.User.findById(req.user.id, (err, athlete) => {
         if (err) throw err;
-        res.json(training);
+        res.json(athlete);
     });
 });
+*/
 
 // get specific timeframe of training for a user params are unix time in ms
 router.get("/training/:startTime/:endTime", authenticate.isLoggedIn, (req, res) => {
