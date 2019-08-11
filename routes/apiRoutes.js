@@ -150,13 +150,45 @@ router.delete("/training/:trainingId", authenticate.isLoggedIn, (req, res) => {
     }
 });
 
-// get all athletes for the coach
-router.get("/athletes", authenticate.isLoggedIn, (req,res) => {
+// get all athletes for the coach and return an object with name, total training time for each
+// activity for the specified timeframe
+router.get("/athletes/:year/:month?", authenticate.isLoggedIn, (req,res) => {
+    let {year, month} = req.params;
+    let date = month ? `${month}/01/${year}` : `01/01/${year}`;
     if (req.user.type === "Coach") {
-        db.User.find({team: req.user.team, type: "Athlete"}, (err, athletes) => {
-            if (err) throw err;
-            res.json(athletes);
-        });
+        db.User.aggregate()
+        .match({$and : [{"team" : req.user.team}, {"type" : "Athlete"}]})
+        .unwind("training")
+        .match({"training.date" : {$gte : new Date(date)}})
+        .group({
+            _id: {username: "$username", mode: "$training.mode"},
+            name: {
+                $first: {$concat : ["$firstName", " ", "$lastName"]}
+            },
+            totalMinutes: {
+                $sum: "$training.duration"
+            }
+        })
+        .group({
+            _id: "$_id.username",
+            name: {$first: "$name"},
+            mode: {
+                $push: {
+                    mode: "$_id.mode",
+                    totalDuration: "$totalMinutes"
+                }
+            }
+        })
+        .project({
+            _id: 1,
+            name: 1,
+            mode: 1,
+            totalTime: {$sum : "$mode.totalDuration"}
+        })
+        .exec((err, athleteArray) => {
+            if (err) console.log(err);
+            res.json(athleteArray);
+        })
     } else {
         res.json("only coaches can hit this route");
     }

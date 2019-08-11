@@ -47,8 +47,8 @@ const API = {
         let updatedTraining = response.json();
         return updatedTraining;
     },
-    findAthletes: async team => {
-        let response = await fetch("/athletes");
+    findAthletes: async year => {
+        let response = await fetch(`/api/athletes/${year}`);
         let teamArray = response.json();
         return teamArray;
     },

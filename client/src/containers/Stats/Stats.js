@@ -23,11 +23,7 @@ const Stats = (props) => {
         }
     });
     const data = {
-        labels: labels,
-        datasets: [{
-            data: datasetData,
-            backgroundColor: backgroundColor
-        }]
+        labels: labels
     };
     const legend = {
         labels: {boxWidth: 25},
@@ -38,6 +34,7 @@ const Stats = (props) => {
             <Doughnut
                 data={data}
                 legend={legend}
+                redraw={true}
             />
         </div>
     );
