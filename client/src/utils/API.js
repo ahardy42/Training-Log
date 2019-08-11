@@ -48,8 +48,8 @@ const API = {
         return updatedTraining;
     },
     findAthletes: async year => {
-        let response = await fetch(`/api/athletes/${year}`);
-        let teamArray = response.json();
+        let response = await fetch(`/api/athletes/activity/${year}`);
+        let teamArray = await response.json();
         return teamArray;
     },
     addComment: async (id, comment) => {

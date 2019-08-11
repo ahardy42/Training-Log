@@ -24,11 +24,17 @@ class Coach extends React.Component {
     }
     render = () => {
         return(
-            <ul className="list-group">
-                {this.state.athletes.map(athlete => {
-                    return <AthleteList key={athlete._id} athlete={athlete} handleClick={this.getDetails}/>
-                })}
-            </ul>
+            <div className="container mt-4">
+                <div className="row">
+                    <div className="col">
+                        <ul className="list-group">
+                            {this.state.athletes.map(athlete => {
+                                return <AthleteList key={athlete._id} athlete={athlete} handleClick={this.getDetails}/>
+                            })}
+                        </ul>
+                    </div>
+                </div>
+            </div>
         );
     }
 }

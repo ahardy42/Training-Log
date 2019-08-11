@@ -4,6 +4,24 @@ const authenticate = require("../config/middleware/authenticate");
 const db = require("../models/Index");
 const mongoose = require("mongoose");
 
+// helper function for parameters ==> date object
+const getDateFromParams = (year, month) => {
+    let obj = {};
+    let yearInt = parseInt(year);
+    let monthInt = month ? parseInt(month) : null;
+    if (monthInt) { // if a month is entered
+        return Object.assign({
+            start: new Date(`${monthInt}/01/${yearInt}`),
+            end: new Date(`${monthInt === 11 ? 0 : monthInt + 1}/01/${monthInt === 11 ? yearInt + 1 : yearInt}`)
+        }, obj);
+    } else {
+        return Object.assign({ // if a
+            start: new Date(`01/01/${yearInt}`),
+            end: new Date(`01/01/${yearInt + 1}`)
+        }, obj);
+    }
+}
+
 // =====================================================================================
 //                                         API routes
 // =====================================================================================
@@ -27,51 +45,17 @@ router.put("/users", authenticate.isLoggedIn, (req, res) => {
 // get all training for a user, or training for a set timeframe need to work on this!
 router.get("/training/:year?/:month?", authenticate.isLoggedIn, (req, res) => {
     let {year, month} = req.params;
-    year = parseInt(year);
-    month = parseInt(month);
-    let date = {};
-    if (month) {
-        date.start = new Date(`${month}/01/${year}`);
-        date.end = month === "12" ? new Date(`01/01/${year + 1}`) : new Date(`${month + 1}/01/${year}`);
-    } else {
-        date.start = new Date(`01/01/${year}`);
-        date.end = new Date(`01/01/${year + 1}`);
-    }
-    console.log(date);
+    let date = getDateFromParams(year, month);
     db.User.findOne({$and : [{_id : req.user.id}, {'training.date' : {$gte : date.start}}, {'training.date' : {$lt : date.end}}]}, "training", (err, training) => {
         if (err) console.log(err);
         res.json(training || []);
     });
 });
 
-// get specific timeframe of training for a user params are unix time in ms
-// router.get("/training/:startTime/:endTime", authenticate.isLoggedIn, (req, res) => {
-//     let startTime = parseInt(req.params.startTime);
-//     let endTime = parseInt(req.params.endTime);
-//     db.User.findById(req.user.id, (err, athlete) => {
-//         if (err) throw err;
-//         let training = athlete.training;
-//         let filteredTraining = training.filter(element => {
-//             return element.date >= startTime && element.date <= endTime;
-//         })
-//         res.json(filteredTraining);
-//     });
-// });
-
 // get trainingStats object for charts.js components
 router.get("/stats/:year?/:month?", authenticate.isLoggedIn, (req, res) => {
     let {year, month} = req.params;
-    year = parseInt(year);
-    month = parseInt(month);
-    let date = {};
-    if (month) {
-        date.start = new Date(`${month}/01/${year}`);
-        date.end = month === "12" ? new Date(`01/01/${year + 1}`) : new Date(`${month + 1}/01/${year}`);
-    } else {
-        date.start = new Date(`01/01/${year}`);
-        date.end = new Date(`01/01/${year + 1}`);
-    }
-    console.log(date);
+    let date = getDateFromParams(year, month);
     db.User.aggregate()
     .match({_id: mongoose.Types.ObjectId(req.user.id)})
     .unwind("$training")
@@ -79,26 +63,9 @@ router.get("/stats/:year?/:month?", authenticate.isLoggedIn, (req, res) => {
     .group({_id: "$training.mode", total: {$sum: "$training.duration"}})
     .exec((err, stats) => {
         if (err) console.log(err);
-        console.log(stats);
         res.json(stats);
     })
 });
-
-// router.get("/stats/:startTime/:endTime", authenticate.isLoggedIn, (req, res) => {
-//     let startTime = parseInt(req.params.startTime);
-//     let endTime = parseInt(req.params.endTime);
-//     db.User.aggregate()
-//     .match({_id: mongoose.Types.ObjectId(req.user.id)})
-//     .unwind("$training")
-//     .match({$and: [{"training.date" : {$gte : startTime}}, {"training.date" : {$lte : endTime}}]})
-//     .group({_id: "$training.mode", total: {$sum: "$training.duration"}})
-//     .exec((err, stats) => {
-//         if (err) console.log(err);
-//         console.log(stats);
-//         res.json(stats);
-//     })
-
-// })
 
 // add a training for a user
 router.post("/training", authenticate.isLoggedIn, (req, res) => {
@@ -152,14 +119,21 @@ router.delete("/training/:trainingId", authenticate.isLoggedIn, (req, res) => {
 
 // get all athletes for the coach and return an object with name, total training time for each
 // activity for the specified timeframe
-router.get("/athletes/:year/:month?", authenticate.isLoggedIn, (req,res) => {
+router.get("/athletes/activity/:year/:month?", authenticate.isLoggedIn, (req,res) => {
     let {year, month} = req.params;
-    let date = month ? `${month}/01/${year}` : `01/01/${year}`;
+    let date = getDateFromParams(year, month);
+    /* wow! this is a bit complicated but what it does is...
+    * 1. matches the team with the coaches team name and makes sure it is only returning athletes...
+    * 2. creates a doc for each element of training
+    * 3. groups by username AND training mode (kind of a weird group)
+    * 4. creates a total during this group for each mode
+    * 5. re-groups by username so that the athletes each have their own formed doc
+    */
     if (req.user.type === "Coach") {
         db.User.aggregate()
         .match({$and : [{"team" : req.user.team}, {"type" : "Athlete"}]})
         .unwind("training")
-        .match({"training.date" : {$gte : new Date(date)}})
+        .match({$and : [{"training.date" : {$gte : date.start}}, {"training.date" : {$lt : date.end}}]})
         .group({
             _id: {username: "$username", mode: "$training.mode"},
             name: {
@@ -179,12 +153,7 @@ router.get("/athletes/:year/:month?", authenticate.isLoggedIn, (req,res) => {
                 }
             }
         })
-        .project({
-            _id: 1,
-            name: 1,
-            mode: 1,
-            totalTime: {$sum : "$mode.totalDuration"}
-        })
+        .project({_id: 1,name: 1,mode: 1,totalTime: {$sum : "$mode.totalDuration"}})
         .exec((err, athleteArray) => {
             if (err) console.log(err);
             res.json(athleteArray);

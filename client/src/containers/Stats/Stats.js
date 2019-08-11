@@ -23,7 +23,11 @@ const Stats = (props) => {
         }
     });
     const data = {
-        labels: labels
+        labels: labels,
+        datasets: [{
+            data: datasetData,
+            backgroundColor: backgroundColor
+        }]
     };
     const legend = {
         labels: {boxWidth: 25},
