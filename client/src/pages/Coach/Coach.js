@@ -1,5 +1,6 @@
 import React from 'react';
-import AthleteList from '../../components/Training/AthleteList';
+import AthleteList from '../../components/AthleteList/AthleteList';
+import dateHelpers from '../../utils/dateHelpers';
 import API from '../../utils/API';
 import CalendarModal from '../../containers/CalendarModal/CalendarModal';
 
@@ -10,7 +11,8 @@ class Coach extends React.Component {
         this.state = {
             athletes: [],
             modalStyle: {display: "none"},
-            selectedAthleteId: ""
+            selectedAthleteId: "",
+            calObject: dateHelpers.initialize()
         }
     }
     openCalendarModal = id => {
@@ -18,13 +20,51 @@ class Coach extends React.Component {
         this.setState({
             modalStyle: {display: "block"},
             selectedAthleteId: id
+        }, () => {
+            let {monthNum, year} = this.state.calObject;
+            this.getAthleteTraining(monthNum, year, this.state.calObject);
         });
     }
     closeCalendarModal = () => {
         this.setState({
             modalStyle: {display: "none"},
-            selectedAthleteId: ""
+            selectedAthleteId: "",
+            calObject: dateHelpers.initialize()
         });
+    }
+    forwardInTimeframe = () => {
+        // go forward one full timeframe unit, then populate the object with training from the DB
+        let {calObject} = this.state;
+        let forwardCalObject = dateHelpers.nextMonth(calObject);
+        let {year, monthNum} = forwardCalObject;
+        // API call to get athlete training info goes here, as well as to set state
+        this.getAthleteTraining(monthNum, year, forwardCalObject);
+    }
+    backwardInTimeframe = () => {
+        // go backward one full timeframe unit
+        let {calObject} = this.state;
+        let backwardCalObject = dateHelpers.prevMonth(calObject);
+        let {year, monthNum} = backwardCalObject;
+        // API call to get athlete training info goes here
+        this.getAthleteTraining(monthNum, year, backwardCalObject);
+    }
+    currentTimeframe = () => {
+        let currentCalObject = dateHelpers.initialize();
+        let {monthNum, year} = currentCalObject;
+        // API call to get athlete training info goes here
+        this.getAthleteTraining(monthNum, year, currentCalObject);
+    }
+    getAthleteTraining = (monthNum, year, calObject) => {
+        let {selectedAthleteId} = this.state;
+        API.specificAthleteTraining(year, monthNum, selectedAthleteId)
+        .then(training => {
+            console.log(training);
+            let updatedCalObject = training ? dateHelpers.insertTrainingIntoCalObject(training, calObject) : calObject;
+            this.setState({
+                calObject: updatedCalObject
+            });
+        })
+        .catch(err => console.log(err)); 
     }
     componentDidMount = () => {
         let year = new Date().getFullYear();
@@ -40,7 +80,11 @@ class Coach extends React.Component {
             <div className="container mt-4">
                 <CalendarModal
                     style={this.state.modalStyle}
-                    athleteId={this.state.athleteId}
+                    calObject={this.state.calObject}
+                    previousMonth={this.backwardInTimeframe}
+                    nextMonth={this.forwardInTimeframe}
+                    todaysDate={this.currentTimeframe}
+                    closeCalendarModal={this.closeCalendarModal}
                 />
                 <div className="row">
                     <div className="col">

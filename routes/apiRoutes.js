@@ -136,6 +136,7 @@ router.get("/athletes/activity/:year/:month?", authenticate.isLoggedIn, (req,res
         .match({$and : [{"training.date" : {$gte : date.start}}, {"training.date" : {$lt : date.end}}]})
         .group({
             _id: {username: "$username", mode: "$training.mode"},
+            athleteId: {$first: "$_id"},
             name: {
                 $first: {$concat : ["$firstName", " ", "$lastName"]}
             },
@@ -146,6 +147,7 @@ router.get("/athletes/activity/:year/:month?", authenticate.isLoggedIn, (req,res
         .group({
             _id: "$_id.username",
             name: {$first: "$name"},
+            athleteId: {$first: "$athleteId"},
             mode: {
                 $push: {
                     mode: "$_id.mode",
@@ -153,7 +155,7 @@ router.get("/athletes/activity/:year/:month?", authenticate.isLoggedIn, (req,res
                 }
             }
         })
-        .project({_id: 1,name: 1,mode: 1,totalTime: {$sum : "$mode.totalDuration"}})
+        .project({_id: 1,name: 1,mode: 1,athleteId:1,totalTime: {$sum : "$mode.totalDuration"}})
         .exec((err, athleteArray) => {
             if (err) console.log(err);
             res.json(athleteArray);
@@ -163,6 +165,19 @@ router.get("/athletes/activity/:year/:month?", authenticate.isLoggedIn, (req,res
     }
 });
 
-// add comment on training for a coach
+// populate training calendar with athlete data for the coach modal
+router.get("/coach/:athleteId/:year/:month", authenticate.isLoggedIn, (req, res) => {
+    let {athleteId, year, month} = req.params;
+    if (req.user.type === "Coach") {
+        let date = getDateFromParams(year, month);
+        db.User.findOne({$and : [{_id : athleteId}, {'training.date' : {$gte : date.start}}, {'training.date' : {$lt : date.end}}, {"team" : req.user.team}]}, "training", (err, training) => {
+            if (err) console.log(err);
+            console.log(training);
+            res.json(training || []);
+        });
+    } else {
+        res.json("only coaches can hit this route");
+    }
+})
 
 module.exports = router;
