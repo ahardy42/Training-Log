@@ -78,17 +78,6 @@ class App extends React.Component {
         });
       });
   }
-  loadAthletes = () => {
-    fetch("/api/athletes")
-      .then(response => {
-        return response.json();
-      })
-      .then(user => {
-        this.setState({
-          user: user
-        });
-      });
-  }
   componentDidMount = () => {
     // check if user is logged in and update state
     fetch("/auth/profile")
@@ -100,11 +89,6 @@ class App extends React.Component {
           this.setState({
             isLoggedIn: true,
             user: json
-          }, () => {
-            console.log(json);
-            if (this.state.user.type === "Coach") {
-              this.loadAthletes();
-            }
           });
         }
       });

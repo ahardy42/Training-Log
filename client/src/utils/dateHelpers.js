@@ -1,7 +1,6 @@
 import moment from 'moment';
 import calendar from 'calendar-js';
-// const moment = require('moment');
-// const calendar = require('calendar-js');
+
 
 const dateHelpers = {
     createInitObject: function(calObject, isIncrement) {

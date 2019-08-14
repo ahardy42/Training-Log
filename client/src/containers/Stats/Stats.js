@@ -38,6 +38,7 @@ const Stats = (props) => {
             <Doughnut
                 data={data}
                 legend={legend}
+                redraw={true}
             />
         </div>
     );

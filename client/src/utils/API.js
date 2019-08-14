@@ -47,13 +47,31 @@ const API = {
         let updatedTraining = response.json();
         return updatedTraining;
     },
-    findAthletes: async team => {
-        let response = await fetch("/athletes");
-        let teamArray = response.json();
+    findAthletes: async year => {
+        let response = await fetch(`/api/athletes/activity/${year}`);
+        let teamArray = await response.json();
         return teamArray;
     },
-    addComment: async (id, comment) => {
-        // 
+    specificAthleteTraining: async (year, month, id) => {
+        let date;
+        if (month) {
+            date = `${year}/${month}`;
+        } else {
+            date = year;
+        }
+        let response = await fetch(`/api/coach/${id}/${date}`);
+        let trainingArray = await response.json();
+        return trainingArray.training; // training is an array even when you only return training...
+    },
+    addComment: async (athleteId, trainingId, comment) => {
+        // route for coach to add a comment to an athlete's training
+        let response = await fetch(`/api/coach/${athleteId}/${trainingId}`,{
+            method: "PUT",
+            body: JSON.stringify(comment),
+            headers: {"content-type" : "application/json"}
+        });
+        let trainingArray = await response.json();
+        return trainingArray;
     }
 }
 
