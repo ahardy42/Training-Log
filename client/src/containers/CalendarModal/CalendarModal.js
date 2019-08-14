@@ -12,7 +12,7 @@ class CalendarModal extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            comment: "",
+            coachComment: "",
             trainingInView: null
         }
     }
@@ -23,10 +23,34 @@ class CalendarModal extends React.Component {
     }
     closeModal = () => {
         this.setState({
+            coachComment: "",
             trainingInView: null
         }, () => {
             this.props.closeCalendarModal();
         })
+    }
+    handleClick = (event, athleteId, trainingId) => {
+        let comment = {
+            coachComment: this.state.coachComment
+        };
+        API.addComment(athleteId, trainingId, comment)
+        .then(training => {
+            let {trainingInView} = this.state;
+            let updatedTrainingInView = trainingInView.map(element => {
+                if (element._id === training._id) {
+                    return training;
+                }
+            });
+            this.setState({
+                trainingInView: updatedTrainingInView
+            });
+        });
+    }
+    handleInputChange = event => {
+        let {name, value} = event.target;
+        this.setState({
+            [name] : value
+        });
     }
     render() {
         return(
@@ -53,7 +77,7 @@ class CalendarModal extends React.Component {
                             </div>
                             <div className="row">
                                 <div className="col">
-                                    {this.state.trainingInView ? <Training training={this.state.trainingInView} /> : null}
+                                    {this.state.trainingInView ? <Training training={this.state.trainingInView} athleteId={this.props.athleteId} handleInputChange={this.handleInputChange} handleClick={this.handleClick}/> : null}
                                 </div>
                             </div>
 

@@ -63,8 +63,15 @@ const API = {
         let trainingArray = await response.json();
         return trainingArray.training; // training is an array even when you only return training...
     },
-    addComment: async (id, comment) => {
-        // 
+    addComment: async (athleteId, trainingId, comment) => {
+        // route for coach to add a comment to an athlete's training
+        let response = await fetch(`/api/coach/${athleteId}/${trainingId}`,{
+            method: "PUT",
+            body: JSON.stringify(comment),
+            headers: {"content-type" : "application/json"}
+        });
+        let trainingArray = await response.json();
+        return trainingArray;
     }
 }
 

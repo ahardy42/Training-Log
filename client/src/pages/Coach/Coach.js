@@ -54,6 +54,11 @@ class Coach extends React.Component {
         // API call to get athlete training info goes here
         this.getAthleteTraining(monthNum, year, currentCalObject);
     }
+    refreshTraining = () => {
+        let {calObject} = this.state;
+        let {monthNum, year} = calObject;
+        this.getAthleteTraining(monthNum, year, calObject);
+    }
     getAthleteTraining = (monthNum, year, calObject) => {
         let {selectedAthleteId} = this.state;
         API.specificAthleteTraining(year, monthNum, selectedAthleteId)
@@ -85,6 +90,8 @@ class Coach extends React.Component {
                     nextMonth={this.forwardInTimeframe}
                     todaysDate={this.currentTimeframe}
                     closeCalendarModal={this.closeCalendarModal}
+                    athleteId={this.state.selectedAthleteId}
+                    refreshTraining={this.refreshTraining}
                 />
                 <div className="row">
                     <div className="col">

@@ -2,7 +2,7 @@ import React from 'react';
 import Button from '../Button/Button';
 import Input from '../Input/Input';
 
-const Training = ({training}) => {
+const Training = ({training, handleInputChange, handleClick, athleteId}) => {
     return(
         <div className="container">
             <table className="table">
@@ -20,13 +20,24 @@ const Training = ({training}) => {
                 <tbody>
                 {training.map((activity, index) => {
                     return (
-                        <tr key={index}>
+                        <tr key={activity._id}>
                             <th scope="row">{index + 1}</th>
                             <th>{activity.mode}</th>
                             <th>{activity.duration} min</th>
                             <th>{activity.intensity}</th>
                             <th>{activity.feeling}</th>
                             <th>{activity.comment}</th>
+                            
+                            {
+                                (activity.coachComment) ? 
+                                (<th>{activity.coachComment}</th>) :
+                                (
+                                    <>
+                                        <Input action="text" name="coachComment" id="coachComment" handleInputChange={handleInputChange} />
+                                        <Button action="button" handleClick={(event) => handleClick(event, athleteId, activity._id)}>Add Comment</Button>
+                                    </>
+                                )
+                            }
                         </tr>
                     );
                 })}
