@@ -57,23 +57,25 @@ router.post("/new-coach", (req, res) => {
         })
 });
 
-router.post("coach-approval/:key", (req, res) => {
+router.get("/coach-approval/:key?", (req, res) => {
     // if this key gets hit the coach will be created in Users and deleted in Temp! 
     let { key } = req.params;
-    let projection = {
-        username: 1,
-        password: 1,
-        type: 1,
-        firstName: 1,
-        lastName: 1,
-        email: 1,
-        team: 1
-    };
-    db.Temp.findOneAndDelete({ accessKey: key }, projection, (err, coach) => {
-        if (err) console.log(err);
-        let approvedCoach = new db.User(coach);
+    console.log(key);
+    db.Temp.findOneAndDelete({ accessKey: key }, (err, coach) => {
+        if (err) console.log("the error is in findOneAndDelete",err);
+        console.log(coach);
+        let tempCoach = {
+            firstName: coach.firstName,
+            lastName: coach.lastName,
+            email: coach.email,
+            username: coach.username,
+            password: coach.password,
+            team: coach.team,
+            type: coach.type
+        }
+        let approvedCoach = new db.User(tempCoach);
         approvedCoach.save((err, newCoach) => {
-            if (err) console.log(err);
+            if (err) console.log("the error is in saving the new coach",err);
             const smtpTransport = nodemailer.createTransport({
                 host: "smtp.sendgrid.net",
                 port: 587,
@@ -93,6 +95,7 @@ router.post("coach-approval/:key", (req, res) => {
             smtpTransport.sendMail(mailOptions, (err) => {
                 if (err) console.log("there was an error " + err);
             });
+            res.json(newCoach);
         })
     })
 
