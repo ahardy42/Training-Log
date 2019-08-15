@@ -21,7 +21,6 @@ const createKey = () => { // create a unique key to be used in a chain below!
 
 router.post("/new-coach", (req, res) => {
     let coach = req.body;
-    console.log("req user", coach);
     // a redirect will bring a new coach signup here to send an email with a request to sign up
     createKey().then(key => {
         const smtpTransport = nodemailer.createTransport({
@@ -38,10 +37,10 @@ router.post("/new-coach", (req, res) => {
             from: 'aohardy@gmail.com',
             subject: 'New Coach Request',
             text:
-                `A new coach has requested to sign up! Their name is ${coach.firstName} ${coach.lastName} and they would like to join ${coach.team}
-            please click the following link to activate: ${req.hostname}/email/coach-approval/${key}
-            if you have any questions for the requester, here is their email: ${coach.email}.
-            lastly, click here: ${req.hostname}/email/coach-deny' to deny the request!`
+            "A new coach has requested to sign up! Their name is " + coach.firstName + " " + coach.lastName + " and they would like to join the team: " + coach.team + ".\n\n" +
+            "please click the following link to activate: http://" + req.hostname + "/email/coach-approval/" + key + "\n\n" +
+            "if you have any questions for the requester, here is their email: " + coach.email + ".\n\n" +
+            "Click here: " + req.hostname + "/email/coach-deny to deny the request!"
         };
         smtpTransport.sendMail(mailOptions, (err) => {
             if (err) console.log("there was an error " + err);
@@ -90,7 +89,8 @@ router.get("/coach-approval/:key?", (req, res) => {
                 from: 'aohardy@gmail.com',
                 subject: 'New Coach Request Approved!',
                 text: "Great news! " + newCoach.firstName + " , you have been approved as a coach for " + newCoach.team + ".\n\n" +
-                    "Please go to " + req.hostname + "/login to login using your username and password. Your username is " + newCoach.username
+                    "Please go to " + req.hostname + "/login to login using your username and password. Your username is " + newCoach.username +
+                    "and your password is the same as the one you signed up with..."
             };
             smtpTransport.sendMail(mailOptions, (err) => {
                 if (err) console.log("there was an error " + err);
