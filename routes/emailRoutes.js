@@ -105,6 +105,7 @@ router.get("/coach-approval/:key?", (req, res) => {
 });
 
 router.post("/reset-password/", (req, res) => {
+    // route to create a key for a password reset
     createKey().then(key => {
         let { id } = req.body;
         let returnedUser = db.User.findByIdAndUpdate(id, {resetKey: key}, {strict: false, new: true});
@@ -136,7 +137,9 @@ router.post("/reset-password/", (req, res) => {
 });
 
 router.get("/reset-password/:key", (req, res) => {
-
+    // route to send the user to the reset page where they can reset their password
+    let {key} = req.params;
+    db.User.findOne({resetKey: key}, (err, user) => {})
 });
 
 module.exports = router;
