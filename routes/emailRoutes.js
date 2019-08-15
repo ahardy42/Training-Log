@@ -6,6 +6,7 @@ const bcrypt = require("bcrypt");
 const nodemailer = require("nodemailer");
 const sendGridKey = process.env.SENDGRID_PASSWORD;
 const sendGridUsername = process.env.SENDGRID_USERNAME;
+const adminEmail = process.env.ADMIN_EMAIL;
 
 // =====================================================================================
 //                               API routes for email related activies
@@ -35,8 +36,8 @@ router.post("/new-coach", (req, res) => {
             }
         });
         const mailOptions = {
-            to: "aohardy@gmail.com",
-            from: 'aohardy@gmail.com',
+            to: "adminEmail",
+            from: adminEmail,
             subject: 'New Coach Request',
             text:
             "A new coach has requested to sign up! Their name is " + coach.firstName + " " + coach.lastName + " and they would like to join the team: " + coach.team + ".\n\n" +
@@ -88,10 +89,10 @@ router.get("/coach-approval/:key?", (req, res) => {
             });
             const mailOptions = {
                 to: newCoach.email,
-                from: 'aohardy@gmail.com',
+                from: adminEmail,
                 subject: 'New Coach Request Approved!',
                 text: "Great news! " + newCoach.firstName + " , you have been approved as a coach for " + newCoach.team + ".\n\n" +
-                    "Please go to " + req.hostname + "/login to login using your username and password. Your username is " + newCoach.username +
+                    "Please go to http://" + req.hostname + "/login to login using your username and password. Your username is " + newCoach.username +
                     "and your password is the same as the one you signed up with..."
             };
             smtpTransport.sendMail(mailOptions, (err) => {
@@ -104,6 +105,7 @@ router.get("/coach-approval/:key?", (req, res) => {
 });
 
 router.post("/reset-password/", (req, res) => {
+    // route to create a key for a password reset
     createKey().then(key => {
         let { id } = req.body;
         let returnedUser = db.User.findByIdAndUpdate(id, {resetKey: key}, {strict: false, new: true});
@@ -121,7 +123,7 @@ router.post("/reset-password/", (req, res) => {
         });
         const mailOptions = {
             to: user.email,
-            from: 'aohardy@gmail.com',
+            from: adminEmail,
             subject: 'Password Reset',
             text: "Hi there " + name + " it looks like you, or somebody else, requested a password reset!\n\n" +
             "If you would like to reset your password, please follow this link: http://" + req.hostname + "/email/" + user.resetKey + "\n\n" +
@@ -135,7 +137,9 @@ router.post("/reset-password/", (req, res) => {
 });
 
 router.get("/reset-password/:key", (req, res) => {
-
+    // route to send the user to the reset page where they can reset their password
+    let {key} = req.params;
+    db.User.findOne({resetKey: key}, (err, user) => {})
 });
 
 module.exports = router;
