@@ -3,7 +3,7 @@ import Button from '../../components/Button/Button';
 import Input from '../../components/Input/Input';
 
 const Reset = ({getUsers, handleInputChange, resetUser, handleSubmit}) => {
-    if (resetUser.id) {
+    if (resetUser._id) {
         // if there is a reset user id prop this means 
         return(
             <div className="container">

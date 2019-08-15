@@ -88,22 +88,22 @@ const API = {
             body: JSON.stringify(id),
             headers: {"content-type" : "application/json"}
         });
-        let key = response.ok;
-        return key;
+        let message = await response.json();
+        return message;
     },
-    showUserForReset: async () => {
-        let response = await fetch("/auth/reset-password/:key");
+    showUserForReset: async key => {
+        let response = await fetch(`/auth/reset-password/${key}`);
         let user = await response.json();
         return user;
     },
-    submitResetPassword: async password => {
-        let response = await fetch(`/email/reset-password`, {
+    submitResetPassword: async (password, key) => {
+        let response = await fetch(`/email/reset-password/${key}`, {
             method: "POST",
-            body: JSON.stringify(id),
+            body: JSON.stringify(password),
             headers: {"content-type" : "application/json"}
         });
-        let isReset = response.ok;
-        return isReset;
+        let message = await response.json();
+        return message;
     }
 }
 

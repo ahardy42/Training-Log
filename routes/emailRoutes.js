@@ -132,7 +132,7 @@ router.post("/reset-password/", (req, res) => {
         smtpTransport.sendMail(mailOptions, (err) => {
             if (err) console.log("there was an error " + err);
         });
-        return req.flash("success", "An email has been sent to the address on file for this user");
+        res.json({messageType: "success", message: "an email was sent to the user requesting a password reset"});
     })
 });
 
@@ -150,7 +150,7 @@ router.post("/reset-password/:key", (req, res) => {
             user.password = hashedPassword;
             user.resetKey = null;
             user.save({new: true}, (err, user) => {
-                req.flash("success", "you have updated your password! You may login using the new password");
+                res.json({messageType: "success", message: "You have successfully reset your password!"});
             })
         }
     });

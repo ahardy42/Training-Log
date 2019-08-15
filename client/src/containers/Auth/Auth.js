@@ -21,7 +21,7 @@ class Auth extends React.Component {
             allowSubmit: false,
             resetUser: {},
             userArray: [],
-            isKey: false
+            message: {}
         }
     }
     handleInputChange = (event) => {
@@ -87,11 +87,17 @@ class Auth extends React.Component {
         this.props.submit(userInfo);
     }
     getResetKey = event => {
-        // hits the route to request a reset key
+        // hits the route to request a reset key by clicking on one of the users... 
+        // also resets state for the users
         event.preventDefault();
         let {id} = this.state.resetUser;
         API.getKeyForReset(id)
-        .then(key => this.setState({isKey: key}));
+        .then(message => {
+            this.setState({
+                userArray: [],
+                message: message
+            })
+        });
     }
     getUsers = event => {
         // populates a list below with possible users
@@ -103,19 +109,19 @@ class Auth extends React.Component {
     submitResetPassword = event => {
         event.preventDefault();
         let {isSamePassword, password} = this.state;
+        let {key} = this.props.match.params;
         if (isSamePassword) {
-            API.submitResetPassword(password)
-            .then(isReset => {
-                if (isReset) {
-                    this.setState({
-                        password: "",
-                        passwordRepeat: "",
-                        isSamePassword: false,
-                        userArray: [],
-                        resetUser: {}
-                    })
-                }
-            })
+            API.submitResetPassword(password, key)
+            .then(message => {
+                this.setState({
+                    password: "",
+                    passwordRepeat: "",
+                    isSamePassword: false,
+                    userArray: [],
+                    resetUser: {},
+                    message: message
+                });
+            });
         }
     }
     renderResetPage = () => {
@@ -123,9 +129,13 @@ class Auth extends React.Component {
     }
     componentDidMount = () => {
         let {params} = this.props.match;
-        console.log(params);
         if (params.key) {
-            
+            API.showUserForReset(params.key)
+            .then(user => {
+                this.setState({
+                    resetUser: user
+                });
+            });
         }
     }
     render() {
