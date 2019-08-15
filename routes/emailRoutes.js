@@ -126,20 +126,34 @@ router.post("/reset-password/", (req, res) => {
             from: adminEmail,
             subject: 'Password Reset',
             text: "Hi there " + name + " it looks like you, or somebody else, requested a password reset!\n\n" +
-            "If you would like to reset your password, please follow this link: http://" + req.hostname + "/email/" + user.resetKey + "\n\n" +
+            "If you would like to reset your password, please follow this link: http://" + req.hostname + "/reset/" + user.resetKey + "\n\n" +
             "Disregard this email if you did not request a reset."
         };
         smtpTransport.sendMail(mailOptions, (err) => {
             if (err) console.log("there was an error " + err);
         });
-        res.json(user);
+        return req.flash("success", "An email has been sent to the address on file for this user");
     })
 });
 
-router.get("/reset-password/:key", (req, res) => {
-    // route to send the user to the reset page where they can reset their password
+// /email/reset-password/:key 
+// hit when reset auth submit button is clicked to reset the user's password
+// req.body includes username and params includes the key. will NOT re-direct to login yet.
+router.post("/reset-password/:key", (req, res) => {
     let {key} = req.params;
-    db.User.findOne({resetKey: key}, (err, user) => {})
+    db.User.findOne({resetKey: key}, {new: true},(err, user) => {
+        if (err) return req.flash("error",err);
+        if (!user) {
+            return req.flash("error", "Sorry no user exists with that key");
+        } else {
+            let hashedPassword = user.generateHash(req.body.password);
+            user.password = hashedPassword;
+            user.resetKey = null;
+            user.save({new: true}, (err, user) => {
+                req.flash("success", "you have updated your password! You may login using the new password");
+            })
+        }
+    });
 });
 
 module.exports = router;

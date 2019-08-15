@@ -3,6 +3,7 @@ import {Redirect} from 'react-router-dom';
 import Login from '../../pages/Login/Login';
 import Signup from '../../pages/Signup/Signup';
 import Reset from '../../pages/Reset/Reset';
+import API from '../../utils/API';
 
 class Auth extends React.Component {
     constructor(props) {
@@ -17,7 +18,10 @@ class Auth extends React.Component {
             team: "unattached",
             isCoach: false,
             isSamePassword: false,
-            allowSubmit: false
+            allowSubmit: false,
+            resetUser: {},
+            userArray: [],
+            isKey: false
         }
     }
     handleInputChange = (event) => {
@@ -82,8 +86,47 @@ class Auth extends React.Component {
         }
         this.props.submit(userInfo);
     }
-    reset = event => {
-        // need to setup mailer route
+    getResetKey = event => {
+        // hits the route to request a reset key
+        event.preventDefault();
+        let {id} = this.state.resetUser;
+        API.getKeyForReset(id)
+        .then(key => this.setState({isKey: key}));
+    }
+    getUsers = event => {
+        // populates a list below with possible users
+        event.preventDefault();
+        let {email} = this.state;
+        API.getUsersForReset(email)
+        .then(userArray => this.setState({userArray: userArray}));
+    }
+    submitResetPassword = event => {
+        event.preventDefault();
+        let {isSamePassword, password} = this.state;
+        if (isSamePassword) {
+            API.submitResetPassword(password)
+            .then(isReset => {
+                if (isReset) {
+                    this.setState({
+                        password: "",
+                        passwordRepeat: "",
+                        isSamePassword: false,
+                        userArray: [],
+                        resetUser: {}
+                    })
+                }
+            })
+        }
+    }
+    renderResetPage = () => {
+
+    }
+    componentDidMount = () => {
+        let {params} = this.props.match;
+        console.log(params);
+        if (params.key) {
+            
+        }
     }
     render() {
         if (this.props.isLoggedIn) {
@@ -101,7 +144,14 @@ class Auth extends React.Component {
                 );
             } else {
                 return (
-                    <Reset handleClick={this.reset} handleInputChange={this.handleInputChange}/>
+                    <Reset
+                        resetUser={this.state.resetUser}
+                        userArray={this.state.userArray}
+                        getUsers={this.getUsers}
+                        getResetKey={this.getResetKey}
+                        submitResetPassword={this.submitResetPassword}
+                        handleInputChange={this.handleInputChange}
+                    />
                 );
             }
         }

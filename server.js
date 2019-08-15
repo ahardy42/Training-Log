@@ -4,6 +4,7 @@ const mongoose = require("mongoose");
 const routes = require("./routes");
 const session = require("express-session");
 const passport = require("./config/passport");
+const flash = require("express-flash");
 require("dotenv").config();
 
 // Sets an initial port. heroku uses the process.env.PORT option
@@ -22,6 +23,7 @@ app.use(session({
 }));
 app.use(passport.initialize());
 app.use(passport.session());
+app.use(flash());
 
 // Serve static files from the React app
 app.use(express.static("public"));
