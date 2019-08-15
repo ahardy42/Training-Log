@@ -4,6 +4,7 @@ const mongoose = require("mongoose");
 const routes = require("./routes");
 const session = require("express-session");
 const passport = require("./config/passport");
+require("dotenv").config();
 
 // Sets an initial port. heroku uses the process.env.PORT option
 const PORT = process.env.PORT || 8080;

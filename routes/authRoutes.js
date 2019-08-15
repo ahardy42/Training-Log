@@ -58,8 +58,27 @@ router.get("/profile", authenticate.isLoggedIn, (req, res) => {
 
 // /auth/logout
 // logs out the user
-router.get("/logout", authenticate.logout, function (req, res) {
+router.get("/logout", authenticate.logout, (req, res) => {
   res.json("User logged out successfully");
 });
+
+// /auth/reset
+// finds the user(s) based on email and returns the array of users to the front end
+router.post("/reset", (req, res) => {
+  let {email} = req.body;
+    db.User.find({email: email}, (err, userArray) => {
+        if (err) {
+            res.json("error message: " + err);
+        }
+        else if (!userArray.length) {
+            res.json("no user found!");
+        } else {
+            let resArray = userArray.map(user => {
+              return {name: `${user.firstName} ${user.lastName}`, username: user.username, id: user._id};
+            })
+            res.json(resArray);
+        }
+    })
+})
 
 module.exports = router;
