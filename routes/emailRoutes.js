@@ -4,6 +4,8 @@ const db = require("../models/Index");
 const crypto = require("crypto");
 const bcrypt = require("bcrypt");
 const nodemailer = require("nodemailer");
+const sendGridKey = process.env.SENDGRID_PASSWORD;
+const sendGridUsername = process.env.SENDGRID_USERNAME;
 
 // =====================================================================================
 //                               API routes for email related activies
@@ -28,8 +30,8 @@ router.post("/new-coach", (req, res) => {
             port: 587,
             secure: false, // upgrade later with STARTTLS
             auth: {
-                user: "apikey",
-                pass: "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"
+                user: sendGridUsername,
+                pass: sendGridKey
             }
         });
         const mailOptions = {
@@ -80,8 +82,8 @@ router.get("/coach-approval/:key?", (req, res) => {
                 port: 587,
                 secure: false, // upgrade later with STARTTLS
                 auth: {
-                    user: "apikey",
-                    pass: "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"
+                    user: sendGridUsername,
+                    pass: sendGridKey
                 }
             });
             const mailOptions = {
@@ -101,8 +103,39 @@ router.get("/coach-approval/:key?", (req, res) => {
 
 });
 
-router.post("/reset-password/:key", (req, res) => {
+router.post("/reset-password/", (req, res) => {
+    createKey().then(key => {
+        let { id } = req.body;
+        let returnedUser = db.User.findByIdAndUpdate(id, {resetKey: key}, {strict: false, new: true});
+        return returnedUser.exec();
+    }).then(user => {
+        let name = `${user.firstName} ${user.lastName}`;
+        const smtpTransport = nodemailer.createTransport({
+            host: "smtp.sendgrid.net",
+            port: 587,
+            secure: false, // upgrade later with STARTTLS
+            auth: {
+                user: sendGridUsername,
+                pass: sendGridKey
+            }
+        });
+        const mailOptions = {
+            to: user.email,
+            from: 'aohardy@gmail.com',
+            subject: 'Password Reset',
+            text: "Hi there " + name + " it looks like you, or somebody else, requested a password reset!\n\n" +
+            "If you would like to reset your password, please follow this link: http://" + req.hostname + "/email/" + user.resetKey + "\n\n" +
+            "Disregard this email if you did not request a reset."
+        };
+        smtpTransport.sendMail(mailOptions, (err) => {
+            if (err) console.log("there was an error " + err);
+        });
+        res.json(user);
+    })
+});
 
-})
+router.get("/reset-password/:key", (req, res) => {
+
+});
 
 module.exports = router;
