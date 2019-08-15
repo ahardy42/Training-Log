@@ -1,7 +1,9 @@
 const express = require('express');
 const router = express.Router();
-const apiRoutes = require("./apiRoutes");
+const athleteRoutes = require("./athleteRoutes");
+const coachRoutes = require("./coachRoutes");
 const authRoutes = require("./authRoutes");
+const emailRoutes = require("./emailRoutes");
 const path = require("path");
 
 // =====================================================================================
@@ -9,8 +11,11 @@ const path = require("path");
 // =====================================================================================
 
 // routes for api and auth
-router.use("/api", apiRoutes);
 router.use("/auth", authRoutes);
+router.use("/email", emailRoutes);
+router.use("/api/athlete", athleteRoutes);
+router.use("/api/coach", coachRoutes);
+
 
 // route for sending the index.html after any API routes
 router.use(function (req, res, next) {

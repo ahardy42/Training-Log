@@ -27,13 +27,25 @@ router.post("/signup", (req, res) => {
     }
     if (!user) {
       // create the user and has the password
-      let newUser = new db.User(req.body);
-      newUser.password = newUser.generateHash(req.body.password);
-      newUser.save((err) => {
-        if (err) throw err;
-        // redirects to the login route as a post route *307*
-        res.redirect(307, "/auth/login");
-      });
+      if (req.body.type === "Coach") {
+        // this is a new coach => proceed to new coach signup at Temp
+        let newCoach = new db.Temp(req.body);
+        newCoach.password = newCoach.generateHash(req.body.password);
+        newCoach.save((err, coach) => {
+          if (err) throw err;
+          req.body.id = coach._id;
+          // redirects to the new coach route as a post route *307*
+          res.redirect(307, "/email/new-coach");
+        });
+      } else {
+        let newUser = new db.User(req.body);
+        newUser.password = newUser.generateHash(req.body.password);
+        newUser.save((err) => {
+          if (err) throw err;
+          // redirects to the login route as a post route *307*
+          res.redirect(307, "/auth/login");
+        });
+      }
     }
   })
 });

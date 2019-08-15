@@ -6,7 +6,7 @@ const API = {
         } else {
             date = year;
         }
-        let response = await fetch(`/api/training/${date}`);
+        let response = await fetch(`/api/athlete/training/${date}`);
         let training = await response.json();
         return training.training ? training.training : null; // training is an array even when you only return training...
     },
@@ -17,13 +17,13 @@ const API = {
         } else {
             date = year;
         }
-        let response = await fetch(`/api/stats/${date}`);
+        let response = await fetch(`/api/athlete/stats/${date}`);
         let stats = await response.json();
         console.log(stats);
         return stats;
     },
     addTraining: async training => {
-        let response = await fetch("/api/training", {
+        let response = await fetch("/api/athlete/training", {
             method: "POST",
             body: JSON.stringify(training),
             headers: {"content-type" : "application/json"}
@@ -32,7 +32,7 @@ const API = {
         return newTraining;
     },
     editTraining: async (training, id) => {
-        let response = await fetch(`/api/training/${id}`, {
+        let response = await fetch(`/api/athlete/training/${id}`, {
             method: "PUT",
             body: JSON.stringify(training),
             headers: {"content-type" : "application/json"}
@@ -41,14 +41,14 @@ const API = {
         return updatedTraining;
     },
     deleteTraining: async id => {
-        let response = await fetch(`/api/training/${id}`, {
+        let response = await fetch(`/api/athlete/training/${id}`, {
             method: "DELETE"
         });
         let updatedTraining = response.json();
         return updatedTraining;
     },
     findAthletes: async year => {
-        let response = await fetch(`/api/athletes/activity/${year}`);
+        let response = await fetch(`/api/coach/team/activity/${year}`);
         let teamArray = await response.json();
         return teamArray;
     },
