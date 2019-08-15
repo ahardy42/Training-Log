@@ -72,7 +72,7 @@ router.post("/reset", (req, res) => {
         }
         else if (!userArray.length) {
             // res.json("no user found!");
-            return req.flash("error", "No user with that email was found");
+            res.json({messageType: "error", message: "No user with that email was found"});
         } else {
             let resArray = userArray.map(user => {
               return {name: `${user.firstName} ${user.lastName}`, username: user.username, id: user._id};

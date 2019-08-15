@@ -103,7 +103,8 @@ class Auth extends React.Component {
         // populates a list below with possible users
         event.preventDefault();
         let {email} = this.state;
-        API.getUsersForReset(email)
+        console.log(email);
+        API.getUsersForReset({email: email})
         .then(userArray => this.setState({userArray: userArray}));
     }
     submitResetPassword = event => {
