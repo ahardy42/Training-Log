@@ -54,8 +54,7 @@ const userSchema = new Schema({
     },
     email: {
         type: String,
-        required: true,
-        unique: false
+        required: true
     },
     team: {
         type: String,
@@ -66,7 +65,8 @@ const userSchema = new Schema({
         type: String,
         required: true,
         default: "Athlete"
-    }
+    },
+    resetKey: String
 });
 
 userSchema.methods.generateHash = function (password) {

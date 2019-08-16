@@ -2,7 +2,7 @@ import React from 'react';
 import Button from '../../components/Button/Button';
 import Input from '../../components/Input/Input';
 
-const Reset = ({getUsers, handleInputChange, resetUser, handleSubmit, userArray}) => {
+const Reset = ({getUsers, getResetKey, handleInputChange, resetUser, handleSubmit, userArray}) => {
     if (resetUser._id) {
         // if there is a reset user id then display the password reset form
         return(
@@ -22,7 +22,7 @@ const Reset = ({getUsers, handleInputChange, resetUser, handleSubmit, userArray}
                  (
                         <ul className="list-group">
                             {userArray.map((user, index) => {
-                                return <li className="list-group-item" key={index}>{user.name}<Button action="button" id={user._id}>Select</Button></li>
+                                return <li className="list-group-item" key={index}>{user.name}<Button action="button" id={user.id} handleClick={getResetKey}>Select</Button></li>
                             })}
                         </ul>
                  ) : 

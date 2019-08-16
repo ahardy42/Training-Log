@@ -90,8 +90,9 @@ class Auth extends React.Component {
         // hits the route to request a reset key by clicking on one of the users... 
         // also resets state for the users
         event.preventDefault();
-        let {id} = this.state.resetUser;
-        API.getKeyForReset(id)
+        let {id} = event.target;
+        console.log(id);
+        API.getKeyForReset({id: id})
         .then(message => {
             this.setState({
                 userArray: [],
@@ -112,7 +113,7 @@ class Auth extends React.Component {
         let {isSamePassword, password} = this.state;
         let {key} = this.props.match.params;
         if (isSamePassword) {
-            API.submitResetPassword(password, key)
+            API.submitResetPassword({password: password}, key)
             .then(message => {
                 this.setState({
                     password: "",
