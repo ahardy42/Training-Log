@@ -119,6 +119,7 @@ router.post("/reset-password/:key", (req, res) => {
             return res.json({messageType: "error", message: "Sorry no user exists with that key"});
         } else {
             let hashedPassword = user.generateHash(req.body.password);
+            console.log(hashedPassword);
             user.password = hashedPassword;
             user.resetKey = null;
             user.save({new: true}, (err, user) => {

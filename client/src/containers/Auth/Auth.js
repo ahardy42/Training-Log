@@ -145,6 +145,8 @@ class Auth extends React.Component {
             return (
                 <Redirect to="/" />
             );
+        } else if (this.state.message.messageType === "success") {
+            return <Redirect to="/" />
         } else {
             if (this.props.action === "login") {
                 return (

@@ -2,7 +2,7 @@ import React from 'react';
 import Button from '../../components/Button/Button';
 import Input from '../../components/Input/Input';
 
-const Reset = ({getUsers, getResetKey, handleInputChange, resetUser, handleSubmit, userArray}) => {
+const Reset = ({getUsers, getResetKey, handleInputChange, resetUser, submitResetPassword, userArray}) => {
     if (resetUser._id) {
         // if there is a reset user id then display the password reset form
         return(
@@ -11,7 +11,7 @@ const Reset = ({getUsers, getResetKey, handleInputChange, resetUser, handleSubmi
                 <form>
                     <Input action="password" name="password" id="signupPassword" handleInputChange={handleInputChange}>Enter your new password</Input>
                     <Input action="password" name="passwordRepeat" id="confirmPassword" handleInputChange={handleInputChange}>Re-enter your new password</Input>
-                    <Button action="submit" id="reset" handleClick={handleSubmit}>Submit New Password</Button>
+                    <Button action="submit" id="reset" handleClick={submitResetPassword}>Submit New Password</Button>
                 </form>
             </div>
         );
