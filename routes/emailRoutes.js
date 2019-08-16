@@ -2,11 +2,11 @@ const express = require('express');
 const router = express.Router();
 const db = require("../models/Index");
 const crypto = require("crypto");
-const bcrypt = require("bcrypt");
-const nodemailer = require("nodemailer");
-const sendGridKey = process.env.SENDGRID_PASSWORD;
-const sendGridUsername = process.env.SENDGRID_USERNAME;
+const sgMail = require('@sendgrid/mail');
+require("dotenv").config();
 const adminEmail = process.env.ADMIN_EMAIL;
+
+sgMail.setApiKey(process.env.SENDGRID_API_KEY);
 
 // =====================================================================================
 //                               API routes for email related activies
@@ -26,17 +26,8 @@ router.post("/new-coach", (req, res) => {
     let coach = req.body;
     // a redirect will bring a new coach signup here to send an email with a request to sign up
     createKey().then(key => {
-        const smtpTransport = nodemailer.createTransport({
-            host: "smtp.sendgrid.net",
-            port: 587,
-            secure: false, // upgrade later with STARTTLS
-            auth: {
-                user: sendGridUsername,
-                pass: sendGridKey
-            }
-        });
         const mailOptions = {
-            to: "adminEmail",
+            to: adminEmail,
             from: adminEmail,
             subject: 'New Coach Request',
             text:
@@ -45,10 +36,7 @@ router.post("/new-coach", (req, res) => {
             "if you have any questions for the requester, here is their email: " + coach.email + ".\n\n" +
             "Click here: " + req.hostname + "/email/coach-deny to deny the request!"
         };
-        smtpTransport.sendMail(mailOptions, (err) => {
-            if (err) console.log("there was an error " + err);
-        });
-        console.log(key);
+        sgMail.send(mailOptions);
         return key;
     })
         .then(key => {
@@ -78,15 +66,6 @@ router.get("/coach-approval/:key?", (req, res) => {
         let approvedCoach = new db.User(tempCoach);
         approvedCoach.save((err, newCoach) => {
             if (err) console.log("the error is in saving the new coach",err);
-            const smtpTransport = nodemailer.createTransport({
-                host: "smtp.sendgrid.net",
-                port: 587,
-                secure: false, // upgrade later with STARTTLS
-                auth: {
-                    user: sendGridUsername,
-                    pass: sendGridKey
-                }
-            });
             const mailOptions = {
                 to: newCoach.email,
                 from: adminEmail,
@@ -95,9 +74,7 @@ router.get("/coach-approval/:key?", (req, res) => {
                     "Please go to http://" + req.hostname + "/login to login using your username and password. Your username is " + newCoach.username +
                     "and your password is the same as the one you signed up with..."
             };
-            smtpTransport.sendMail(mailOptions, (err) => {
-                if (err) console.log("there was an error " + err);
-            });
+            sgMail.send(mailOptions);
             res.json(newCoach);
         })
     })
@@ -108,38 +85,50 @@ router.post("/reset-password/", (req, res) => {
     // route to create a key for a password reset
     createKey().then(key => {
         let { id } = req.body;
-        let returnedUser = db.User.findByIdAndUpdate(id, {resetKey: key}, {strict: false, new: true});
+        let returnedUser = db.User.findByIdAndUpdate(id, {resetKey: key}, {strict: false, new: true}).select('email firstName lastName resetKey _id');
         return returnedUser.exec();
     }).then(user => {
-        let name = `${user.firstName} ${user.lastName}`;
-        const smtpTransport = nodemailer.createTransport({
-            host: "smtp.sendgrid.net",
-            port: 587,
-            secure: false, // upgrade later with STARTTLS
-            auth: {
-                user: sendGridUsername,
-                pass: sendGridKey
-            }
-        });
-        const mailOptions = {
-            to: user.email,
-            from: adminEmail,
-            subject: 'Password Reset',
-            text: "Hi there " + name + " it looks like you, or somebody else, requested a password reset!\n\n" +
-            "If you would like to reset your password, please follow this link: http://" + req.hostname + "/email/" + user.resetKey + "\n\n" +
-            "Disregard this email if you did not request a reset."
-        };
-        smtpTransport.sendMail(mailOptions, (err) => {
-            if (err) console.log("there was an error " + err);
-        });
-        res.json(user);
+        if (!user) {
+            let message = {messageType: "error", message: "something went wrong! couldn't find a user with those credentials..."}
+            res.json(message);
+        } else {
+            let message = {messageType: "success", message: "an email was sent to the user requesting a password reset"}
+            let name = `${user.firstName} ${user.lastName}`;
+            const mailOptions = {
+                to: user.email,
+                from: adminEmail,
+                subject: 'Password Reset',
+                text: "Hi there " + name + " it looks like you, or somebody else, requested a password reset!\n\n" +
+                    "If you would like to reset your password, please follow this link: http://" + req.hostname + "/reset/" + user.resetKey + "\n\n" +
+                    "Disregard this email if you did not request a reset. " + user.resetKey + " is the key"
+            };
+            sgMail.send(mailOptions);
+            res.json(message);
+        }
     })
 });
 
-router.get("/reset-password/:key", (req, res) => {
-    // route to send the user to the reset page where they can reset their password
+// /email/reset-password/:key 
+// hit when reset auth submit button is clicked to reset the user's password
+// req.body includes username and params includes the key. will NOT re-direct to login yet.
+router.post("/reset-password/:key", (req, res) => {
     let {key} = req.params;
-    db.User.findOne({resetKey: key}, (err, user) => {})
+    db.User.findOne({resetKey: key}, {new: true},(err, user) => {
+        if (err) return req.flash("error",err);
+        if (!user) {
+            return res.json({messageType: "error", message: "Sorry no user exists with that key"});
+        } else {
+            let hashedPassword = user.generateHash(req.body.password);
+            console.log(hashedPassword);
+            user.password = hashedPassword;
+            user.resetKey = null;
+            user.save({new: true}, (err, user) => {
+                if (err) res.json({messageType: "error", message: err})
+                let name = `${user.firstName} ${user.lastName}`
+                res.json({messageType: "success", message: name + " you have successfully reset your password!"});
+            });
+        }
+    });
 });
 
 module.exports = router;

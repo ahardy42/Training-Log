@@ -43,9 +43,6 @@ class App extends React.Component {
       user: user
     });
   }
-  reset = (email) => {
-    // need to set up email routes for this to work.
-  }
   signOut = async () => {
     let response = await fetch("/auth/logout");
     if (response.ok) {
@@ -101,7 +98,7 @@ class App extends React.Component {
           <Route exact path="/" render={(props) => this.renderLandingPage(props)} />
           <Route exact path="/login" render={(props) => <Auth {...props} isLoggedIn={this.state.isLoggedIn} submit={this.login} action="login" />} />
           <Route exact path="/signup" render={(props) => <Auth {...props} isLoggedIn={this.state.isLoggedIn} submit={this.signup} action="signup" />} />
-          <Route exact path="/reset" render={(props) => <Auth {...props} action="reset" />} />
+          <Route path="/reset/:key?" render={(props) => <Auth {...props} action="reset" />} />
         </Switch>
       </Router>
     );

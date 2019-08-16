@@ -72,6 +72,38 @@ const API = {
         });
         let trainingArray = await response.json();
         return trainingArray;
+    },
+    getUsersForReset: async email => {
+        let response = await fetch(`/auth/reset`, {
+            method: "POST",
+            body: JSON.stringify(email),
+            headers: {"content-type" : "application/json"}
+        });
+        let userArray = await response.json();
+        return userArray;
+    },
+    getKeyForReset: async id => {
+        let response = await fetch(`/email/reset-password`, {
+            method: "POST",
+            body: JSON.stringify(id),
+            headers: {"content-type" : "application/json"}
+        });
+        let message = await response.json();
+        return message;
+    },
+    showUserForReset: async key => {
+        let response = await fetch(`/auth/reset-password/${key}`);
+        let user = await response.json();
+        return user;
+    },
+    submitResetPassword: async (password, key) => {
+        let response = await fetch(`/email/reset-password/${key}`, {
+            method: "POST",
+            body: JSON.stringify(password),
+            headers: {"content-type" : "application/json"}
+        });
+        let message = await response.json();
+        return message;
     }
 }
 

@@ -3,6 +3,7 @@ import {Redirect} from 'react-router-dom';
 import Login from '../../pages/Login/Login';
 import Signup from '../../pages/Signup/Signup';
 import Reset from '../../pages/Reset/Reset';
+import API from '../../utils/API';
 
 class Auth extends React.Component {
     constructor(props) {
@@ -17,7 +18,10 @@ class Auth extends React.Component {
             team: "unattached",
             isCoach: false,
             isSamePassword: false,
-            allowSubmit: false
+            allowSubmit: false,
+            resetUser: {},
+            userArray: [],
+            message: {}
         }
     }
     handleInputChange = (event) => {
@@ -82,14 +86,67 @@ class Auth extends React.Component {
         }
         this.props.submit(userInfo);
     }
-    reset = event => {
-        // need to setup mailer route
+    getResetKey = event => {
+        // hits the route to request a reset key by clicking on one of the users... 
+        // also resets state for the users
+        event.preventDefault();
+        let {id} = event.target;
+        console.log(id);
+        API.getKeyForReset({id: id})
+        .then(message => {
+            this.setState({
+                userArray: [],
+                message: message
+            })
+        });
+    }
+    getUsers = event => {
+        // populates a list below with possible users
+        event.preventDefault();
+        let {email} = this.state;
+        console.log(email);
+        API.getUsersForReset({email: email})
+        .then(userArray => this.setState({userArray: userArray}));
+    }
+    submitResetPassword = event => {
+        event.preventDefault();
+        let {isSamePassword, password} = this.state;
+        let {key} = this.props.match.params;
+        if (isSamePassword) {
+            API.submitResetPassword({password: password}, key)
+            .then(message => {
+                this.setState({
+                    password: "",
+                    passwordRepeat: "",
+                    isSamePassword: false,
+                    userArray: [],
+                    resetUser: {},
+                    message: message
+                });
+            });
+        }
+    }
+    renderResetPage = () => {
+
+    }
+    componentDidMount = () => {
+        let {params} = this.props.match;
+        if (params.key) {
+            API.showUserForReset(params.key)
+            .then(user => {
+                this.setState({
+                    resetUser: user
+                });
+            });
+        }
     }
     render() {
         if (this.props.isLoggedIn) {
             return (
                 <Redirect to="/" />
             );
+        } else if (this.state.message.messageType === "success") {
+            return <Redirect to="/" />
         } else {
             if (this.props.action === "login") {
                 return (
@@ -101,7 +158,14 @@ class Auth extends React.Component {
                 );
             } else {
                 return (
-                    <Reset handleClick={this.reset} handleInputChange={this.handleInputChange}/>
+                    <Reset
+                        resetUser={this.state.resetUser}
+                        userArray={this.state.userArray}
+                        getUsers={this.getUsers}
+                        getResetKey={this.getResetKey}
+                        submitResetPassword={this.submitResetPassword}
+                        handleInputChange={this.handleInputChange}
+                    />
                 );
             }
         }

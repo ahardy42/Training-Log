@@ -71,14 +71,30 @@ router.post("/reset", (req, res) => {
             res.json("error message: " + err);
         }
         else if (!userArray.length) {
-            res.json("no user found!");
+            // res.json("no user found!");
+            res.json({messageType: "error", message: "No user with that email was found"});
         } else {
             let resArray = userArray.map(user => {
               return {name: `${user.firstName} ${user.lastName}`, username: user.username, id: user._id};
             })
-            res.json(resArray);
+            res.json(resArray); // sends back the list of users to be used as a "button"
         }
     })
-})
+});
+
+// /auth/reset-password/:key 
+// hit when reset auth component mounts to show a form
+router.get("/reset-password/:key", (req, res) => {
+  // route to send the user to the reset page where they can reset their password
+  let {key} = req.params;
+  db.User.findOne({resetKey: key}, (err, user) => {
+      if (err) res.json(err);
+      if (!user) {
+          return res.json("Sorry no user exists with that key");
+      } else {
+          res.json(user);
+      }
+  })
+});
 
 module.exports = router;
