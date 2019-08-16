@@ -1,5 +1,5 @@
 import React from 'react';
-import './App.css';
+import './App.sass';
 import NavBar from './containers/NavBar/NavBar';
 import Main from './pages/Main/Main';
 import Athlete from './pages/Athlete/Athlete';
