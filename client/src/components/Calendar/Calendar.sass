@@ -21,15 +21,15 @@
     padding: 10px
   
 
-.calendar__day,.active 
-    font-weight: bold
-    color: green
-    border: 1px solid $navBarColor
+.calendar__day.active 
+        font-weight: bold
+        color: $buttonColor
+        border: 2px solid $buttonColor
   
 
 .calendar__day.training 
-    background-color: rgba(0, 128, 0, 1)
-    color: rgb(252, 255, 255)
+    background-color: $textColor2
+    color: $textColor1
   
 .calendar 
     background-color: white
@@ -48,8 +48,29 @@
 	color: $textColor1
     border-right: 1px solid $textColor1
     border-top: 1px solid $textColor1
+    
+.day
+    position: relative
   
 
 .calendar__day:last-child 
     border-right: 0
   
+.no-outline-button
+    border: none
+    background-color: transparent
+    color: $textColor2
+    font-size: 1.5em
+
+.no-outline-button:hover
+    background-color: $textColor2
+    color: $navBarColor
+    box-shadow: $cardShadow
+
+.day-intensity
+    position: absolute
+    height: 25%
+    width: 25%
+    left: 0
+    bottom: 0
+    

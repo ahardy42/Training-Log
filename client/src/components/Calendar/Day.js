@@ -1,6 +1,7 @@
 import React from 'react';
-// import Training from '../Training/Training';
+import colorFuncs from '../../utils/colorFuncs';
 import "./Calendar.sass";
+
 
 const Day = ({isToday, day, training, handleClick}) => {
     // style the day div based on whether there is training for the day. this is a good start...
@@ -8,6 +9,7 @@ const Day = ({isToday, day, training, handleClick}) => {
     return (
         <div className={`calendar__day day ${isToday ? "active" : ""} ${training.length ? "training" : ""}`} onClick={training.length ? (event) => handleClick(event, training) : null}>
             <p className="day-p">{day}</p>
+            <div className="day-intensity" style={{backgroundColor: colorFuncs.intensityColor(training)}}></div>
         </div>
     )
 }

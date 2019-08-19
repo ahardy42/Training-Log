@@ -11,9 +11,9 @@ const ToolBar = ({ year, month, previousMonth, nextMonth, todaysDate}) => {
                 <div className="current-month">{month} {year}</div>
             </div>
             <div className="col-6 mb-2 d-flex justify-content-end">
-                <Button action="button" handleClick={previousMonth}><FontAwesomeIcon icon={faAngleLeft}/></Button>
-                <Button action="button" handleClick={todaysDate}><FontAwesomeIcon icon={faCalendarCheck}/></Button>
-                <Button action="button" handleClick={nextMonth}><FontAwesomeIcon icon={faAngleRight}/></Button>
+                <Button extraClasses="no-outline-button" action="button" handleClick={previousMonth}><FontAwesomeIcon icon={faAngleLeft}/></Button>
+                <Button extraClasses="no-outline-button" action="button" handleClick={todaysDate}><FontAwesomeIcon icon={faCalendarCheck}/></Button>
+                <Button extraClasses="no-outline-button" action="button" handleClick={nextMonth}><FontAwesomeIcon icon={faAngleRight}/></Button>
             </div>
         </div>
     );
