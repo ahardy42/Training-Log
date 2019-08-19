@@ -5,6 +5,15 @@ const colors = {
     green: "#2ad404"
 }
 
+const sports = {
+    bike: "#165408",
+    run: "#082d52",
+    ski: "#a65703",
+    rollerski: "#f08e26",
+    swim: "#69e0c5",
+    other: "#d90b04"
+}
+
 const colorFuncs = {
     intensityColor: function(training) {
         if (training.length) {
@@ -40,7 +49,12 @@ const colorFuncs = {
         }
     },
     trainingColor: function(training) {
-
+        if (training.length) {
+            let color = sports[training[0].mode];
+            return color;
+        } else {
+            return "transparent";
+        }
     },
     gradientColorCss: function(color, direction) { // supports hex colors only
         let gradient = `linear-gradient(to ${direction}, ${color}, ${color}00)`;
