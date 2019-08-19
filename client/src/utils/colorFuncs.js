@@ -1,43 +1,50 @@
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import {faSmile, faGrinAlt, faTired, faMeh, faSadCry } from '@fortawesome/free-solid-svg-icons';
+const colors = {
+    red: "#b51010",
+    orange: "#cf5804",
+    yellow: "#eef202",
+    green: "#2ad404"
+}
 
 const colorFuncs = {
-    intensityColor: training => {
+    intensityColor: function(training) {
         if (training.length) {
-            let totalIntensity = 0;
-            let avgIntensity = 0;
-            let len = training.length;
-            for (let i = 0; i < len; i++) {
-                totalIntensity += training[i].intensity;
-            }
-            avgIntensity = Math.round(totalIntensity / len);
-            let color = avgIntensity < 30 ? "yellow" :
-                avgIntensity < 50 ? "green" :
-                    avgIntensity < 80 ? "orange" : "red";
+            let avgIntensity = this.avgVal(training, "intensity");
+            let color = avgIntensity < 30 ? colors.green :
+                avgIntensity < 50 ? colors.yellow :
+                    avgIntensity < 80 ? colors.orange : colors.red;
             return color;
         } else {
             return "transparent";
         }
     },
-    feelingColor: training => {
+    feelingColor: function(training) {
         if (training.length) {
-            let totalFeeling = 0;
-            let avgFeeling = 0;
-            let len = training.length;
-            for (let i = 0; i < len; i++) {
-                totalFeeling += training[i].feeling;
-            }
-            avgFeeling = Math.round(totalFeeling / len);
-            let color = avgFeeling < 30 ? "red" :
-                avgFeeling < 50 ? "orange" :
-                avgFeeling < 80 ? "yellow" : "green";
+            let avgFeeling = this.avgVal(training, "feeling");
+            let color = avgFeeling < 30 ? colors.red :
+                avgFeeling < 50 ? colors.orange :
+                avgFeeling < 80 ? colors.yellow : colors.green;
             return color;
         } else {
             return "transparent";
         }
     },
-    trainingColor: training => {
+    avgVal: function(array, string) {
+        if (array.length) {
+            let total = 0;
+            let len = array.length;
+            for (let i = 0; i < len; i++) {
+                total += array[i][string];
+            }
+            let avg = Math.round(total / len);
+            return avg;
+        }
+    },
+    trainingColor: function(training) {
 
+    },
+    gradientColorCss: function(color, direction) { // supports hex colors only
+        let gradient = `linear-gradient(to ${direction}, ${color}, ${color}00)`;
+        return gradient;
     }
 }
 
