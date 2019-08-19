@@ -10,6 +10,7 @@ const Day = ({isToday, day, training, handleClick}) => {
         <div className={`calendar__day day ${isToday ? "active" : ""} ${training.length ? "training" : ""}`} onClick={training.length ? (event) => handleClick(event, training) : null}>
             <p className="day-p">{day}</p>
             <div className="day-intensity" style={{backgroundColor: colorFuncs.intensityColor(training)}}></div>
+            <div className="day-feeling"></div>
         </div>
     )
 }
