@@ -5,6 +5,7 @@ import Stats from '../../containers/Stats/Stats';
 import TrainingModal from '../../containers/TrainingModal/TrainingModal';
 import API from '../../utils/API';
 import dateHelpers from '../../utils/dateHelpers';
+import './Athlete.sass';
 
 class Athlete extends React.Component {
     constructor(props) {
@@ -146,26 +147,34 @@ class Athlete extends React.Component {
                     isEdit={this.state.isEdit}
                     training={this.state.selectedTraining}
                 />
-                <div className="row">
+                <div className="row justify-content-center">
                     {/* buttons to toggle view / add training */}
-                    <div className="col justify-content-center">
-                        <Button action="button" handleClick={this.openTrainingAddModal}>Add Training</Button>
+                    <div className="col-md-4 d-flex justify-content-center add-training-div">
+                        <Button extraClasses="add-button" action="button" handleClick={this.openTrainingAddModal}>Add Training</Button>
                     </div>
                 </div>
                 <div className="row">
                     {/* calendar and stats */}
-                    <div className="col-7">
-                        <Calendar
-                            display={this.state.display}
-                            viewTraining={this.openTrainingViewModal}
-                            nextMonth={this.forwardInTimeframe}
-                            previousMonth={this.backwardInTimeframe}
-                            todaysDate={this.currentTimeframe}
-                            calObject={this.state.calObject}
-                        />
+                    <div className="col-md-7 col-12 mb-2">
+                        <div className="card">
+                            <div className="card-body">
+                                <Calendar
+                                    display={this.state.display}
+                                    viewTraining={this.openTrainingViewModal}
+                                    nextMonth={this.forwardInTimeframe}
+                                    previousMonth={this.backwardInTimeframe}
+                                    todaysDate={this.currentTimeframe}
+                                    calObject={this.state.calObject}
+                                />
+                            </div>
+                        </div>
                     </div>
-                    <div className="col-5">
-                        <Stats userTraining={this.state.trainingStats}/>
+                    <div className="col-md-5 col-12">
+                        <div className="card">
+                            <div className="card-body">
+                                <Stats userTraining={this.state.trainingStats}/>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>

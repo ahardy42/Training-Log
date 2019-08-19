@@ -1,6 +1,6 @@
 import React from 'react';
 import Day from './Day';
-import './Calendar.css';
+import './Calendar.sass';
 
 const Week = ({week, viewTraining}) => {
     return (

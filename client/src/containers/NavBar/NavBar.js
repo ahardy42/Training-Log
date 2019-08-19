@@ -1,5 +1,6 @@
 import React from 'react';
 import Nav from '../../components/Nav/Nav';
+import './Navbar.sass'
 
 class NavBar extends React.Component {
     constructor(props) {
