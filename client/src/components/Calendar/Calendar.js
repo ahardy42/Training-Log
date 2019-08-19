@@ -2,7 +2,7 @@ import React from 'react';
 import ToolBar from './ToolBar';
 import Header from './Header';
 import Week from './Week';
-import './Calendar.css';
+import './Calendar.sass';
 
 const Calendar = ({calObject, previousMonth, nextMonth, todaysDate, viewTraining}) => {
 

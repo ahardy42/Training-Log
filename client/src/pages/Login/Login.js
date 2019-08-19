@@ -8,11 +8,11 @@ const Login = ({handleInputChange, handleClick}) => {
         <div className="container login">
            <div className="card">
                 <div className="card-body">
-                <h5 class="card-title text-center mb-5">Login to view your training</h5>
-                    <form>
+                <h3 className="card-title text-center mb-5">Login to view your training</h3>
+                    <form className="login-form">
                         <Input action="username" name="username" id="loginUsername" handleInputChange={handleInputChange}>username</Input>
                         <Input action="password" name="password" id="loginPassword" handleInputChange={handleInputChange}>password</Input>
-                        <Button action="submit" id="login" handleClick={handleClick}>Login!</Button>
+                        <Button action="submit" id="login" extraClasses="login-button" handleClick={handleClick}>Login!</Button>
                     </form>
                 </div>
            </div>

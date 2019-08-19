@@ -1,6 +1,6 @@
 import React from 'react';
 // import Training from '../Training/Training';
-import "./Calendar.css";
+import "./Calendar.sass";
 
 const Day = ({isToday, day, training, handleClick}) => {
     // style the day div based on whether there is training for the day. this is a good start...

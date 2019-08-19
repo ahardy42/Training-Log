@@ -1,34 +1,37 @@
 @import ../../colorVars
     
-.login
+h2
+    font-family: $headlineFont
+    text-align: center
+    background-color: $navBarColor
+    color: $textColor2
+    padding: 20px
+    border-radius: 5px
+    box-shadow: $cardShadow
+
+.signup
     height: 100vh
     display: flex
     flex-direction: column
     justify-content: center
     margin-top: 2em
 
-.card-title
-    font-family: $headlineFont
-
-.card
-    box-shadow: $cardShadow
-    background-color: $navBarColor
-    color: $textColor2
-
-label
-    font-family: $normalFont
-
-.login-form
+.signup-bottom-form
     display: flex
     flex-direction: column
     align-items: center
+    
 
-.login-form
+.signup-bottom-form
     .form-group
         width: 90%
-        margin-bottom: 2em
 
-.login-button
+.signup-bottom-form
+    .btn
+        width: 50%
+        margin-top: 1.5em
+
+.signup-button
     border: none
     width: 25%
     padding: .75em 0
@@ -39,9 +42,12 @@ label
     font-family: $normalFont
     font-size: 1.2em
 
-.login-button:hover
+.signup-button, .disabled
+        color: $textColor2
+        background-color: $navBarColor
+
+.signup-button:hover
     border: 2px solid $textColor2
     background-color: $navBarColor
     color: $textColor2
     box-shadow: 3px 3px 10px black
-    
