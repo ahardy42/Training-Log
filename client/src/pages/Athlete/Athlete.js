@@ -16,7 +16,8 @@ class Athlete extends React.Component {
             isAdd: false,
             isEdit: false,
             selectedTraining: [],
-            trainingStats: []
+            trainingStats: [],
+            yearStats: []
         }
     }
     openModal = () => {
@@ -120,9 +121,17 @@ class Athlete extends React.Component {
         })
         .catch(err => console.log(err));
     }
+    getBarSats = (year) => {
+        API.getTrainingStats(year)
+        .then(yearStats => {
+            this.setState({yearStats: yearStats});
+        })
+        .catch(err => console.log(err));
+    }
     updateTrainingAndStats = (calObject) => {
         let {year, monthNum} = calObject;
         this.getStats(year, monthNum);
+        this.getBarSats(year);
         API.getTraining(year, monthNum)
         .then(training => {
             let updatedCalObject = training ? dateHelpers.insertTrainingIntoCalObject(training, calObject) : calObject;
@@ -172,7 +181,10 @@ class Athlete extends React.Component {
                     <div className="col-md-5 col-12">
                         <div className="card">
                             <div className="card-body">
-                                <Stats userTraining={this.state.trainingStats}/>
+                                <Stats
+                                    userTraining={this.state.trainingStats}
+                                    yearStats={this.state.yearStats}
+                                />
                             </div>
                         </div>
                     </div>
