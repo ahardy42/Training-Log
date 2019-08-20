@@ -6,7 +6,8 @@ import './Calendar.sass';
 
 const TrainingInfo = ({training}) => {
     let intensityStyle = {
-        backgroundImage: colorFuncs.gradientColorCss(colorFuncs.intensityColor(training), "right")
+        borderRadius: "20px 0 0 20px",
+        backgroundImage: colorFuncs.gradientColorCss(colorFuncs.intensityColor(training), "to right")
     };
     let avgFeeling = colorFuncs.avgVal(training, "feeling");
     return(

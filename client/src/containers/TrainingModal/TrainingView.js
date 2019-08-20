@@ -1,5 +1,5 @@
 import React from 'react';
-import './TrainingModal.css';
+
 
 const TrainingView = ({ trainingArray, index }) => {
     // if trainingArray is empty, just return the empty array so this doesn't error out on load

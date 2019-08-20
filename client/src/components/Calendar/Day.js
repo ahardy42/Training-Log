@@ -8,8 +8,7 @@ const Day = ({isToday, day, training, handleClick}) => {
     // style the day div based on whether there is training for the day. this is a good start...
     // perhaps in the future this will render a button styled to fit the contents of the div...
     let style = {
-        border: `5px outset ${colorFuncs.trainingColor(training)}`,
-        backgroundColor: `${colorFuncs.trainingColor(training)}33`
+        backgroundImage: `${colorFuncs.gradientColorCss(colorFuncs.trainingColor(training), "to bottom right", "75%")}`
     }
     return (
         <div style={style} className={`calendar__day day ${isToday ? "active" : ""} ${training.length ? "training" : ""}`} onClick={training.length ? (event) => handleClick(event, training) : null}>

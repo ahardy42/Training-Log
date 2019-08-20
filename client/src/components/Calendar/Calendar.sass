@@ -22,9 +22,9 @@
   
 
 .calendar__day.active 
-        font-weight: bold
-        color: $buttonColor
-        border: 2px solid $buttonColor
+    font-weight: bold
+    color: $buttonColor
+    border: 2px solid $buttonColor
 
   
 .calendar 
@@ -42,12 +42,20 @@
 
 .calendar__day 
 	color: $textColor1
-    border-right: 1px solid $textColor1
-    border-top: 1px solid $textColor1
+    border: 
+        right: 1px solid $textColor1
+        bottom: 1px solid $textColor1
     
 .day
     position: relative
   
+.training
+    margin-left: 2px
+    box-shadow: 2px 2px 10px black
+
+.training:active
+    margin-left: 0
+    box-shadow: none
 
 .calendar__day:last-child 
     border-right: 0
@@ -78,7 +86,7 @@
     left: 0
 
 .feeling-icon
-    color: 	#ffcc33
+    color: 	$icons
     background-color: black
     box-shadow: 2px 2px 5px black
     border-radius: 32px

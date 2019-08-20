@@ -56,8 +56,8 @@ const colorFuncs = {
             return "transparent";
         }
     },
-    gradientColorCss: function(color, direction) { // supports hex colors only
-        let gradient = `linear-gradient(to ${direction}, ${color}, ${color}00)`;
+    gradientColorCss: function(color, direction, endAt) { // supports hex colors only
+        let gradient = `linear-gradient(${direction}, ${color}, ${color}00  ${endAt ? endAt : ""})`;
         return gradient;
     }
 }

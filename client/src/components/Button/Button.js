@@ -6,7 +6,7 @@ const Button = ({action, children, handleClick, ...props}) => {
             type={action}
             onClick={handleClick}
             id={props.id}
-            className={`btn btn-outline-info ${props.extraClasses ? props.extraClasses : ""}`}
+            className={`btn ${props.extraClasses ? props.extraClasses : "myButton"}`}
         >
             {children}
         </button>
