@@ -52,30 +52,33 @@ router.get("/coach-approval/:key?", (req, res) => {
     let { key } = req.params;
     db.Temp.findOneAndDelete({ accessKey: key }, (err, coach) => {
         if (err) res.json({messageType: "error", message: err});
-        console.log(coach);
-        let tempCoach = {
-            firstName: coach.firstName,
-            lastName: coach.lastName,
-            email: coach.email,
-            username: coach.username,
-            password: coach.password,
-            team: coach.team,
-            type: coach.type
+        if (coach) {
+            let tempCoach = {
+                firstName: coach.firstName,
+                lastName: coach.lastName,
+                email: coach.email,
+                username: coach.username,
+                password: coach.password,
+                team: coach.team,
+                type: coach.type
+            }
+            let approvedCoach = new db.User(tempCoach);
+            approvedCoach.save((err, newCoach) => {
+                if (err) res.json({messageType: "error", message: err});
+                const mailOptions = {
+                    to: newCoach.email,
+                    from: adminEmail,
+                    subject: 'New Coach Request Approved!',
+                    text: "Great news! " + newCoach.firstName + " , you have been approved as a coach for " + newCoach.team + ".\n\n" +
+                        "Please go to http://" + req.hostname + "/login to login using your username and password. Your username is " + newCoach.username +
+                        "and your password is the same as the one you signed up with..."
+                };
+                sgMail.send(mailOptions);
+                res.json({messageType: "success", message: "success!"});
+            });
+        } else {
+            res.json({messageType: "error", message: "something happened!"});
         }
-        let approvedCoach = new db.User(tempCoach);
-        approvedCoach.save((err, newCoach) => {
-            if (err) res.json({messageType: "error", message: err});
-            const mailOptions = {
-                to: newCoach.email,
-                from: adminEmail,
-                subject: 'New Coach Request Approved!',
-                text: "Great news! " + newCoach.firstName + " , you have been approved as a coach for " + newCoach.team + ".\n\n" +
-                    "Please go to http://" + req.hostname + "/login to login using your username and password. Your username is " + newCoach.username +
-                    "and your password is the same as the one you signed up with..."
-            };
-            sgMail.send(mailOptions);
-            res.json({messageType: "success", message: "success!"});
-        })
     })
 
 });

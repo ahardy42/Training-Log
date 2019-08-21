@@ -11,10 +11,11 @@ class Main extends React.Component {
         }
     }
     componentDidMount() {
-        if (this.props.match.path === "/coach") {
+        if (this.props.match.path === "/coach/:key") {
             let {key} = this.props.match.params;
             fetch("/email/coach-approval/" + key)
             .then(message => {
+                console.log(message);
                 this.setState({
                     message: message
                 });
