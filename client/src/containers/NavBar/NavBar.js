@@ -24,7 +24,7 @@ class NavBar extends React.Component {
     render() {
         let name = `${this.props.user.firstName} ${this.props.user.lastName}`;
         return (
-            <Nav getLink={this.props.getLink} pathName={this.props.pathName} name={name} isLoggedIn={this.props.isLoggedIn} handleSignOut={this.props.signOut}/>
+            <Nav type={this.props.user.type} getLink={this.props.getLink} pathName={this.props.pathName} name={name} isLoggedIn={this.props.isLoggedIn} handleSignOut={this.props.signOut}/>
         );
     }
 }
