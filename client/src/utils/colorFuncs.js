@@ -44,7 +44,7 @@ const colorFuncs = {
             for (let i = 0; i < len; i++) {
                 total += array[i][string];
             }
-            let avg = Math.round(total / len);
+            let avg = (total / len).toFixed(1);
             return avg;
         }
     },

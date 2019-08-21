@@ -15,10 +15,10 @@ const TrainingInfo = ({training}) => {
             <div className="day-intensity" style={intensityStyle}></div>
             <div className="day-feeling">
                 {
-                    avgFeeling < 20 ? <FontAwesomeIcon icon={faSadCry} size="2x" className="feeling-icon"/> :
-                    avgFeeling < 40 ? <FontAwesomeIcon icon={faTired} size="2x" className="feeling-icon"/> :
-                    avgFeeling < 60 ? <FontAwesomeIcon icon={faMeh} size="2x" className="feeling-icon"/> :
-                    avgFeeling < 80 ? <FontAwesomeIcon icon={faSmile} size="2x" className="feeling-icon"/> : <FontAwesomeIcon icon={faGrinAlt} size="2x" className="feeling-icon"/>
+                    avgFeeling < 1 ? <FontAwesomeIcon icon={faSadCry} size="2x" className="feeling-icon"/> :
+                    avgFeeling < 2 ? <FontAwesomeIcon icon={faTired} size="2x" className="feeling-icon"/> :
+                    avgFeeling < 3 ? <FontAwesomeIcon icon={faMeh} size="2x" className="feeling-icon"/> :
+                    avgFeeling < 4 ? <FontAwesomeIcon icon={faSmile} size="2x" className="feeling-icon"/> : <FontAwesomeIcon icon={faGrinAlt} size="2x" className="feeling-icon"/>
                 }
             </div>
         </div>
