@@ -1,4 +1,4 @@
-# Training-Log (in progress... not currently deployed)
+# Training-Log (deployed at [stoked on training!](https://stoked-on-training.herokuapp.com/))
 ## Introductory Training Log
 
 ### who it’s for: 
@@ -29,7 +29,8 @@ Dependencies:
 Front-End libraries: 
 
 - Bootstrap
-- Animate.css
+- chartsjs
+- moment
 
 ### User Information
 
@@ -50,4 +51,4 @@ As an athlete, using the main page, you can view a calendar with your workouts, 
 
 Clicking "Add Workout" brings you to a form page where you can fill out details of a workout you have done. Submitting this workout populates the calendar with your newly added workout. Editing a workout is very similar to adding one, and deleting is pretty self-explanatory. 
 
-The calendar has three views: Yearly, Monthly and Weekly.  Each activity on the calendar is color coded by activity type, and is highlighted in a special way when a coach has commented. 
+The calendar has one view: Monthly.  Each activity on the calendar is color coded by activity type, and is highlighted in a special way when a coach has commented. You can immediately see, by color / emoji tags, trends in how hard you went, and how you were feeling during workouts. 

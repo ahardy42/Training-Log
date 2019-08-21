@@ -1,33 +1,39 @@
 import React from 'react';
 import Button from '../Button/Button';
 import moment from 'moment';
+import colorFuncs from '../../utils/colorFuncs';
 import { Pie } from 'react-chartjs-2';
 
 const AthleteList = ({athlete, handleClick}) => {
         let pieData = athlete.mode.map(element => element.totalDuration);
         let labels = athlete.mode.map(element => element.mode);
-        let backgroundColor = athlete.mode.map(element => {
-            switch (element.mode) {
-                case "rollerski":
-                    return "#62eb13";
-                case "run":
-                    return "#ebdd13";
-                case "bike":
-                    return "#141fe3";
-                case "ski":
-                    return "#39660b";
-                case "swim":
-                    return "#e012be";
-                default:
-                    return "#0baab5";
-            }
-        });
+        let backgroundColor = athlete.mode.map(element => colorFuncs.coachColor(element.mode));
+        // let backgroundColor = athlete.mode.map(element => {
+        //     switch (element.mode) {
+        //         case "rollerski":
+        //             return "#62eb13";
+        //         case "run":
+        //             return "#ebdd13";
+        //         case "bike":
+        //             return "#141fe3";
+        //         case "ski":
+        //             return "#39660b";
+        //         case "swim":
+        //             return "#e012be";
+        //         default:
+        //             return "#0baab5";
+        //     }
+        // });
         let data = {
             labels: labels,
             datasets: [{
                 data: pieData,
                 backgroundColor: backgroundColor
             }]
+        };
+        let legend = {
+            labels: { boxWidth: 20 },
+            position: "bottom"
         }
     return (
         <li className="list-group-item">
@@ -40,7 +46,7 @@ const AthleteList = ({athlete, handleClick}) => {
                             <Button action="button" handleClick={() => {handleClick(athlete.athleteId, athlete.name)}}>Details</Button>
                         </div>
                         <div className="col-9">
-                            <Pie data={data}/>
+                            <Pie data={data} legend={legend}/>
                         </div>
                     </div>
                 </div>

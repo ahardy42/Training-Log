@@ -6,7 +6,7 @@ import Button from '../Button/Button';
 const Nav = ({name, handleSignOut, isLoggedIn, pathName, getLink, type}) => {
     return (
         <nav className="navbar">
-            <span className="navbar-brand mb-0"><h1>Training Log: <em style={{fontSize: "0.8em"}}>{type}</em></h1></span>
+            <span className="navbar-brand mb-0"><h1>Stoked On Training!{type ? " |" : ""} <em style={{fontSize: "0.8em"}}>{type}</em></h1></span>
             <span className="navbar-text">{isLoggedIn ? `Hi ${name}` : null}</span>
             {isLoggedIn ? <Button handleClick={handleSignOut}>Sign Out</Button> : (
                 <ul className="nav flex-column">

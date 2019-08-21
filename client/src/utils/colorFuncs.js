@@ -56,6 +56,10 @@ const colorFuncs = {
             return "transparent";
         }
     },
+    coachColor: function(element) {
+        let color = sports[element];
+        return color;
+    },
     statsColor: function(statsElement) { // used in a map function to produce a new array
         let color = sports[statsElement._id];
         return color += "BF";
