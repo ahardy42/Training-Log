@@ -1,7 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const authenticate = require("../config/middleware/authenticate");
-const db = require("../models/Index");
+const db = require("../models");
 const mongoose = require("mongoose");
 
 const getDateFromParams = require("./helperFunc");
@@ -22,31 +22,33 @@ router.get("/training/:year?/:month?", authenticate.isLoggedIn, (req, res) => {
 
 // get trainingStats object for charts.js components
 router.get("/stats/:year?/:month?", authenticate.isLoggedIn, (req, res) => {
-    let {year, month} = req.params;
-    if (month) {
-        let date = getDateFromParams(year, month);
-        db.User.aggregate()
-            .match({ _id: mongoose.Types.ObjectId(req.user.id) })
-            .unwind("$training")
-            .match({ $and: [{ "training.date": { $gte: date.start } }, { "training.date": { $lte: date.end } }] })
-            .group({ _id: "$training.mode", total: { $sum: "$training.duration" } })
-            .exec((err, stats) => {
-                if (err) console.log(err);
-                res.json(stats);
-            })
-    } else {
-        let date = getDateFromParams(year, month);
-        db.User.aggregate()
-            .match({ _id: mongoose.Types.ObjectId(req.user.id) })
-            .unwind("$training")
-            .match({ $and: [{ "training.date": { $gte: date.start } }, { "training.date": { $lte: date.end } }] })
-            .group({ _id: {month: {$month: "$training.date"}}, total: { $sum: "$training.duration" } })
-            .exec((err, stats) => {
-                if (err) console.log(err);
-                res.json(stats);
-            })
-    }
+    let { year, month } = req.params;
+    let date = getDateFromParams(year, month);
+    db.User.aggregate()
+        .match({ _id: mongoose.Types.ObjectId(req.user.id) })
+        .unwind("$training")
+        .match({ $and: [{ "training.date": { $gte: date.start } }, { "training.date": { $lte: date.end } }] })
+        .group({ _id: "$training.mode", total: { $sum: "$training.duration" } })
+        .exec((err, stats) => {
+            if (err) console.log(err);
+            res.json(stats);
+        })
 });
+
+// get stats for the year, by month for the chart
+router.get("/chart-stats/:year", authenticate.isLoggedIn, (req, res) => {
+    let {year} = req.params;
+    let date = getDateFromParams(year);
+    db.User.aggregate()
+        .match({ _id: mongoose.Types.ObjectId(req.user.id) })
+        .unwind("$training")
+        .match({ $and: [{ "training.date": { $gte: date.start } }, { "training.date": { $lte: date.end } }] })
+        .group({ _id: { month: { $month: "$training.date" } }, total: { $sum: "$training.duration" } })
+        .exec((err, stats) => {
+            if (err) console.log(err);
+            res.json(stats);
+        });
+})
 
 // add a training for a user
 router.post("/training", authenticate.isLoggedIn, (req, res) => {

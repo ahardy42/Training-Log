@@ -62,7 +62,9 @@ class Athlete extends React.Component {
             this.setState({
                 calObject: updatedCalObject
             }, () => {
-                this.getStats(this.state.calObject);
+                let {year, monthNum} = this.state.calObject;
+                this.getStats(year, monthNum);
+                this.getBarSats(year);
             });
         })
         .catch(err => console.log(err));
@@ -75,7 +77,9 @@ class Athlete extends React.Component {
             this.setState({
                 calObject: updatedCalObject
             }, () => {
-                this.getStats(this.state.calObject);
+                let {year, monthNum} = this.state.calObject;
+                this.getStats(year, monthNum);
+                this.getBarSats(year);
             });
         })
         .catch(err => console.log(err));
@@ -88,7 +92,9 @@ class Athlete extends React.Component {
             this.setState({
                 calObject: updatedCalObject
             }, () => {
-                this.getStats(this.state.calObject);
+                let {year, monthNum} = this.state.calObject;
+                this.getStats(year, monthNum);
+                this.getBarSats(year);
             });
         })
         .catch(err => console.log(err));
@@ -122,7 +128,7 @@ class Athlete extends React.Component {
         .catch(err => console.log(err));
     }
     getBarSats = (year) => {
-        API.getTrainingStats(year)
+        API.getYearStats(year)
         .then(yearStats => {
             this.setState({yearStats: yearStats});
         })
@@ -164,9 +170,10 @@ class Athlete extends React.Component {
                 </div>
                 <div className="row">
                     {/* calendar and stats */}
-                    <div className="col-md-7 col-12 mb-2">
+                    <div className="col-lg-7 col-12 mb-2">
                         <div className="card">
                             <div className="card-body">
+                                <h3 className="card-title text-center">This Month's Training!</h3>
                                 <Calendar
                                     display={this.state.display}
                                     viewTraining={this.openTrainingViewModal}
@@ -178,9 +185,10 @@ class Athlete extends React.Component {
                             </div>
                         </div>
                     </div>
-                    <div className="col-md-5 col-12">
+                    <div className="col-lg-5 col-12">
                         <div className="card">
                             <div className="card-body">
+                            <h3 className="card-title text-center">Training Graphs!</h3>
                                 <Stats
                                     userTraining={this.state.trainingStats}
                                     yearStats={this.state.yearStats}

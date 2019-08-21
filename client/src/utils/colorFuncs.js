@@ -56,6 +56,10 @@ const colorFuncs = {
             return "transparent";
         }
     },
+    statsColor: function(statsElement) { // used in a map function to produce a new array
+        let color = sports[statsElement._id];
+        return color += "BF";
+    },
     gradientColorCss: function(color, direction, endAt) { // supports hex colors only
         let gradient = `linear-gradient(${direction}, ${color}, ${color}00  ${endAt ? endAt : ""})`;
         return gradient;
