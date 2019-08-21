@@ -1,7 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const authenticate = require("../config/middleware/authenticate");
-const db = require("../models/Index");
+const db = require("../models");
 const mongoose = require("mongoose");
 
 const getDateFromParams = require("./helperFunc");

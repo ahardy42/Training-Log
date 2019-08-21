@@ -1,6 +1,6 @@
 const express = require('express');
 const router = express.Router();
-const db = require("../models/Index");
+const db = require("../models");
 const crypto = require("crypto");
 const sgMail = require('@sendgrid/mail');
 require("dotenv").config();

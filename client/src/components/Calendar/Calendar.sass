@@ -1,0 +1,95 @@
+@import ../../colorVars
+
+.calendar__week,
+.calendar__header 
+    display: grid
+    grid-template-columns: repeat(7, 1fr)
+  
+
+.calendar__week 
+    grid-auto-rows: 100px
+    text-align: right
+  
+
+.calendar__header 
+    grid-auto-rows: 50px
+    align-items: center
+    text-align: center
+  
+
+.calendar__day 
+    padding: 10px
+  
+
+.calendar__day.active 
+    font-weight: bold
+    color: $buttonColor
+    border: 2px solid $buttonColor
+
+  
+.calendar 
+    background-color: white
+    border: 1px solid #e1e1e1
+  
+
+.calendar__header>
+	div 
+		color: $textColor1
+    	text-transform: uppercase
+    	font-size: 0.8em
+    	font-weight: bold
+  
+
+.calendar__day 
+	color: $textColor1
+    border: 
+        right: 1px solid $textColor1
+        bottom: 1px solid $textColor1
+    
+.day
+    position: relative
+  
+.training
+    margin-left: 2px
+    box-shadow: 2px 2px 10px black
+
+.training:active
+    margin-left: 0
+    box-shadow: none
+
+.calendar__day:last-child 
+    border-right: 0
+  
+.no-outline-button
+    border: none
+    background-color: transparent
+    color: $textColor2
+    font-size: 1.5em
+
+.no-outline-button:hover
+    background-color: $textColor2
+    color: $navBarColor
+    box-shadow: $cardShadow
+
+.day-training
+    position: absolute
+    height: 40%
+    width: 100%
+    left: 0
+    bottom: 0
+    
+.day-intensity
+    position: absolute
+    width: 100%
+    height: 100%
+    top: 0
+    left: 0
+
+.feeling-icon
+    color: 	$icons
+    background-color: black
+    box-shadow: 2px 2px 5px black
+    border-radius: 32px
+    position: absolute
+    right: 10px
+    bottom: 5px

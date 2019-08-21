@@ -5,6 +5,7 @@ import Stats from '../../containers/Stats/Stats';
 import TrainingModal from '../../containers/TrainingModal/TrainingModal';
 import API from '../../utils/API';
 import dateHelpers from '../../utils/dateHelpers';
+import './Athlete.sass';
 
 class Athlete extends React.Component {
     constructor(props) {
@@ -15,7 +16,8 @@ class Athlete extends React.Component {
             isAdd: false,
             isEdit: false,
             selectedTraining: [],
-            trainingStats: []
+            trainingStats: [],
+            yearStats: []
         }
     }
     openModal = () => {
@@ -60,7 +62,9 @@ class Athlete extends React.Component {
             this.setState({
                 calObject: updatedCalObject
             }, () => {
-                this.getStats(this.state.calObject);
+                let {year, monthNum} = this.state.calObject;
+                this.getStats(year, monthNum);
+                this.getBarSats(year);
             });
         })
         .catch(err => console.log(err));
@@ -73,7 +77,9 @@ class Athlete extends React.Component {
             this.setState({
                 calObject: updatedCalObject
             }, () => {
-                this.getStats(this.state.calObject);
+                let {year, monthNum} = this.state.calObject;
+                this.getStats(year, monthNum);
+                this.getBarSats(year);
             });
         })
         .catch(err => console.log(err));
@@ -86,7 +92,9 @@ class Athlete extends React.Component {
             this.setState({
                 calObject: updatedCalObject
             }, () => {
-                this.getStats(this.state.calObject);
+                let {year, monthNum} = this.state.calObject;
+                this.getStats(year, monthNum);
+                this.getBarSats(year);
             });
         })
         .catch(err => console.log(err));
@@ -119,9 +127,17 @@ class Athlete extends React.Component {
         })
         .catch(err => console.log(err));
     }
+    getBarSats = (year) => {
+        API.getYearStats(year)
+        .then(yearStats => {
+            this.setState({yearStats: yearStats});
+        })
+        .catch(err => console.log(err));
+    }
     updateTrainingAndStats = (calObject) => {
         let {year, monthNum} = calObject;
         this.getStats(year, monthNum);
+        this.getBarSats(year);
         API.getTraining(year, monthNum)
         .then(training => {
             let updatedCalObject = training ? dateHelpers.insertTrainingIntoCalObject(training, calObject) : calObject;
@@ -146,26 +162,39 @@ class Athlete extends React.Component {
                     isEdit={this.state.isEdit}
                     training={this.state.selectedTraining}
                 />
-                <div className="row">
+                <div className="row justify-content-center">
                     {/* buttons to toggle view / add training */}
-                    <div className="col justify-content-center">
-                        <Button action="button" handleClick={this.openTrainingAddModal}>Add Training</Button>
+                    <div className="col-md-4 d-flex justify-content-center add-training-div">
+                        <Button extraClasses="add-button" action="button" handleClick={this.openTrainingAddModal}>Add Training</Button>
                     </div>
                 </div>
                 <div className="row">
                     {/* calendar and stats */}
-                    <div className="col-7">
-                        <Calendar
-                            display={this.state.display}
-                            viewTraining={this.openTrainingViewModal}
-                            nextMonth={this.forwardInTimeframe}
-                            previousMonth={this.backwardInTimeframe}
-                            todaysDate={this.currentTimeframe}
-                            calObject={this.state.calObject}
-                        />
+                    <div className="col-lg-7 col-12 mb-2">
+                        <div className="card">
+                            <div className="card-body">
+                                <h3 className="card-title text-center">This Month's Training!</h3>
+                                <Calendar
+                                    display={this.state.display}
+                                    viewTraining={this.openTrainingViewModal}
+                                    nextMonth={this.forwardInTimeframe}
+                                    previousMonth={this.backwardInTimeframe}
+                                    todaysDate={this.currentTimeframe}
+                                    calObject={this.state.calObject}
+                                />
+                            </div>
+                        </div>
                     </div>
-                    <div className="col-5">
-                        <Stats userTraining={this.state.trainingStats}/>
+                    <div className="col-lg-5 col-12">
+                        <div className="card">
+                            <div className="card-body">
+                            <h3 className="card-title text-center">Training Graphs!</h3>
+                                <Stats
+                                    userTraining={this.state.trainingStats}
+                                    yearStats={this.state.yearStats}
+                                />
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>

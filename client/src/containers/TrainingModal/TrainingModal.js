@@ -4,7 +4,8 @@ import TrainingForm from './TrainingForm';
 import TrainingView from './TrainingView';
 import Pagination from './Pagination';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faTimesCircle } from '@fortawesome/free-solid-svg-icons';
+import {faTimesCircle, faSmile, faGrinAlt, faTired, faMeh, faSadCry } from '@fortawesome/free-solid-svg-icons';
+import './TrainingModal.sass';
 
 class TrainingModal extends React.Component {
     constructor(props) {
@@ -18,7 +19,13 @@ class TrainingModal extends React.Component {
             feeling: 0,
             comment: "",
             coachComment: "",
-            id: ""
+            id: "",
+            rangeStyle: {}
+        }
+    }
+    rangeStyle = () => {
+        let style = {
+            
         }
     }
     nextPage = () => {
@@ -117,7 +124,7 @@ class TrainingModal extends React.Component {
                     <div className="modal-content">
                         <div className="modal-header">
                             <h5 className="modal-title">{isAdd ? "Add Training" : "Here's your training!"}</h5>
-                            <Button action="button" handleClick={this.modalCloseReset}>
+                            <Button action="button" handleClick={this.modalCloseReset} extraClasses="no-outline-button">
                                 <FontAwesomeIcon icon={faTimesCircle}></FontAwesomeIcon>
                             </Button>
                         </div>
@@ -130,6 +137,7 @@ class TrainingModal extends React.Component {
                             {
                                 (isAdd || isEdit) ? (
                                     <TrainingForm
+                                        rangeStyle={this.rangeStyle}
                                         state={this.state}
                                         selectedDate={this.state.date}
                                         handleInputChange={this.handleInputChange}
