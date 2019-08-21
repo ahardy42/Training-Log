@@ -126,9 +126,6 @@ class Auth extends React.Component {
             });
         }
     }
-    renderResetPage = () => {
-
-    }
     componentDidMount = () => {
         let {params, path} = this.props.match;
         this.props.renderLink(path);
@@ -155,7 +152,7 @@ class Auth extends React.Component {
                 );
             } else if (this.props.action === "signup") {
                 return (
-                    <Signup handleCheck={this.handleCheck} handleClick={this.signup} handleInputChange={this.handleInputChange} allowSubmit={this.state.allowSubmit}/>
+                    <Signup message={this.props.message} handleCheck={this.handleCheck} handleClick={this.signup} handleInputChange={this.handleInputChange} allowSubmit={this.state.allowSubmit}/>
                 );
             } else {
                 return (

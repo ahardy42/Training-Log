@@ -13,7 +13,8 @@ class App extends React.Component {
     this.state = {
       isLoggedIn: false,
       user: {},
-      pathName: ""
+      pathName: "",
+      message: {}
     }
   }
   login = async user => {
@@ -39,10 +40,16 @@ class App extends React.Component {
       }
     });
     let user = await response.json();
-    this.setState({
-      isLoggedIn: true,
-      user: user
-    });
+    if (user.messageType) {
+      this.setState({
+        message: user
+      });
+    } else {
+      this.setState({
+        isLoggedIn: true,
+        user: user
+      });
+    }
   }
   signOut = async () => {
     let response = await fetch("/auth/logout");
@@ -56,13 +63,13 @@ class App extends React.Component {
     }
   }
   renderLandingPage = (props) => {
-    let { isLoggedIn, user } = this.state;
+    let { isLoggedIn, user, message } = this.state;
     if (isLoggedIn && user.type === "Athlete") {
       return <Athlete {...props} athlete={user} />
     } else if (isLoggedIn && user.type === "Coach") {
       return <Coach {...props} coach={user} />
     } else {
-      return <Main {...props} />
+      return <Main {...props} message={message} />
     }
   }
   loadTraining = () => {
@@ -105,8 +112,9 @@ class App extends React.Component {
         <Switch>
           <Route exact path="/" render={(props) => this.renderLandingPage(props)} />
           <Route exact path="/login" render={(props) => <Auth {...props} renderLink={this.renderLink} isLoggedIn={this.state.isLoggedIn} submit={this.login} action="login" />} />
-          <Route exact path="/signup" render={(props) => <Auth {...props} renderLink={this.renderLink} isLoggedIn={this.state.isLoggedIn} submit={this.signup} action="signup" />} />
+          <Route exact path="/signup" render={(props) => <Auth {...props} message={this.state.message} renderLink={this.renderLink} isLoggedIn={this.state.isLoggedIn} submit={this.signup} action="signup" />} />
           <Route path="/reset/:key?" render={(props) => <Auth {...props} renderLink={this.renderLink} action="reset" />} />
+          <Route path="/coach/:key?" render={(props) => <Main {...props}  message={this.state.message}/>} />
         </Switch>
       </Router>
     );
