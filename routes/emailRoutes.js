@@ -32,7 +32,7 @@ router.post("/new-coach", (req, res) => {
             subject: 'New Coach Request',
             text:
             "A new coach has requested to sign up! Their name is " + coach.firstName + " " + coach.lastName + " and they would like to join the team: " + coach.team + ".\n\n" +
-            "please click the following link to activate: http://" + req.hostname + "/" + key + "\n\n" +
+            "please click the following link to activate: https://" + req.hostname + "/coach/" + key + "\n\n" +
             "if you have any questions for the requester, here is their email: " + coach.email + ".\n\n" +
             "Click here: " + req.hostname + "/email/coach-deny to deny the request!"
         };
@@ -52,6 +52,7 @@ router.get("/coach-approval/:key?", (req, res) => {
     let { key } = req.params;
     db.Temp.findOneAndDelete({ accessKey: key }, (err, coach) => {
         if (err) res.json({messageType: "error", message: err});
+        console.log(coach);
         let tempCoach = {
             firstName: coach.firstName,
             lastName: coach.lastName,
