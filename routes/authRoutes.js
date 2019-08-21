@@ -13,7 +13,12 @@ const authenticate = require("../config/middleware/authenticate");
 router.post("/login", passport.authenticate("local"), (req, res) => {
   console.log("sign in successful");
   // send the front end the user for now
-  res.json(req.user);
+  if (req.user.message) {
+    let {message} = req.user;
+    res.json(message)
+  } else {
+    res.json(req.user);
+  }
 });
 
 // /auth/signup

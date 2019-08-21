@@ -1,5 +1,4 @@
 import React from 'react';
-import dateHelpers from '../../utils/dateHelpers';
 import API from '../../utils/API';
 import Calendar from '../../components/Calendar/Calendar';
 import Training from '../../components/Training/Training';
