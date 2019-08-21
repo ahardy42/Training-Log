@@ -11,8 +11,7 @@ class Main extends React.Component {
         }
     }
     componentDidMount() {
-        console.log(this.props.match.params);
-        if (this.props.match.params) {
+        if (this.props.match.path === "/coach") {
             let {key} = this.props.match.params;
             fetch("/email/coach-approval/" + key)
             .then(message => {

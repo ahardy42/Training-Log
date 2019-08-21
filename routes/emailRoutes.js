@@ -50,10 +50,8 @@ router.post("/new-coach", (req, res) => {
 router.get("/coach-approval/:key?", (req, res) => {
     // if this key gets hit the coach will be created in Users and deleted in Temp! 
     let { key } = req.params;
-    console.log(key);
     db.Temp.findOneAndDelete({ accessKey: key }, (err, coach) => {
         if (err) res.json({messageType: "error", message: err});
-        console.log(coach);
         let tempCoach = {
             firstName: coach.firstName,
             lastName: coach.lastName,
@@ -119,7 +117,6 @@ router.post("/reset-password/:key", (req, res) => {
             return res.json({messageType: "error", message: "Sorry no user exists with that key"});
         } else {
             let hashedPassword = user.generateHash(req.body.password);
-            console.log(hashedPassword);
             user.password = hashedPassword;
             user.resetKey = null;
             user.save({new: true}, (err, user) => {
