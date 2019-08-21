@@ -12,6 +12,7 @@ const TrainingView = ({ trainingArray, index }) => {
             <li className="list-group-item">Intensity: {training.intensity}</li>
             <li className="list-group-item">Feeling: {training.feeling}</li>
             <li className="list-group-item">Comments: {training.comment}</li>
+            {training.coachComment ? <li className="list-group-item">Coach Says: {training.coachComment}</li> : null}
         </ul>
     )
 }
