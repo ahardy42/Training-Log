@@ -126,11 +126,9 @@ class Auth extends React.Component {
             });
         }
     }
-    renderResetPage = () => {
-
-    }
     componentDidMount = () => {
-        let {params} = this.props.match;
+        let {params, path} = this.props.match;
+        this.props.renderLink(path);
         if (params.key) {
             API.showUserForReset(params.key)
             .then(user => {
@@ -150,15 +148,16 @@ class Auth extends React.Component {
         } else {
             if (this.props.action === "login") {
                 return (
-                    <Login handleClick={this.login} handleInputChange={this.handleInputChange} values={this.state}/>
+                    <Login message={this.props.message} handleClick={this.login} handleInputChange={this.handleInputChange} values={this.state}/>
                 );
             } else if (this.props.action === "signup") {
                 return (
-                    <Signup handleCheck={this.handleCheck} handleClick={this.signup} handleInputChange={this.handleInputChange} allowSubmit={this.state.allowSubmit}/>
+                    <Signup message={this.props.message} handleCheck={this.handleCheck} handleClick={this.signup} handleInputChange={this.handleInputChange} allowSubmit={this.state.allowSubmit}/>
                 );
             } else {
                 return (
                     <Reset
+                        message={this.props.message} 
                         resetUser={this.state.resetUser}
                         userArray={this.state.userArray}
                         getUsers={this.getUsers}

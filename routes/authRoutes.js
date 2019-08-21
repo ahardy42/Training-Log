@@ -13,7 +13,12 @@ const authenticate = require("../config/middleware/authenticate");
 router.post("/login", passport.authenticate("local"), (req, res) => {
   console.log("sign in successful");
   // send the front end the user for now
-  res.json(req.user);
+  if (req.user.message) {
+    let {message} = req.user;
+    res.json(message)
+  } else {
+    res.json(req.user);
+  }
 });
 
 // /auth/signup
@@ -23,7 +28,7 @@ router.post("/signup", (req, res) => {
     if (err) throw err;
     if (user) {
       console.log("user already exists")
-      return res.json("user already exists");
+      return res.json({messageType: "error", message: "user already exists"});
     }
     if (!user) {
       // create the user and has the password
@@ -32,7 +37,7 @@ router.post("/signup", (req, res) => {
         let newCoach = new db.Temp(req.body);
         newCoach.password = newCoach.generateHash(req.body.password);
         newCoach.save((err, coach) => {
-          if (err) throw err;
+          if (err) console.log(err);
           req.body.id = coach._id;
           // redirects to the new coach route as a post route *307*
           res.redirect(307, "/email/new-coach");
@@ -41,7 +46,7 @@ router.post("/signup", (req, res) => {
         let newUser = new db.User(req.body);
         newUser.password = newUser.generateHash(req.body.password);
         newUser.save((err) => {
-          if (err) throw err;
+          if (err) console.log(err);
           // redirects to the login route as a post route *307*
           res.redirect(307, "/auth/login");
         });

@@ -4,7 +4,7 @@ import Input from '../Input/Input';
 
 const Training = ({training, handleInputChange, handleClick, athleteId}) => {
     return(
-        <div className="container">
+        <div className="table-responsive">
             <table className="table">
                 <thead>
                     <tr>
@@ -20,7 +20,7 @@ const Training = ({training, handleInputChange, handleClick, athleteId}) => {
                 <tbody>
                 {training.map((activity, index) => {
                     return (
-                        <tr key={activity._id}>
+                        <tr key={activity._id} >
                             <th scope="row">{index + 1}</th>
                             <th>{activity.mode}</th>
                             <th>{activity.duration} min</th>
@@ -32,10 +32,10 @@ const Training = ({training, handleInputChange, handleClick, athleteId}) => {
                                 (activity.coachComment) ? 
                                 (<th>{activity.coachComment}</th>) :
                                 (
-                                    <>
+                                    <th>
                                         <Input action="text" name="coachComment" id="coachComment" handleInputChange={handleInputChange} />
                                         <Button action="button" handleClick={(event) => handleClick(event, athleteId, activity._id)}>Add Comment</Button>
-                                    </>
+                                    </th>
                                 )
                             }
                         </tr>
