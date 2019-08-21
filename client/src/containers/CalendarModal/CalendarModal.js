@@ -5,7 +5,7 @@ import Training from '../../components/Training/Training';
 import Button from '../../components/Button/Button';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faTimesCircle } from '@fortawesome/free-solid-svg-icons';
-import './CalendarModal.css';
+import './CalendarModal.sass';
 
 class CalendarModal extends React.Component {
     constructor(props) {
@@ -57,7 +57,7 @@ class CalendarModal extends React.Component {
                 <div className="modal-dialog" role="document">
                     <div className="modal-content">
                         <div className="modal-header">
-                            <h5 className="modal-title">Training</h5>
+                            <h5 className="modal-title">Training for {this.props.athleteName}</h5>
                             <Button action="button" handleClick={this.closeModal}>
                                 <FontAwesomeIcon icon={faTimesCircle}></FontAwesomeIcon>
                             </Button>
