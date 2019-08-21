@@ -17,7 +17,17 @@ router.post("/login", passport.authenticate("local"), (req, res) => {
     let {message} = req.user;
     res.json(message)
   } else {
-    res.json(req.user);
+    let user = {
+      _id: req.user._id,
+      email: req.user.email,
+      username: req.user.username,
+      firstName: req.user.firstName,
+      lastName: req.user.lastName,
+      training: req.user.training,
+      team: req.user.team,
+      type: req.user.type
+    }
+    res.json(user);
   }
 });
 
@@ -58,7 +68,17 @@ router.post("/signup", (req, res) => {
 // /auth/profile
 // checks if user is logged in
 router.get("/profile", authenticate.isLoggedIn, (req, res) => {
-  res.json(req.user);
+  let user = {
+    _id: req.user._id,
+    email: req.user.email,
+    username: req.user.username,
+    firstName: req.user.firstName,
+    lastName: req.user.lastName,
+    training: req.user.training,
+    team: req.user.team,
+    type: req.user.type
+  }
+  res.json(user);
 });
 
 // /auth/logout
@@ -97,7 +117,17 @@ router.get("/reset-password/:key", (req, res) => {
       if (!user) {
           return res.json("Sorry no user exists with that key");
       } else {
-          res.json(user);
+        let user = {
+          _id: req.user._id,
+          email: req.user.email,
+          username: req.user.username,
+          firstName: req.user.firstName,
+          lastName: req.user.lastName,
+          training: req.user.training,
+          team: req.user.team,
+          type: req.user.type
+        }
+        res.json(user);
       }
   })
 });

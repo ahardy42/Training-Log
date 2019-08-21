@@ -37,7 +37,7 @@ const AthleteList = ({athlete, handleClick}) => {
                         <div className="col-3">
                             <h5 className="card-title">Athlete: {athlete.name}</h5>
                             <h6 className="card-subtitle mb-2 text-muted">Training to date: {moment.duration(athlete.totalTime, "minutes").humanize()}</h6>
-                            <Button action="button" handleClick={() => {handleClick(athlete.athleteId)}}>Details</Button>
+                            <Button action="button" handleClick={() => {handleClick(athlete.athleteId, athlete.name)}}>Details</Button>
                         </div>
                         <div className="col-9">
                             <Pie data={data}/>
