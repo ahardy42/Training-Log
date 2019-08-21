@@ -18,9 +18,9 @@ const colorFuncs = {
     intensityColor: function(training) {
         if (training.length) {
             let avgIntensity = this.avgVal(training, "intensity");
-            let color = avgIntensity < 30 ? colors.green :
-                avgIntensity < 50 ? colors.yellow :
-                    avgIntensity < 80 ? colors.orange : colors.red;
+            let color = avgIntensity < 2 ? colors.green :
+                avgIntensity < 4 ? colors.yellow :
+                    avgIntensity < 5 ? colors.orange : colors.red;
             return color;
         } else {
             return "transparent";
