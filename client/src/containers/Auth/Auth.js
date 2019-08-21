@@ -130,7 +130,8 @@ class Auth extends React.Component {
 
     }
     componentDidMount = () => {
-        let {params} = this.props.match;
+        let {params, path} = this.props.match;
+        this.props.renderLink(path);
         if (params.key) {
             API.showUserForReset(params.key)
             .then(user => {

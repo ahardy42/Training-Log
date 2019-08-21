@@ -12,7 +12,8 @@ class App extends React.Component {
     super(props);
     this.state = {
       isLoggedIn: false,
-      user: {}
+      user: {},
+      pathName: ""
     }
   }
   login = async user => {
@@ -75,6 +76,14 @@ class App extends React.Component {
         });
       });
   }
+  renderLink = path => {
+    this.setState({
+      pathName: path
+    })
+  }
+  getLink = path => {
+    this.renderLink(path);
+  }
   componentDidMount = () => {
     // check if user is logged in and update state
     fetch("/auth/profile")
@@ -84,7 +93,6 @@ class App extends React.Component {
       .then(json => {
         if (json) {
           this.setState({
-            isLoggedIn: true,
             user: json
           });
         }
@@ -93,12 +101,12 @@ class App extends React.Component {
   render() {
     return (
       <Router>
-        <NavBar user={this.state.user} isLoggedIn={this.state.isLoggedIn} signOut={this.signOut} />
+        <NavBar getLink={this.getLink} pathName={this.state.pathName} user={this.state.user} isLoggedIn={this.state.isLoggedIn} signOut={this.signOut} />
         <Switch>
           <Route exact path="/" render={(props) => this.renderLandingPage(props)} />
-          <Route exact path="/login" render={(props) => <Auth {...props} isLoggedIn={this.state.isLoggedIn} submit={this.login} action="login" />} />
-          <Route exact path="/signup" render={(props) => <Auth {...props} isLoggedIn={this.state.isLoggedIn} submit={this.signup} action="signup" />} />
-          <Route path="/reset/:key?" render={(props) => <Auth {...props} action="reset" />} />
+          <Route exact path="/login" render={(props) => <Auth {...props} renderLink={this.renderLink} isLoggedIn={this.state.isLoggedIn} submit={this.login} action="login" />} />
+          <Route exact path="/signup" render={(props) => <Auth {...props} renderLink={this.renderLink} isLoggedIn={this.state.isLoggedIn} submit={this.signup} action="signup" />} />
+          <Route path="/reset/:key?" render={(props) => <Auth {...props} renderLink={this.renderLink} action="reset" />} />
         </Switch>
       </Router>
     );
