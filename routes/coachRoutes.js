@@ -75,15 +75,19 @@ router.get("/:athleteId/:year/:month", authenticate.isLoggedIn, (req, res) => {
 
 router.put("/:athleteId/:trainingId", authenticate.isLoggedIn, (req, res) => {
     let {athleteId, trainingId} = req.params;
-    db.User.findById(athleteId, (err, athlete) => {
-        if (err) throw err;
-        let training = athlete.training.id(trainingId);
-        training.set(req.body); // need to have req.body match exactly the structure of the training subdoc
-        athlete.save((err, athlete) => {
+    if (req.user.type === "Coach") {
+        db.User.findById(athleteId, (err, athlete) => {
             if (err) throw err;
-            res.json(athlete.training.id(trainingId));
+            let training = athlete.training.id(trainingId);
+            training.set(req.body); // need to have req.body match exactly the structure of the training subdoc
+            athlete.save((err, athlete) => {
+                if (err) throw err;
+                res.json(athlete.training.id(trainingId));
+            });
         });
-    });
+    } else {
+        res.json("only coaches can hit this route");
+    }
 });
 
 module.exports = router;
