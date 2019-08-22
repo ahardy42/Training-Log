@@ -38,6 +38,8 @@ class CalendarModal extends React.Component {
             let updatedTrainingInView = trainingInView.map(element => {
                 if (element._id === training._id) {
                     return training;
+                } else {
+                    return element;
                 }
             });
             this.setState({
