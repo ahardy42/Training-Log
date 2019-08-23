@@ -8,7 +8,7 @@ const teamSchema = new Schema({
         required: true
     },
     activities: [{
-        type: String,
+        activityType: String,
         icon: String
     }],
     fields: [{

@@ -15,13 +15,14 @@ class Auth extends React.Component {
             firstName: "",
             lastName: "",
             email: "",
-            team: "unattached",
+            team: "",
             isCoach: false,
             isSamePassword: false,
             allowSubmit: false,
             resetUser: {},
             userArray: [],
-            message: {}
+            message: {},
+            teamArray: []
         }
     }
     handleInputChange = (event) => {
@@ -126,7 +127,23 @@ class Auth extends React.Component {
             });
         }
     }
+    getTeamsForSelect = () => {
+        fetch("/api/team/select-menu")
+        .then(response => {
+            return response.json();
+        })
+        .then(teamArray => {
+            this.setState({
+                team: teamArray[0].name,
+                teamArray: teamArray
+            });
+        })
+        .catch(err => {
+            console.log(err);
+        });
+    }
     componentDidMount = () => {
+        this.getTeamsForSelect();
         let {params, path} = this.props.match;
         this.props.renderLink(path);
         if (params.key) {
@@ -152,7 +169,14 @@ class Auth extends React.Component {
                 );
             } else if (this.props.action === "signup") {
                 return (
-                    <Signup message={this.props.message} handleCheck={this.handleCheck} handleClick={this.signup} handleInputChange={this.handleInputChange} allowSubmit={this.state.allowSubmit}/>
+                    <Signup 
+                        teamArray={this.state.teamArray}
+                        message={this.props.message}
+                        handleCheck={this.handleCheck}
+                        handleClick={this.signup}
+                        handleInputChange={this.handleInputChange}
+                        allowSubmit={this.state.allowSubmit}
+                    />
                 );
             } else {
                 return (
