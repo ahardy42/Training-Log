@@ -32,4 +32,15 @@ router.get("/select-menu", (req, res) => {
     });
 });
 
+router.get("/:team", (req, res) => {
+    let {team} = req.params;
+    db.Team.aggregate()
+    .match({name : team})
+    .project({name : 1, activities : 1, fields : 1})
+    .exec((err, teamArray) => {
+        if (err) console.log(err);
+        res.json(teamArray[0]);
+    })
+})
+
 module.exports = router;

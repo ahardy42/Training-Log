@@ -19,13 +19,7 @@ class TrainingModal extends React.Component {
             feeling: 0,
             comment: "",
             coachComment: "",
-            id: "",
-            rangeStyle: {}
-        }
-    }
-    rangeStyle = () => {
-        let style = {
-            
+            id: ""
         }
     }
     nextPage = () => {
@@ -115,6 +109,10 @@ class TrainingModal extends React.Component {
             feeling: feeling,
             comment: comment
         };
+    }
+    componentDidMount = () => {
+        // populate the team state object with some values
+        
     }
     render() {
         let {style, training, isAdd, isEdit} = this.props;

@@ -10,20 +10,48 @@ const TrainingForm = ({ handleInputChange, state, handleCheck, handleChange}) =>
         <form>
             <div className="form-row">
                 <div className="col">
-                    <PickerWrapper handleChange={handleChange} currValue={date}/>
+                    <PickerWrapper
+                        handleChange={handleChange}
+                        currValue={date}
+                    />
                 </div>
             </div>
             <div className="form-row">
                 <div className="col">
-                    <Input action="number" id="duration" name="duration" value={duration} handleInputChange={handleInputChange}>Enter Time (minutes)</Input>
+                    <Input
+                        action="number"
+                        id="duration"
+                        name="duration"
+                        value={duration}
+                        handleInputChange={handleInputChange}
+                    >
+                        Enter Time (minutes)
+                    </Input>
                 </div>
                 <div className="col">
-                    <Input action="range" id="feeling" name="feeling" value={feeling} handleInputChange={handleInputChange}>How'd you feel?</Input>
+                    <Input
+                        action="range"
+                        id="feeling"
+                        name="feeling"
+                        value={feeling}
+                        handleInputChange={handleInputChange}
+                    >
+                        How'd you feel?
+                    </Input>
                 </div>
             </div>
             <div className="form-row">
                 <div className="col">
-                    <Input extraClasses="intensity-range" action="range" id="intensity" name="intensity" value={intensity} handleInputChange={handleInputChange}>How hard did you go?</Input>
+                    <Input
+                        extraClasses="intensity-range"
+                        action="range"
+                        id="intensity"
+                        name="intensity"
+                        value={intensity}
+                        handleInputChange={handleInputChange}
+                    >
+                        How hard did you go?
+                    </Input>
                 </div>
                 <div className="col">
                     <div className="form-row">
