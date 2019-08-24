@@ -169,6 +169,7 @@ class Auth extends React.Component {
                       handleClick={this.signup}
                       handleInputChange={this.handleInputChange}
                       allowSubmit={this.state.allowSubmit}
+                      message={this.state.message}
                       invalidEmail={this.state.invalidEmail}
                       invalidPassword={this.state.invalidPassword}
                     />
