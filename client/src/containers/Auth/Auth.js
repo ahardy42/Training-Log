@@ -22,7 +22,9 @@ class Auth extends React.Component {
             resetUser: {},
             userArray: [],
             message: {},
-            teamArray: []
+            teamArray: [],
+            invalidEmail: false,
+            invalidPassword: false
         }
     }
     handleInputChange = (event) => {
@@ -85,7 +87,17 @@ class Auth extends React.Component {
             team: team,
             type: isCoach ? "Coach" : "Athlete"
         }
-        this.props.submit(userInfo);
+        const regex = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+        if ( !email.match(regex) ) {
+            this.setState({ invalidEmail: true })
+        }
+        else if ( password.length < 4 ) {
+            this.setState({ invalidPassword: true, invalidEmail: false })
+        }
+        else {
+            this.props.submit(userInfo);
+        }
+
     }
     getResetKey = event => {
         // hits the route to request a reset key by clicking on one of the users... 
@@ -169,13 +181,14 @@ class Auth extends React.Component {
                 );
             } else if (this.props.action === "signup") {
                 return (
-                    <Signup 
-                        teamArray={this.state.teamArray}
-                        message={this.props.message}
-                        handleCheck={this.handleCheck}
-                        handleClick={this.signup}
-                        handleInputChange={this.handleInputChange}
-                        allowSubmit={this.state.allowSubmit}
+                    <Signup
+                      handleCheck={this.handleCheck}
+                      handleClick={this.signup}
+                      handleInputChange={this.handleInputChange}
+                      allowSubmit={this.state.allowSubmit}
+                      message={this.state.message}
+                      invalidEmail={this.state.invalidEmail}
+                      invalidPassword={this.state.invalidPassword}
                     />
                 );
             } else {
