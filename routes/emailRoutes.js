@@ -1,6 +1,6 @@
 const express = require('express');
 const router = express.Router();
-const db = require("../models/Index");
+const db = require("../models");
 const crypto = require("crypto");
 const sgMail = require('@sendgrid/mail');
 require("dotenv").config();
@@ -32,7 +32,7 @@ router.post("/new-coach", (req, res) => {
             subject: 'New Coach Request',
             text:
             "A new coach has requested to sign up! Their name is " + coach.firstName + " " + coach.lastName + " and they would like to join the team: " + coach.team + ".\n\n" +
-            "please click the following link to activate: http://" + req.hostname + "/email/coach-approval/" + key + "\n\n" +
+            "please click the following link to activate: https://" + req.hostname + "/coach/" + key + "\n\n" +
             "if you have any questions for the requester, here is their email: " + coach.email + ".\n\n" +
             "Click here: " + req.hostname + "/email/coach-deny to deny the request!"
         };
@@ -41,8 +41,8 @@ router.post("/new-coach", (req, res) => {
     })
         .then(key => {
             db.Temp.findOneAndUpdate({ username: coach.username }, { accessKey: key }, { new: true }, (err, doc) => {
-                if (err) console.log(err);
-                res.json(doc);
+                if (err) res.json({messageType: "error", message: err});
+                res.json({messageType: "success", message: "An email has been sent to the administrator. You will be notified if you are approved."});
             });
         })
 });
@@ -50,33 +50,35 @@ router.post("/new-coach", (req, res) => {
 router.get("/coach-approval/:key?", (req, res) => {
     // if this key gets hit the coach will be created in Users and deleted in Temp! 
     let { key } = req.params;
-    console.log(key);
     db.Temp.findOneAndDelete({ accessKey: key }, (err, coach) => {
-        if (err) console.log("the error is in findOneAndDelete",err);
-        console.log(coach);
-        let tempCoach = {
-            firstName: coach.firstName,
-            lastName: coach.lastName,
-            email: coach.email,
-            username: coach.username,
-            password: coach.password,
-            team: coach.team,
-            type: coach.type
+        if (err) res.json({messageType: "error", message: err});
+        if (coach) {
+            let tempCoach = {
+                firstName: coach.firstName,
+                lastName: coach.lastName,
+                email: coach.email,
+                username: coach.username,
+                password: coach.password,
+                team: coach.team,
+                type: coach.type
+            }
+            let approvedCoach = new db.User(tempCoach);
+            approvedCoach.save((err, newCoach) => {
+                if (err) res.json({messageType: "error", message: err});
+                const mailOptions = {
+                    to: newCoach.email,
+                    from: adminEmail,
+                    subject: 'New Coach Request Approved!',
+                    text: "Great news! " + newCoach.firstName + " , you have been approved as a coach for " + newCoach.team + ".\n\n" +
+                        "Please go to http://" + req.hostname + "/login to login using your username and password. Your username is " + newCoach.username +
+                        "and your password is the same as the one you signed up with..."
+                };
+                sgMail.send(mailOptions);
+                res.json({messageType: "success", message: "success!"});
+            });
+        } else {
+            res.json({messageType: "error", message: "something happened!"});
         }
-        let approvedCoach = new db.User(tempCoach);
-        approvedCoach.save((err, newCoach) => {
-            if (err) console.log("the error is in saving the new coach",err);
-            const mailOptions = {
-                to: newCoach.email,
-                from: adminEmail,
-                subject: 'New Coach Request Approved!',
-                text: "Great news! " + newCoach.firstName + " , you have been approved as a coach for " + newCoach.team + ".\n\n" +
-                    "Please go to http://" + req.hostname + "/login to login using your username and password. Your username is " + newCoach.username +
-                    "and your password is the same as the one you signed up with..."
-            };
-            sgMail.send(mailOptions);
-            res.json(newCoach);
-        })
     })
 
 });
@@ -119,7 +121,6 @@ router.post("/reset-password/:key", (req, res) => {
             return res.json({messageType: "error", message: "Sorry no user exists with that key"});
         } else {
             let hashedPassword = user.generateHash(req.body.password);
-            console.log(hashedPassword);
             user.password = hashedPassword;
             user.resetKey = null;
             user.save({new: true}, (err, user) => {

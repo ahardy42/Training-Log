@@ -12,14 +12,16 @@ class Coach extends React.Component {
             athletes: [],
             modalStyle: {display: "none"},
             selectedAthleteId: "",
+            selectedAthleteName: "",
             calObject: dateHelpers.initialize()
         }
     }
-    openCalendarModal = id => {
+    openCalendarModal = (id, name) => {
         // handler to open the calendar modal on the page
         this.setState({
             modalStyle: {display: "block"},
-            selectedAthleteId: id
+            selectedAthleteId: id,
+            selectedAthleteName: name
         }, () => {
             let {monthNum, year} = this.state.calObject;
             this.getAthleteTraining(monthNum, year, this.state.calObject);
@@ -83,6 +85,13 @@ class Coach extends React.Component {
     render = () => {
         return(
             <div className="container mt-4">
+                <div className="row">
+                    <div className="col card mb-2">
+                        <div className="card-body">
+                            <h3 className="text-center card-title">Team: {this.props.coach.team} | Athletes: {this.state.athletes.length}</h3>
+                        </div>
+                    </div>
+                </div>
                 <CalendarModal
                     style={this.state.modalStyle}
                     calObject={this.state.calObject}
@@ -91,6 +100,7 @@ class Coach extends React.Component {
                     todaysDate={this.currentTimeframe}
                     closeCalendarModal={this.closeCalendarModal}
                     athleteId={this.state.selectedAthleteId}
+                    athleteName={this.state.selectedAthleteName}
                     refreshTraining={this.refreshTraining}
                 />
                 <div className="row">

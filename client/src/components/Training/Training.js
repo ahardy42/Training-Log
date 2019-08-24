@@ -1,14 +1,15 @@
 import React from 'react';
 import Button from '../Button/Button';
 import Input from '../Input/Input';
+import moment from 'moment';
 
 const Training = ({training, handleInputChange, handleClick, athleteId}) => {
     return(
-        <div className="container">
+        <div className="table-responsive">
             <table className="table">
                 <thead>
                     <tr>
-                        <th scope="col">#</th>
+                        <th scope="col">Date</th>
                         <th scope="col">Activity</th>
                         <th scope="col">Time</th>
                         <th scope="col">Intensity</th>
@@ -20,8 +21,8 @@ const Training = ({training, handleInputChange, handleClick, athleteId}) => {
                 <tbody>
                 {training.map((activity, index) => {
                     return (
-                        <tr key={activity._id}>
-                            <th scope="row">{index + 1}</th>
+                        <tr key={activity._id} >
+                            <th scope="row">{moment(activity.date).format("MM/DD/YYYY")}</th>
                             <th>{activity.mode}</th>
                             <th>{activity.duration} min</th>
                             <th>{activity.intensity}</th>
@@ -32,10 +33,10 @@ const Training = ({training, handleInputChange, handleClick, athleteId}) => {
                                 (activity.coachComment) ? 
                                 (<th>{activity.coachComment}</th>) :
                                 (
-                                    <>
+                                    <th>
                                         <Input action="text" name="coachComment" id="coachComment" handleInputChange={handleInputChange} />
                                         <Button action="button" handleClick={(event) => handleClick(event, athleteId, activity._id)}>Add Comment</Button>
-                                    </>
+                                    </th>
                                 )
                             }
                         </tr>

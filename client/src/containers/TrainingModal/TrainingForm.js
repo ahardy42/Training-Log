@@ -1,5 +1,5 @@
 import React from 'react';
-import './TrainingModal.css';
+import './TrainingModal.sass';
 import Input from '../../components/Input/Input';
 import PickerWrapper from "./PickerWrapper";
 import "react-datepicker/dist/react-datepicker.css";
@@ -23,7 +23,7 @@ const TrainingForm = ({ handleInputChange, state, handleCheck, handleChange}) =>
             </div>
             <div className="form-row">
                 <div className="col">
-                    <Input action="range" id="intensity" name="intensity" value={intensity} handleInputChange={handleInputChange}>How hard did you go?</Input>
+                    <Input extraClasses="intensity-range" action="range" id="intensity" name="intensity" value={intensity} handleInputChange={handleInputChange}>How hard did you go?</Input>
                 </div>
                 <div className="col">
                     <div className="form-row">

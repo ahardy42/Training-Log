@@ -1,10 +1,11 @@
 import React from 'react';
-import { Link } from 'react-router-dom';
 import Button from '../../components/Button/Button';
 import Input from '../../components/Input/Input';
 import './Signup.sass';
 
+
 const Signup = ({handleClick, handleInputChange, allowSubmit, invalidEmail, invalidPassword, ...props}) => {
+
     return (
         <div className="container">
             <form>
@@ -21,6 +22,13 @@ const Signup = ({handleClick, handleInputChange, allowSubmit, invalidEmail, inva
                 {allowSubmit ? (<Button action="button" id="signup" handleClick={handleClick}>Sign Up!</Button>) : (<Button action="button" isDisabled="disabled" id="signup" handleClick={handleClick}>Sign Up!</Button>)}
 
         <div className="container signup">
+            {message.messageType ? (
+                <div class={`alert alert-${message.messageType === "error" ? "danger" : "success"}`} role="alert">
+                    {message.message}
+                </div>
+            ) : (
+                null
+            ) }
             <div className="row">
                 <div className="col">
                     <h2>Sign Up for Training Log</h2>
@@ -63,8 +71,6 @@ const Signup = ({handleClick, handleInputChange, allowSubmit, invalidEmail, inva
                     </div>
                 </div>
             </form>
-            <Link to="/login">Already a User?</Link>
-            <Link to="/reset">Forgot username or password?</Link>
         </div>
     );
 }

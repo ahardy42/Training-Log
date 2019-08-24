@@ -19,8 +19,12 @@ const API = {
         }
         let response = await fetch(`/api/athlete/stats/${date}`);
         let stats = await response.json();
-        console.log(stats);
         return stats;
+    },
+    getYearStats: async year => {
+        let response = await fetch(`/api/athlete/chart-stats/${year}`);
+        let yearStats = await response.json();
+        return yearStats;
     },
     addTraining: async training => {
         let response = await fetch("/api/athlete/training", {
