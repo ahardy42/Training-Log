@@ -4,17 +4,16 @@ import Input from '../../components/Input/Input';
 import PickerWrapper from "./PickerWrapper";
 import "react-datepicker/dist/react-datepicker.css";
 
-const TrainingForm = ({ handleInputChange, state, handleCheck, handleChange}) => {
+const TrainingForm = ({ handleInputChange, state, handleCheck, handleChange, teamInputs}) => {
     let {date, comment, duration, feeling, intensity, mode} = state;
+
     return (
         <form>
-            <div className="form-row">
-                <div className="col">
-                    <PickerWrapper
-                        handleChange={handleChange}
-                        currValue={date}
-                    />
-                </div>
+            <div className="form-group">
+                <PickerWrapper
+                    handleChange={handleChange}
+                    currValue={date}
+                />
             </div>
             <div className="form-row">
                 <div className="col">

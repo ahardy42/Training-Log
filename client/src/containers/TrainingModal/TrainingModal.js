@@ -12,12 +12,7 @@ class TrainingModal extends React.Component {
         super(props);
         this.state = {
             trainingPage: 0,
-            date: null,
-            duration: 0,
-            mode: "",
-            intensity: 0,
-            feeling: 0,
-            comment: "",
+            teamInputVals: {},
             coachComment: "",
             id: ""
         }
@@ -110,9 +105,29 @@ class TrainingModal extends React.Component {
             comment: comment
         };
     }
-    componentDidMount = () => {
-        // populate the team state object with some values
-        
+    componentWillReceiveProps = newProps => {
+        if (newProps.teamInputs !== this.props.teamInputs) {
+            let {teamInputs} = newProps;
+            let updatedInputVals = {};
+            for (let i =0; i < teamInputs.length; i++) {
+                switch (teamInputs[i].dataType) {
+                    case "dateObject":
+                        updatedInputVals[teamInputs[i].name] = null;
+                        break;
+                    case "number":
+                        updatedInputVals[teamInputs[i].name] = 0;
+                        break;
+                    case "string":
+                        updatedInputVals[teamInputs[i].name] = "";
+                        break;
+                    default:
+                        updatedInputVals[teamInputs[i].name] = null;
+                }
+            }
+            this.setState({
+                teamInputVals: updatedInputVals
+            })
+        }
     }
     render() {
         let {style, training, isAdd, isEdit} = this.props;
@@ -135,6 +150,9 @@ class TrainingModal extends React.Component {
                             {
                                 (isAdd || isEdit) ? (
                                     <TrainingForm
+                                        initialValues={this.state.teamInputVals}
+                                        teamInputs={this.props.teamInputs}
+                                        teamActivities={this.props.teamActivities}
                                         rangeStyle={this.rangeStyle}
                                         state={this.state}
                                         selectedDate={this.state.date}

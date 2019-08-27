@@ -189,6 +189,7 @@ class Auth extends React.Component {
                       message={this.state.message}
                       invalidEmail={this.state.invalidEmail}
                       invalidPassword={this.state.invalidPassword}
+                      teams={this.state.teamArray}
                     />
                 );
             } else {
