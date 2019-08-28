@@ -1,7 +1,7 @@
 import React from 'react';
 import './Input.sass';
 
-const Input = ({action, id, children, handleInputChange, ...props}) => {
+const Input = ({action, id, children, handleInputChange, validationFunction, ...props}) => {
     const rangevalues = {
         min: action => action === "range" ? 0 : null,
         max: action => action === "range" ? 5 : null,
@@ -40,7 +40,7 @@ const Input = ({action, id, children, handleInputChange, ...props}) => {
                     max={rangevalues.max(action)}
                     step={rangevalues.step(action)}
                     placeholder={`Enter ${action}`}
-                    onChange={handleInputChange}
+                    onChange={(event) => handleInputChange(event, validationFunction)}
                 />
             </div>
         );

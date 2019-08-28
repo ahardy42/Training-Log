@@ -65,6 +65,21 @@ router.post("/signup", (req, res) => {
   })
 });
 
+// /auth/username-check/:username
+// looks for the same username in the database and returns a boolean
+router.get("/username-check/:username", (req, res) => {
+  let {username} = req.params;
+  db.User.findOne({username: username}, (err, user) => {
+    if (err) {
+      res.json({messageType: "error", message: "There was an error searching the database at /auth/username-check/:username"});
+    } else if (user) {
+      res.json({exists : true});
+    } else {
+      res.json({exists : false});
+    }
+  });
+});
+
 // /auth/profile
 // checks if user is logged in
 router.get("/profile", authenticate.isLoggedIn, (req, res) => {
