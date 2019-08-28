@@ -6,6 +6,7 @@ import Athlete from './pages/Athlete/Athlete';
 import Coach from './pages/Coach/Coach';
 import Auth from './containers/Auth/Auth';
 import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
+import API from './utils/API';
 
 class App extends React.Component {
   constructor(props) {
@@ -41,24 +42,22 @@ class App extends React.Component {
     
   }
   signup = async newUser => {
-    let response = await fetch("/auth/signup", {
-      method: "post",
-      body: JSON.stringify(newUser),
-      headers: {
-        'content-type': 'application/json'
+    API.signupUser(newUser)
+    .then(user => {
+      if (user.messageType) {
+        this.setState({
+          message: user
+        });
+      } else {
+        this.setState({
+          isLoggedIn: true,
+          user: user
+        });
       }
-    });
-    let user = await response.json();
-    if (user.messageType) {
-      this.setState({
-        message: user
-      });
-    } else {
-      this.setState({
-        isLoggedIn: true,
-        user: user
-      });
-    }
+    })
+    .catch(err => {
+      console.log(err);
+    })
   }
   signOut = async () => {
     let response = await fetch("/auth/logout");

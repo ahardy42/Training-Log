@@ -23,19 +23,23 @@ class Auth extends React.Component {
             userArray: [],
             message: {},
             invalidEmail: false,
-            invalidPassword: false
+            invalidPassword: false,
+            repeatUsername: false,
+            invalidUsername: false,
+            invalidFirstName: false
         }
     }
-    handleInputChange = (event) => {
+    handleInputChange = (event, validationFunction) => {
         event.preventDefault();
-        const {name, value, id} = event.target;
+        const {name, value} = event.target;
         this.setState({
             [name]: value
         }, () => {
-            if (id === "confirmPassword") {
-                this.checkPassword();
+            if (validationFunction) {
+                validationFunction();
+            } else {
+                return;
             }
-            this.allowSubmit();
         });
     }
     handleCheck = (event) => {
@@ -44,26 +48,51 @@ class Auth extends React.Component {
             [name]: checked
         });
     }
+    checkFirstName = () => {
+        const {firstName} = this.state;
+        this.setState({
+            invalidFirstName: firstName.length ? false : true
+        })
+    }
     checkPassword = () => {
-        const {passwordRepeat, password} = this.state;
-        this.setState({            
-            isSamePassword: password === passwordRepeat ? true : false
-        },() => {
-            this.allowSubmit();
+        const {password} = this.state;
+        this.setState({
+            invalidPassword: password.length < 4 ? true : false
         });
     }
-    allowSubmit = () => {
-        const {username, password, firstName, lastName, email, isSamePassword} = this.state;
-        if (username.length 
-            && password.length 
-            && firstName.length 
-            && lastName.length 
-            && isSamePassword
-            && email.includes("@")) {
-            this.setState({
-                allowSubmit: true}
-            );
-        }
+    checkRepeatPassword = () => {
+        const {passwordRepeat, password} = this.state;
+        this.setState({
+            isSamePassword: password === passwordRepeat ? true : false
+        });
+    }
+    checkEmail = () => {
+        let {email} = this.state;
+        const regex = /^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+        this.setState({
+            invalidEmail: !email.match(regex) ? true : false
+        });
+    }
+    checkUsername = () => {
+        let {username} = this.state;
+        API.checkUserName(username)
+        .then(user => {
+            if (user.exists) {
+                this.setState({
+                    repeatUsername: true
+                });
+            } else if (username.includes(" ")) {
+                this.setState({
+                    invalidUsername: true
+                });
+            } else {
+                this.setState({
+                    invalidUsername: false,
+                    repeatUsername: false
+                })
+            }
+        })
+
     }
     login = event => {
         event.preventDefault();
@@ -85,18 +114,26 @@ class Auth extends React.Component {
             lastName: lastName,
             team: team,
             type: isCoach ? "Coach" : "Athlete"
+        };
+        const {passwordRepeat, isSamePassword, invalidEmail, invalidFirstName, invalidPassword, invalidUsername} = this.state;
+        // validation pre-submit
+        if (!username.length || invalidUsername) {
+            return;
+        } else if (!password.length || invalidPassword) {
+            this.checkPassword();
+            return;
+        } else if (!passwordRepeat.length || !isSamePassword) {
+            this.checkRepeatPassword();
+            return;
+        } else if (!email.length || invalidEmail) {
+            this.checkEmail();
+            return;
+        } else if (!firstName.length || invalidFirstName) {
+            this.checkFirstName();
+            return;
+        } else {
+            this.props.submit(userInfo)
         }
-        const regex = /^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
-        if ( !email.match(regex) ) {
-            this.setState({ invalidEmail: true })
-        }
-        else if ( password.length < 4 ) {
-            this.setState({ invalidPassword: true, invalidEmail: false })
-        }
-        else {
-            this.props.submit(userInfo);
-        }
-
     }
     getResetKey = event => {
         // hits the route to request a reset key by clicking on one of the users... 
@@ -165,13 +202,22 @@ class Auth extends React.Component {
             } else if (this.props.action === "signup") {
                 return (
                     <Signup
-                      handleCheck={this.handleCheck}
-                      handleClick={this.signup}
-                      handleInputChange={this.handleInputChange}
-                      allowSubmit={this.state.allowSubmit}
-                      message={this.state.message}
-                      invalidEmail={this.state.invalidEmail}
-                      invalidPassword={this.state.invalidPassword}
+                        checkFirstName={this.checkFirstName}
+                        checkEmail={this.checkEmail}
+                        checkPassword={this.checkPassword}
+                        checkRepeatPassword={this.checkRepeatPassword}
+                        checkUsername={this.checkUsername}
+                        handleCheck={this.handleCheck}
+                        handleClick={this.signup}
+                        handleInputChange={this.handleInputChange}
+                        allowSubmit={this.state.allowSubmit}
+                        message={this.state.message}
+                        isSamePassword={this.state.isSamePassword}
+                        invalidFirstName={this.state.invalidFirstName}
+                        invalidEmail={this.state.invalidEmail}
+                        invalidPassword={this.state.invalidPassword}
+                        invalidUsername={this.state.invalidUsername}
+                        repeatUsername={this.state.repeatUsername}
                     />
                 );
             } else {
