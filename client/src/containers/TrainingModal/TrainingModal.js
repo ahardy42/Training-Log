@@ -5,6 +5,8 @@ import TrainingView from './TrainingView';
 import Pagination from './Pagination';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import {faTimesCircle, faSmile, faGrinAlt, faTired, faMeh, faSadCry } from '@fortawesome/free-solid-svg-icons';
+import _ from 'lodash';
+import API from '../../utils/API';
 import './TrainingModal.sass';
 
 class TrainingModal extends React.Component {
@@ -12,7 +14,7 @@ class TrainingModal extends React.Component {
         super(props);
         this.state = {
             trainingPage: 0,
-            teamInputVals: {},
+            splitActivities: [],
             coachComment: "",
             id: "",
             rangeStyle: {},
@@ -163,29 +165,16 @@ class TrainingModal extends React.Component {
             comment: comment
         };
     }
-    componentWillReceiveProps = newProps => {
-        if (newProps.teamInputs !== this.props.teamInputs) {
-            let {teamInputs} = newProps;
-            let updatedInputVals = {};
-            for (let i =0; i < teamInputs.length; i++) {
-                switch (teamInputs[i].dataType) {
-                    case "dateObject":
-                        updatedInputVals[teamInputs[i].name] = null;
-                        break;
-                    case "number":
-                        updatedInputVals[teamInputs[i].name] = 0;
-                        break;
-                    case "string":
-                        updatedInputVals[teamInputs[i].name] = "";
-                        break;
-                    default:
-                        updatedInputVals[teamInputs[i].name] = null;
-                }
-            }
+    componentDidMount = () => {
+        API.getTeamSpecificInfo(this.props.teamName)
+        .then(teamObject => {
+            let {activities} = teamObject;
+            let chunk = _.chunk(activities, 3);
             this.setState({
-                teamInputVals: updatedInputVals
-            })
-        }
+                splitActivities: chunk
+            });
+        });
+        
     }
     render() {
         let {style, training, isAdd, isEdit} = this.props;
@@ -220,6 +209,7 @@ class TrainingModal extends React.Component {
                                         handleChange={this.handleChange}
                                         handleCheck={this.handleCheck}
                                         handleSelect={this.handleSelect}
+                                        splitActivities={this.state.splitActivities}
                                     />
                                 ) : (
                                         <TrainingView

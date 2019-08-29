@@ -17,19 +17,8 @@ class Athlete extends React.Component {
             isEdit: false,
             selectedTraining: [],
             trainingStats: [],
-            yearStats: [],
-            teamActivities: [],
-            teamInputs: []
+            yearStats: []
         }
-    }
-    getTeamInfo = team => {
-        API.getTeamSpecificInfo(team)
-        .then(teamObject => {
-            this.setState({
-                teamActivities: teamObject.activities,
-                teamInputs: teamObject.fields
-            });
-        })
     }
     openModal = () => {
         let style = {display: "block"}
@@ -130,8 +119,6 @@ class Athlete extends React.Component {
         // get training within the current timeframe and add it to the days that it happened (in the calObject)
         let {calObject} = this.state;
         this.updateTrainingAndStats(calObject);
-        // use team specific fields and activities in training add modal
-        this.getTeamInfo(this.props.athlete.team);
     }
     getStats = (year, monthNum) => {
         API.getTrainingStats(year, monthNum)
@@ -164,8 +151,7 @@ class Athlete extends React.Component {
         return (
             <div className="container">
                 <TrainingModal
-                    teamActivities={this.state.teamActivities}
-                    teamInputs={this.state.teamInputs}
+                    teamName={this.props.athlete.team}
                     switchToEdit={this.switchToEdit}
                     addTraining={this.addTraining}
                     deleteTraining={this.deleteTraining}
