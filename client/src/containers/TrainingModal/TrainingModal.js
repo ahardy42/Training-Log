@@ -20,13 +20,34 @@ class TrainingModal extends React.Component {
             comment: "",
             coachComment: "",
             id: "",
-            rangeStyle: {}
+            rangeStyle: {},
+            invalidDuration: false,
+            invalidModeSelection: false
         }
     }
-    rangeStyle = () => {
-        let style = {
-            
+    checkDuration = () => {
+        let {duration} = this.state;
+        if (Number.isNaN(duration)) {
+            this.setState({
+                duration: 0,
+                invalidDuration: true
+            });
+        } else {
+            this.setState({
+                invalidDuration: false
+            })
         }
+    }
+    checkDate = () => {
+        this.setState(prevState => {
+            if (prevState.date === null) { // nothing entered
+                return {date: new Date()}
+            } else if (!Date.parse(prevState.date)) { // does not evaluate to a date string
+                return {date: new Date()}
+            } else {
+                return;
+            }
+        });
     }
     nextPage = () => {
         this.setState(prevState => {
@@ -57,30 +78,61 @@ class TrainingModal extends React.Component {
         // change the parent state to isAdd === true
         this.props.switchToEdit();
     }
-    handleInputChange = (event) => {
+    handleInputChange = (event, validationFunction) => {
         // input handler for form version of modal!
         event.preventDefault();
         let {name, value} = event.target;
         let parsedValue = Boolean(parseInt(value)) ? parseInt(value) : value; // return numbers where I need to
         this.setState({
             [name]: parsedValue
+        }, () => {
+            if (validationFunction) {
+                validationFunction();
+            } else {
+                return;
+            }
         });
     }
     handleCheck = (event) => {
         const {name, id} = event.target;
         this.setState({
-            [name]: id
+            [name]: id,
+            invalidModeSelection: false
         });
     }
-    handleChange = (date) => {
+    handleChange = (date, validationFunction) => {
         this.setState({
             date: date 
+        }, () => {
+            validationFunction();
         });
     }
     handleAdd = (event) => {
-        let training = this.createTrainingObject();
-        this.props.addTraining(training);
-        this.modalCloseReset(event);
+        let {duration, date, mode, invalidDuration, invalidModeSelection} = this.state;
+        if (invalidDuration || Number.isNaN(duration)) {
+            this.setState({
+                invalidDuration : true
+            });
+            return;
+        } else if (mode === "" || invalidModeSelection) {
+            this.setState({
+                invalidModeSelection : true
+            });
+            return;
+        } else if (date === null || !Date.parse(date)) {
+            this.setState({
+                date : new Date()
+            }, () => {
+                    let training = this.createTrainingObject();
+                    this.props.addTraining(training);
+                    this.modalCloseReset(event);
+            });
+            return;
+        } else {
+            let training = this.createTrainingObject();
+            this.props.addTraining(training);
+            this.modalCloseReset(event);
+        }
     }
     handleEdit = (event) => {
         let {id} = this.state;
@@ -98,7 +150,7 @@ class TrainingModal extends React.Component {
         this.setState({
             date: new Date(),
             duration: 0,
-            mode: "",
+            mode: null,
             intensity: 0,
             feeling: 0,
             comment: "",
@@ -137,6 +189,11 @@ class TrainingModal extends React.Component {
                             {
                                 (isAdd || isEdit) ? (
                                     <TrainingForm
+                                        invalidDuration={this.state.invalidDuration}
+                                        invalidModeSelection={this.state.invalidModeSelection}
+                                        checkDate={this.checkDate}
+                                        checkDuration={this.checkDuration}
+                                        checkModeSelection={this.checkModeSelection}
                                         rangeStyle={this.rangeStyle}
                                         state={this.state}
                                         selectedDate={this.state.date}

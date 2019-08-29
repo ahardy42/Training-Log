@@ -4,18 +4,18 @@ import Input from '../../components/Input/Input';
 import PickerWrapper from "./PickerWrapper";
 import "react-datepicker/dist/react-datepicker.css";
 
-const TrainingForm = ({ handleInputChange, state, handleCheck, handleChange}) => {
+const TrainingForm = ({ handleInputChange, state, handleCheck, handleChange, invalidModeSelection, invalidDuration, checkDuration, checkDate}) => {
     let {date, comment, duration, feeling, intensity, mode} = state;
     return (
         <form>
             <div className="form-row">
                 <div className="col">
-                    <PickerWrapper handleChange={handleChange} currValue={date}/>
+                    <PickerWrapper validationFunction={checkDate} handleChange={handleChange} currValue={date}/>
                 </div>
             </div>
             <div className="form-row">
                 <div className="col">
-                    <Input action="number" id="duration" name="duration" value={duration} handleInputChange={handleInputChange}>Enter Time (minutes)</Input>
+                    <Input action="number" id="duration" name="duration" value={duration} validationFunction={checkDuration} handleInputChange={handleInputChange}>Enter Time (minutes)</Input>
                 </div>
                 <div className="col">
                     <Input action="range" id="feeling" name="feeling" value={feeling} handleInputChange={handleInputChange}>How'd you feel?</Input>
@@ -50,6 +50,8 @@ const TrainingForm = ({ handleInputChange, state, handleCheck, handleChange}) =>
                     </div>
                 </div>
             </div>
+            {invalidModeSelection ? <p className="training-error">Please select a training mode!</p> : null}
+            {invalidDuration ? <p className="training-error">Please enter a valid duration!</p> : null}
             <div className="form-row">
                 <div className="col">
                     <Input action="textarea" id="comment" name="comment" value={comment} handleInputChange={handleInputChange}>Any general comments?</Input>

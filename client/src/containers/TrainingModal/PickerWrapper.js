@@ -12,7 +12,7 @@ class PickerWrapper extends React.Component {
         this.setState({
             date: date
         }, () => {
-            this.props.handleChange(this.state.date);
+            this.props.handleChange(this.state.date, this.props.validationFunction);
         });
     }
     componentDidMount() {
