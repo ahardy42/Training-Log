@@ -176,7 +176,7 @@ returns:
 
 this route expects an object and a request parameter, key
 
-``
+```
 {username : usernameString}
 ```
 
@@ -190,9 +190,57 @@ returns:
 {messageType: "success", message: name + " you have successfully reset your password!"}
 ```
 
-
-
 ### athlete API routes
 
+```/api/athlete/training/:year?/:month? //GET route```
+
+returns:
+```js
+[
+  {
+    object: trainingObject
+  },
+  ...
+]
+```
+
+```/api/athlete/stats/:year?/:month? //GET route```
+
+returns:
+```js
+```
+
+```/api/athlete/chart-stats/:year //GET route```
+
+returns: 
+```js
+```
+
+```/api/athlete/training //POST route```
+
+expects:
+```js
+```
+
+returns:
+```js
+```
+
+```/api/athlete/training/:trainingId //PUT route```
+
+expects:
+```js
+```
+returns:
+```js
+```
+
+```/api/athlete/training/:trainingId //DELETE route```
+
+returns:
+```js
+```
+
 ### coach API routes
+
 
