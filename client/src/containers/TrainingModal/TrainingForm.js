@@ -4,16 +4,15 @@ import Input from '../../components/Input/Input';
 import PickerWrapper from "./PickerWrapper";
 import "react-datepicker/dist/react-datepicker.css";
 
-const TrainingForm = ({ handleInputChange, state, handleCheck, handleChange, teamInputs}) => {
+const TrainingForm = ({ handleInputChange, state, handleCheck, handleChange, invalidModeSelection, invalidDuration, checkDuration, checkDate}) => {
     let {date, comment, duration, feeling, intensity, mode} = state;
 
     return (
         <form>
-            <div className="form-group">
-                <PickerWrapper
-                    handleChange={handleChange}
-                    currValue={date}
-                />
+            <div className="form-row">
+                <div className="col">
+                    <PickerWrapper validationFunction={checkDate} handleChange={handleChange} currValue={date}/>
+                </div>
             </div>
             <div className="form-row">
                 <div className="col">
@@ -22,6 +21,7 @@ const TrainingForm = ({ handleInputChange, state, handleCheck, handleChange, tea
                         id="duration"
                         name="duration"
                         value={duration}
+                        validationFunction={checkDuration}
                         handleInputChange={handleInputChange}
                     >
                         Enter Time (minutes)
@@ -77,6 +77,8 @@ const TrainingForm = ({ handleInputChange, state, handleCheck, handleChange, tea
                     </div>
                 </div>
             </div>
+            {invalidModeSelection ? <p className="training-error">Please select a training mode!</p> : null}
+            {invalidDuration ? <p className="training-error">Please enter a valid duration!</p> : null}
             <div className="form-row">
                 <div className="col">
                     <Input action="textarea" id="comment" name="comment" value={comment} handleInputChange={handleInputChange}>Any general comments?</Input>

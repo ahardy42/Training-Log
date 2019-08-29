@@ -114,6 +114,20 @@ const API = {
         let response = await fetch(`/api/team/${team}`);
         let teamObject = await response.json();
         return teamObject;
+    },
+    checkUserName: async username => {
+        let response = await fetch(`/auth/username-check/${username}`);
+        let user = await response.json();
+        return user; // {exists : boolean}
+    },
+    signupUser: async userInfoObject => {
+        let response = await fetch("/auth/signup", {
+            method: "POST",
+            body: JSON.stringify(userInfoObject),
+            headers: {"content-type" : "application/json"}
+        });
+        let user = await response.json();
+        return user;
     }
 }
 
