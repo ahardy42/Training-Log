@@ -15,13 +15,14 @@ class Auth extends React.Component {
             firstName: "",
             lastName: "",
             email: "",
-            team: "unattached",
+            team: "",
             isCoach: false,
             isSamePassword: false,
             allowSubmit: false,
             resetUser: {},
             userArray: [],
             message: {},
+            teamArray: [],
             invalidEmail: false,
             invalidPassword: false,
             repeatUsername: false,
@@ -175,7 +176,23 @@ class Auth extends React.Component {
             });
         }
     }
+    getTeamsForSelect = () => {
+        fetch("/api/team/select-menu")
+        .then(response => {
+            return response.json();
+        })
+        .then(teamArray => {
+            this.setState({
+                team: teamArray[0].name,
+                teamArray: teamArray
+            });
+        })
+        .catch(err => {
+            console.log(err);
+        });
+    }
     componentDidMount = () => {
+        this.getTeamsForSelect();
         let {params, path} = this.props.match;
         this.props.renderLink(path);
         if (params.key) {

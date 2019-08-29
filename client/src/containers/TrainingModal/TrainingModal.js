@@ -5,6 +5,8 @@ import TrainingView from './TrainingView';
 import Pagination from './Pagination';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import {faTimesCircle, faSmile, faGrinAlt, faTired, faMeh, faSadCry } from '@fortawesome/free-solid-svg-icons';
+import _ from 'lodash';
+import API from '../../utils/API';
 import './TrainingModal.sass';
 
 class TrainingModal extends React.Component {
@@ -12,12 +14,7 @@ class TrainingModal extends React.Component {
         super(props);
         this.state = {
             trainingPage: 0,
-            date: null,
-            duration: 0,
-            mode: "",
-            intensity: 0,
-            feeling: 0,
-            comment: "",
+            splitActivities: [],
             coachComment: "",
             id: "",
             rangeStyle: {},
@@ -168,6 +165,17 @@ class TrainingModal extends React.Component {
             comment: comment
         };
     }
+    componentDidMount = () => {
+        API.getTeamSpecificInfo(this.props.teamName)
+        .then(teamObject => {
+            let {activities} = teamObject;
+            let chunk = _.chunk(activities, 3);
+            this.setState({
+                splitActivities: chunk
+            });
+        });
+        
+    }
     render() {
         let {style, training, isAdd, isEdit} = this.props;
         return (
@@ -201,6 +209,7 @@ class TrainingModal extends React.Component {
                                         handleChange={this.handleChange}
                                         handleCheck={this.handleCheck}
                                         handleSelect={this.handleSelect}
+                                        splitActivities={this.state.splitActivities}
                                     />
                                 ) : (
                                         <TrainingView

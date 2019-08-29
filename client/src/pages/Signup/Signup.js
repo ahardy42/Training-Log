@@ -75,7 +75,7 @@ const Signup = ({message, handleClick, handleInputChange, allowSubmit, invalidEm
                     <div className="col-sm-12">
                         <div className="card">
                             <div className="card-body signup-bottom-form">
-                                <Input action="select" name="team" id="signupTeam" handleInputChange={handleInputChange}>What team are you on?</Input>
+                                <Input teams={props.teams} action="select" name="team" id="signupTeam" handleInputChange={handleInputChange}>What team are you on?</Input>
                                 <Input action="checkbox" name="isCoach" id="isCoach" handleCheck={props.handleCheck}>Are you a coach?</Input>
                                 <Button action="button" extraClasses="signup-button" id="signup" handleClick={handleClick}>Sign Up!</Button>
                             </div>

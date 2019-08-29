@@ -1,4 +1,5 @@
 module.exports = {
     User: require("./User"),
-    Temp: require("./Temp")
+    Temp: require("./Temp"),
+    Team: require("./Team")
 }

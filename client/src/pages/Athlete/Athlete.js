@@ -151,6 +151,7 @@ class Athlete extends React.Component {
         return (
             <div className="container">
                 <TrainingModal
+                    teamName={this.props.athlete.team}
                     switchToEdit={this.switchToEdit}
                     addTraining={this.addTraining}
                     deleteTraining={this.deleteTraining}

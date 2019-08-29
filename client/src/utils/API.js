@@ -109,6 +109,12 @@ const API = {
         let message = await response.json();
         return message;
     },
+    getTeamSpecificInfo: async team => {
+        // find the athlete's team in the team DB collection and use it to populate the page with relevant info
+        let response = await fetch(`/api/team/${team}`);
+        let teamObject = await response.json();
+        return teamObject;
+    },
     checkUserName: async username => {
         let response = await fetch(`/auth/username-check/${username}`);
         let user = await response.json();

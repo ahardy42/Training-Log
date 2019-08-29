@@ -12,8 +12,9 @@ const Input = ({action, id, children, handleInputChange, validationFunction, ...
             <div className="form-group">
                 <label htmlFor={id}>{children}</label>
                 <select className="form-control" value={props.value} name={props.name} id={id} onChange={handleInputChange}>
-                    <option>unattached</option>
-                    <option>SNSC</option>
+                    {props.teams.map(team => {
+                        return <option key={team._id} id={team._id}>{team.name}</option>
+                    })}
                 </select>
             </div>
         );
