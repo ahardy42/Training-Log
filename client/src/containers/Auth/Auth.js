@@ -235,6 +235,8 @@ class Auth extends React.Component {
                         invalidPassword={this.state.invalidPassword}
                         invalidUsername={this.state.invalidUsername}
                         repeatUsername={this.state.repeatUsername}
+                        team={this.state.team}
+                        teams={this.state.teamArray}
                     />
                 );
             } else {
