@@ -52,3 +52,9 @@ As an athlete, using the main page, you can view a calendar with your workouts, 
 Clicking "Add Workout" brings you to a form page where you can fill out details of a workout you have done. Submitting this workout populates the calendar with your newly added workout. Editing a workout is very similar to adding one, and deleting is pretty self-explanatory. 
 
 The calendar has one view: Monthly.  Each activity on the calendar is color coded by activity type, and is highlighted in a special way when a coach has commented. You can immediately see, by color / emoji tags, trends in how hard you went, and how you were feeling during workouts. 
+
+### How to run the app on your machine
+
+1. clone this repo
+2. cd into cloned directory and run: ```npm i && cd client && npm i```
+3. run ```npm start``` and away you go!
