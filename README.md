@@ -39,6 +39,24 @@ There are two types of user for this app.
 1. Coaches
 2. Athletes
 
+### screen shots
+
+![login](https://ahardy42.s3.us-east-2.amazonaws.com/project_screenShots/training_log_login.png)
+
+login
+
+![signup](https://ahardy42.s3.us-east-2.amazonaws.com/project_screenShots/training_log_signup.png)
+
+signup
+
+![athlete screenshot](https://ahardy42.s3.us-east-2.amazonaws.com/project_screenShots/training_log_athlete.png)
+
+athlete view
+
+![coach screenshot](https://ahardy42.s3.us-east-2.amazonaws.com/project_screenShots/training_log_coach.png)
+
+coach view
+
 #### Coaches
 
 As a coach, using the main page, you can see a list of athletes in your program who are using the app, and who have allowed coaches to see their data.  Clicking on an athlete whill bring you to a summary view of their workouts.  You may view workout data, and comment on a workoutbut cannot write data to athlete's pages otherwise.  
