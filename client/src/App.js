@@ -106,6 +106,7 @@ class App extends React.Component {
         return response.json();
       })
       .then(json => {
+        console.log("response is", json);
         if (json) {
           this.setState({
             isLoggedIn: true,
