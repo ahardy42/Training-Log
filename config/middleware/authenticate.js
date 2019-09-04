@@ -8,6 +8,7 @@ const auth = {
             next();
         } else{
             console.log("user not authenticated");
+            res.end();
         }
     },
 
