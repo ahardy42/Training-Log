@@ -44,6 +44,7 @@ router.get("/chart-stats/:year", authenticate.isLoggedIn, (req, res) => {
         .unwind("$training")
         .match({ $and: [{ "training.date": { $gte: date.start } }, { "training.date": { $lte: date.end } }] })
         .group({ _id: { month: { $month: "$training.date" } }, total: { $sum: "$training.duration" } })
+        .sort({"_id.month" : 1})
         .exec((err, stats) => {
             if (err) console.log(err);
             res.json(stats);
