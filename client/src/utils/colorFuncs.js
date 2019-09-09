@@ -29,9 +29,9 @@ const colorFuncs = {
     feelingColor: function(training) {
         if (training.length) {
             let avgFeeling = this.avgVal(training, "feeling");
-            let color = avgFeeling < 30 ? colors.red :
-                avgFeeling < 50 ? colors.orange :
-                avgFeeling < 80 ? colors.yellow : colors.green;
+            let color = avgFeeling < 2 ? colors.red :
+                avgFeeling < 3 ? colors.orange :
+                avgFeeling < 4 ? colors.yellow : colors.green;
             return color;
         } else {
             return "transparent";
@@ -67,6 +67,22 @@ const colorFuncs = {
     gradientColorCss: function(color, direction, endAt) { // supports hex colors only
         let gradient = `linear-gradient(${direction}, ${color}, ${color}00  ${endAt ? endAt : ""})`;
         return gradient;
+    },
+    intensityBar: function(training) {
+        let trainingArray = [training];
+        let style = {
+            backgroundColor: this.intensityColor(trainingArray),
+            width: `${training.intensity > 0 ? training.intensity * 20 : 10}%`
+        }
+        return style;
+    },
+    feelingBar: function(training) {
+        let trainingArray = [training];
+        let style = {
+            backgroundColor: this.feelingColor(trainingArray),
+            width: `${training.feeling > 0 ? training.feeling * 20 : 10}%`
+        }
+        return style;
     }
 }
 
