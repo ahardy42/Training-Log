@@ -47,6 +47,7 @@ const Input = ({action, id, children, handleInputChange, validationFunction, ...
                 <label htmlFor={id}>{children}</label>
                 <input
                     type={action}
+                    pattern={props.pattern ? props.pattern : ""}
                     className="form-control"
                     value={props.value}
                     name={props.name}

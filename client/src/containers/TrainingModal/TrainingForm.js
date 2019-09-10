@@ -22,6 +22,7 @@ const TrainingForm = ({ handleInputChange, state, handleCheck, handleChange, inv
                         value={duration}
                         validationFunction={checkDuration}
                         handleInputChange={handleInputChange}
+                        pattern="[0-9]*"
                     >
                         Enter Time (minutes)
                     </Input>
