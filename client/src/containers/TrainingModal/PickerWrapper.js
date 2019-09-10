@@ -29,6 +29,7 @@ class PickerWrapper extends React.Component {
                     onChange={this.handlePickerChange}
                     placeholderText="Select a Date!"
                     selected={this.state.date}
+                    disabledKeyboardNavigation={true}
                 />
             </div>
         );
