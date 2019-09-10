@@ -173,6 +173,7 @@ class TrainingModal extends React.Component {
         this.props.handleClose(event);
         this.setState({
             date: new Date(),
+            trainingPage: 0,
             hours: 0,
             minutes: 0,
             mode: null,
