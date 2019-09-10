@@ -11,6 +11,7 @@ const Week = ({week, viewTraining}) => {
                         handleClick={viewTraining}
                         customDate={day.customDate}
                         isToday={day.isToday}
+                        isInPrimaryMonth={day.isInPrimaryMonth}
                         day={day.day} 
                         date={day.date}
                         key={day.day}
