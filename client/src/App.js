@@ -103,17 +103,21 @@ class App extends React.Component {
     // check if user is logged in and update state
     fetch("/auth/profile")
       .then(response => {
-        return response.json();
+        if (response) {
+          return response.json();
+        } else {
+          return null;
+        }
       })
       .then(json => {
-        console.log("response is", json);
         if (json) {
           this.setState({
             isLoggedIn: true,
             user: json
           });
         }
-      });
+      })
+      .catch(err => console.log(err));
   }
   render() {
     return (

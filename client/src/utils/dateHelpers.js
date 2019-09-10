@@ -33,7 +33,6 @@ const dateHelpers = {
     initialize: function(obj) {
         // function runs to set the state of Athlete
         let now = obj ? obj : moment().toObject();
-        console.log(now);
         let calObject = calendar().detailed(parseInt(now.years), parseInt(now.months), (data, calendar) => {
             let bool = moment().startOf('day').format() === moment(data.date).startOf('day').format();
             let training = [];
@@ -54,7 +53,6 @@ const dateHelpers = {
                 reformattedDate: moment(activity.date).format("MM/DD/YYYY")
             }, activity);
         });
-        console.log(reformattedTraining);
         // loop through the calendar nested array and add the training array for each day that matches the formatted date
         let updatedCalendar = calObject.calendar.map(week => {
             for (let i = 0; i < week.length; i++) {
