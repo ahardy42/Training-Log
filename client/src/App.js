@@ -27,9 +27,7 @@ class App extends React.Component {
       }
     });
     let json;
-    console.log(response);
     if (response.ok) {
-      console.log(response);
       json = await response.json();
       if (json.messageType === "error") {
         this.setState({message: json});
@@ -77,7 +75,7 @@ class App extends React.Component {
     } else if (isLoggedIn && user.type === "Coach") {
       return <Coach {...props} coach={user} />
     } else {
-      return <Main {...props} message={message} />
+      return <Main {...props} message={message} login={this.login}/>
     }
   }
   loadTraining = () => {

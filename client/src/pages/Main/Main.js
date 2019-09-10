@@ -10,8 +10,27 @@ class Main extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            message: {}
+            message: {},
+            testUser: {
+                username: "grumpy",
+                password: "password"
+            },
+            splitActivities: [
+                [
+                    {activityType: "run"},
+                    {activityType: "ski"},
+                    {activityType: "rollerski"}
+                ],
+                [
+                    {activityType: "bike"},
+                    {activityType: "swim"},
+                    {activityType: "other"}
+                ]
+            ]
         }
+    }
+    loginTest = () => {
+        this.props.login(this.state.testUser);
     }
     componentDidMount() {
         if (this.props.match.path === "/coach/:key") {
@@ -53,6 +72,7 @@ class Main extends React.Component {
                         </p>
                         <br></br>
                         <h4 className="text-center">How it works</h4>
+                        <h5 className="text-center"><Button action="button" extraClasses="btn-link" handleClick={this.loginTest}>(click to see a working example!)</Button></h5>
                         <br></br>
                         <p className="text-justified">
                             When you create an account, you are providing some important information to help this site work...
@@ -74,15 +94,15 @@ class Main extends React.Component {
                             When you have signed up, you will see a calendar (initially empty) which displays your training by month. There are charts to show you how your monthly activity breakdown looks (are you doing enough rollerskiing??), and to show you the monthly hours you have trained since the beginning of the year.
                         </p>
                         <br></br>
-                        <div className="row mb-3">
-                            <div className="card col-6 offset-3">
-                                <div className="card-body">
+                        <div className="row mb-3 justify-content-center">
+                            <div className="card col-lg-6 col-sm-12">
+                                <div className="card-body d-flex-column">
                                     <h4 className="text-center">When you add training, the form looks like this</h4>
                                     <br></br>
                                     <div className="intro-form-wrap">
                                         <TrainingForm 
                                             handleInputChange={(e) => console.log(e.target)}
-                                            state={{date: "", comment: "", intensity: 0, duration: 0, feeling: 0, mode: ""}}
+                                            state={{date: new Date(), comment: "", intensity: 3, duration: 45, feeling: 4, mode: "run", splitActivities: this.state.splitActivities}}
                                             handleChange={(e) => console.log(e.target)}
                                             handleCheck={(e) => console.log(e.target)}
                                         />
