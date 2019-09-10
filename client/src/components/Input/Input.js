@@ -27,6 +27,20 @@ const Input = ({action, id, children, handleInputChange, validationFunction, ...
                 </label>
             </div>
         );
+    } else if (action === "textarea") {
+        return (
+            <div className={`form-group ${props.extraClasses || ""}`}>
+                <label htmlFor={id}>{children}</label>
+                <textarea 
+                    className="form-control"
+                    value={props.value}
+                    name={props.name}
+                    id={id}
+                    placeholder="enter comment"
+                    onChange={handleInputChange}
+                />
+            </div>
+        )
     } else {
         return (
             <div className={`form-group ${props.extraClasses || ""}`}>

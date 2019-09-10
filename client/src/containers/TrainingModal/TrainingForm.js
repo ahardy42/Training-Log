@@ -52,17 +52,16 @@ const TrainingForm = ({ handleInputChange, state, handleCheck, handleChange, inv
                     </Input>
                 </div>
                 <div className="col">
-                    {splitActivities ? splitActivities.map(array => {
+                    {splitActivities ? splitActivities.map((array, index) => {
                         return (
-                            <div className="form-row">
+                            <div className="form-row" key={index}>
                                 {array.length ? array.map(activityObject => {
                                     return (
-                                        <div className="col">
+                                        <div className="col" key={activityObject._id}>
                                             <Input
                                                 action="radio"
                                                 icon={activityObject.icon}
                                                 id={activityObject.activityType}
-                                                key={activityObject._id}
                                                 name="mode"
                                                 value={activityObject.activityType}
                                                 checked={mode === activityObject.activityType ? true : false}

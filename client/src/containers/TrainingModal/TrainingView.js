@@ -1,6 +1,5 @@
 import React from 'react';
 import colorFuncs from '../../utils/colorFuncs';
-import moment from 'moment';
 
 
 const TrainingView = ({ trainingArray, index }) => {
@@ -19,7 +18,7 @@ const TrainingView = ({ trainingArray, index }) => {
     }
     return (
         <ul className="list-group">
-            <li className="list-group-item">Date: {moment(training.date).format("MM/DD/YYYY")}</li>
+            <li className="list-group-item">Date: {training.reformattedDate}</li>
             <li className="list-group-item">Type: {training.mode}</li>
             <li className="list-group-item">Duration: {returnDuration(training.duration)}</li>
             <li className="list-group-item list-bar">Intensity: <span style={colorFuncs.intensityBar(training)}></span></li>

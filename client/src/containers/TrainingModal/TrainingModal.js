@@ -18,6 +18,12 @@ class TrainingModal extends React.Component {
             coachComment: "",
             id: "",
             rangeStyle: {},
+            duration: 0,
+            intensity: 3,
+            feeling: 3,
+            date: null,
+            comment: "",
+            mode: "",
             invalidDuration: false,
             invalidModeSelection: false
         }
@@ -174,7 +180,6 @@ class TrainingModal extends React.Component {
                 splitActivities: chunk
             });
         });
-        
     }
     render() {
         let {style, training, isAdd, isEdit} = this.props;

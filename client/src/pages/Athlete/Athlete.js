@@ -32,10 +32,10 @@ class Athlete extends React.Component {
             modalStyle: style,
             isAdd: false,
             isEdit: false,
+            selectedTraining: []
         });
     }
     openTrainingViewModal = (event, training) => {
-        console.log(training);
         this.setState({
             selectedTraining: training
         }, () => {
