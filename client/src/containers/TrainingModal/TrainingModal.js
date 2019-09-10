@@ -18,7 +18,8 @@ class TrainingModal extends React.Component {
             coachComment: "",
             id: "",
             rangeStyle: {},
-            duration: 0,
+            hours: 0,
+            minutes: 0,
             intensity: 3,
             feeling: 3,
             date: null,
@@ -28,11 +29,24 @@ class TrainingModal extends React.Component {
             invalidModeSelection: false
         }
     }
-    checkDuration = () => {
-        let {duration} = this.state;
-        if (Number.isNaN(duration)) {
+    setDurationStateValue = (hours, minutes) => {
+        let duration = 0;
+        duration += hours*60;
+        duration += minutes;
+        return duration;
+    }
+    getDurationHoursMinutes = duration => {
+        let hours = Math.floor(duration/60);
+        let minutes = duration % 60;
+        return {
+            hours: hours,
+            minutes: minutes
+        }
+    }
+    checkTime = (time, val) => {
+        if (Number.isNaN(val)) {
             this.setState({
-                duration: 0,
+                [time]: 0,
                 invalidDuration: true
             });
         } else {
@@ -69,9 +83,11 @@ class TrainingModal extends React.Component {
         let {training} = this.props;
         let {trainingPage} = this.state;
         let {date, duration, mode, intensity, feeling, comment, _id} = training[trainingPage];
+        let durationObject = this.getDurationHoursMinutes(duration);
         this.setState({
             date: date,
-            duration: duration,
+            hours: durationObject.hours,
+            minutes: durationObject.minutes,
             mode: mode,
             intensity: intensity,
             feeling: feeling,
@@ -111,7 +127,9 @@ class TrainingModal extends React.Component {
         });
     }
     handleAdd = (event) => {
-        let {duration, date, mode, invalidDuration, invalidModeSelection} = this.state;
+        let {invalidDuration, invalidModeSelection} = this.state;
+        let training = this.createTrainingObject();
+        let {duration, mode, date} = training;
         if (invalidDuration || Number.isNaN(duration)) {
             this.setState({
                 invalidDuration : true
@@ -132,16 +150,19 @@ class TrainingModal extends React.Component {
             });
             return;
         } else {
-            let training = this.createTrainingObject();
             this.props.addTraining(training);
             this.modalCloseReset(event);
         }
     }
     handleEdit = (event) => {
-        let {id} = this.state;
-        let training = this.createTrainingObject();
-        this.props.updateTraining(training, id);
-        this.modalCloseReset(event);
+        let {id, hours, minutes} = this.state;
+        this.setState({
+            duration: this.setDurationStateValue(hours, minutes)
+        }, () => {
+            let training = this.createTrainingObject();
+            this.props.updateTraining(training, id);
+            this.modalCloseReset(event);
+        })
     }
     handleDelete = (event) => {
         let {id} = this.state;
@@ -152,7 +173,8 @@ class TrainingModal extends React.Component {
         this.props.handleClose(event);
         this.setState({
             date: new Date(),
-            duration: 0,
+            hours: 0,
+            minutes: 0,
             mode: null,
             intensity: 0,
             feeling: 0,
@@ -161,10 +183,10 @@ class TrainingModal extends React.Component {
         });
     }
     createTrainingObject = () => {
-        let {date, duration, mode, intensity, feeling, comment} = this.state;
+        let {date, hours, minutes, mode, intensity, feeling, comment} = this.state;
         return {
             date: date,
-            duration: duration,
+            duration: this.setDurationStateValue(hours, minutes),
             mode: mode,
             intensity: intensity,
             feeling: feeling,
@@ -205,7 +227,7 @@ class TrainingModal extends React.Component {
                                         invalidDuration={this.state.invalidDuration}
                                         invalidModeSelection={this.state.invalidModeSelection}
                                         checkDate={this.checkDate}
-                                        checkDuration={this.checkDuration}
+                                        checkTime={this.checkTime}
                                         checkModeSelection={this.checkModeSelection}
                                         rangeStyle={this.rangeStyle}
                                         state={this.state}

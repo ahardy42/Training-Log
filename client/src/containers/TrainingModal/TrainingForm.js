@@ -4,38 +4,41 @@ import Input from '../../components/Input/Input';
 import PickerWrapper from "./PickerWrapper";
 import "react-datepicker/dist/react-datepicker.css";
 
-const TrainingForm = ({ handleInputChange, state, handleCheck, handleChange, invalidModeSelection, invalidDuration, checkDuration, checkDate}) => {
-    let {splitActivities, date, comment, duration, feeling, intensity, mode} = state;
+const TrainingForm = ({ handleInputChange, state, handleCheck, handleChange, invalidModeSelection, invalidDuration, checkTime, checkDate}) => {
+    let {splitActivities, date, comment, hours, minutes, feeling, intensity, mode} = state;
     return (
         <form>
-            <div className="form-row">
+            <div className="form-row justify-content-center">
                 <div className="col">
                     <PickerWrapper validationFunction={checkDate} handleChange={handleChange} currValue={date}/>
                 </div>
             </div>
-            <div className="form-row">
+            <p className="text-center mt-1 modal-p">Enter a time:</p>
+            <div className="form-row" id="time-row">
                 <div className="col">
                     <Input
                         action="number"
-                        id="duration"
-                        name="duration"
-                        value={duration}
-                        validationFunction={checkDuration}
+                        id="hours"
+                        name="hours"
+                        value={hours}
+                        validationFunction={checkTime}
                         handleInputChange={handleInputChange}
                         pattern="[0-9]*"
                     >
-                        Enter Time (minutes)
+                        (hours)
                     </Input>
                 </div>
                 <div className="col">
                     <Input
-                        action="range"
-                        id="feeling"
-                        name="feeling"
-                        value={feeling}
+                        action="number"
+                        id="minutes"
+                        name="minutes"
+                        value={minutes}
+                        validationFunction={checkTime}
                         handleInputChange={handleInputChange}
+                        pattern="[0-9]*"
                     >
-                        How'd you feel?
+                        (minutes)
                     </Input>
                 </div>
             </div>
@@ -52,6 +55,20 @@ const TrainingForm = ({ handleInputChange, state, handleCheck, handleChange, inv
                         How hard did you go?
                     </Input>
                 </div>
+                <div className="col">
+                    <Input
+                        action="range"
+                        id="feeling"
+                        name="feeling"
+                        value={feeling}
+                        handleInputChange={handleInputChange}
+                    >
+                        How'd you feel?
+                    </Input>
+                </div>
+            </div>
+            <p className="text-center mt-1 modal-p">Pick an Activity</p>
+            <div className="form-row" id="activities-row">
                 <div className="col">
                     {splitActivities ? splitActivities.map((array, index) => {
                         return (
