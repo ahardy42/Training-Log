@@ -2,7 +2,7 @@ import React from 'react';
 import Button from '../../components/Button/Button';
 import Input from '../../components/Input/Input';
 
-const Reset = ({message, getUsers, getResetKey, handleInputChange, resetUser, submitResetPassword, userArray, checkPassword, checkRepeatPassword}) => {
+const Reset = ({resetMessage, message, getUsers, getResetKey, handleInputChange, resetUser, submitResetPassword, userArray, checkPassword, checkRepeatPassword}) => {
     if (resetUser._id) {
         // if there is a reset user id then display the password reset form
         return(
@@ -25,6 +25,20 @@ const Reset = ({message, getUsers, getResetKey, handleInputChange, resetUser, su
     } else {
         return (
             <div className="container">
+                {message.messageType ? (
+                    <div class={`alert alert-${message.messageType === "error" ? "danger" : "success"}`} role="alert">
+                        {message.message}
+                    </div>
+                ) : (
+                    null
+                ) }
+                {resetMessage.messageType ? (
+                    <div class={`alert alert-${resetMessage.messageType === "error" ? "danger" : "success"}`} role="alert">
+                        {resetMessage.message}
+                    </div>
+                ) : (
+                    null
+                ) }
                 {userArray.length ? 
                  (
                         <ul className="list-group">

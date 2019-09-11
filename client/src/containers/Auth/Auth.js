@@ -210,8 +210,6 @@ class Auth extends React.Component {
             return (
                 <Redirect to="/" />
             );
-        } else if (this.state.message.messageType === "success") {
-            return <Redirect to="/" />
         } else {
             if (this.props.action === "login") {
                 return (
@@ -244,7 +242,8 @@ class Auth extends React.Component {
             } else {
                 return (
                     <Reset
-                        message={this.props.message} 
+                        resetMessage={this.props.message}
+                        message={this.state.message} 
                         resetUser={this.state.resetUser}
                         userArray={this.state.userArray}
                         getUsers={this.getUsers}

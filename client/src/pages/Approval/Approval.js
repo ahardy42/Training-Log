@@ -6,7 +6,6 @@ const Approval = ({match}) => {
     const [coach, setCoach] = useState("");
     useEffect(() => {
         let {key} = match.params;
-        console.log(key);
         if (key) {
             fetch("/email/coach-approval/" + key)
             .then(response => {
