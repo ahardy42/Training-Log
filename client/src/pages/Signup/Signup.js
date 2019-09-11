@@ -4,13 +4,13 @@ import Input from '../../components/Input/Input';
 import './Signup.sass';
 
 
-const Signup = ({message, handleClick, handleInputChange, allowSubmit, invalidEmail, invalidPassword, invalidUsername, repeatUsername, ...props}) => {
+const Signup = ({coachMessage, message, handleClick, handleInputChange, allowSubmit, invalidEmail, invalidPassword, invalidUsername, repeatUsername, ...props}) => {
 
     return (
         <div className="container signup">
-            {message.messageType ? (
-                <div class={`alert alert-${message.messageType === "error" ? "danger" : "success"}`} role="alert">
-                    {message.message}
+            {coachMessage.messageType ? (
+                <div class={`alert alert-${coachMessage.messageType === "error" ? "danger" : "success"}`} role="alert">
+                    {coachMessage.message}
                 </div>
             ) : (
                 null

@@ -230,6 +230,7 @@ class Auth extends React.Component {
                         handleInputChange={this.handleInputChange}
                         allowSubmit={this.state.allowSubmit}
                         message={this.state.message}
+                        coachMessage={this.props.message}
                         isSamePassword={this.state.isSamePassword}
                         invalidFirstName={this.state.invalidFirstName}
                         invalidEmail={this.state.invalidEmail}
