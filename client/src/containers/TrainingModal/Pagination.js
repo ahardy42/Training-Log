@@ -12,7 +12,7 @@ const Pagination = ({ length, page, previousPage, nextPage }) => {
           <Button className="page-link" action="button" handleClick={previousPage} aria-label="Previous"><FontAwesomeIcon icon={faAngleLeft}/></Button>
         </li>
         {pageArray.map(pageNum => {
-          return <li className="page-item" key={pageNum}>{pageNum + 1}</li>
+          return <li className={`page-item ${page === pageNum ? "active" : ""}`} key={pageNum}><p>{pageNum + 1}</p></li>
         })}
         <li className="page-item">
           <Button className="page-link" action="button" handleClick={nextPage} aria-label="Next"><FontAwesomeIcon icon={faAngleRight}/></Button>

@@ -18,8 +18,8 @@ class TrainingModal extends React.Component {
             coachComment: "",
             id: "",
             rangeStyle: {},
-            hours: 0,
-            minutes: 0,
+            hours: null,
+            minutes: null,
             intensity: 3,
             feeling: 3,
             date: null,
@@ -143,10 +143,6 @@ class TrainingModal extends React.Component {
         } else if (date === null || !Date.parse(date)) {
             this.setState({
                 date : new Date()
-            }, () => {
-                    let training = this.createTrainingObject();
-                    this.props.addTraining(training);
-                    this.modalCloseReset(event);
             });
             return;
         } else {
@@ -174,9 +170,9 @@ class TrainingModal extends React.Component {
         this.setState({
             date: new Date(),
             trainingPage: 0,
-            hours: 0,
-            minutes: 0,
-            mode: null,
+            hours: null,
+            minutes: null,
+            mode: "",
             intensity: 0,
             feeling: 0,
             comment: "",
