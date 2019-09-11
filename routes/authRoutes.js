@@ -132,17 +132,17 @@ router.get("/reset-password/:key", (req, res) => {
       if (!user) {
           return res.json("Sorry no user exists with that key");
       } else {
-        let user = {
-          _id: req.user._id,
-          email: req.user.email,
-          username: req.user.username,
-          firstName: req.user.firstName,
-          lastName: req.user.lastName,
-          training: req.user.training,
-          team: req.user.team,
-          type: req.user.type
+        let userInfo = {
+          _id: user._id,
+          email: user.email,
+          username: user.username,
+          firstName: user.firstName,
+          lastName: user.lastName,
+          training: user.training,
+          team: user.team,
+          type: user.type
         }
-        res.json(user);
+        res.json(userInfo);
       }
   })
 });
