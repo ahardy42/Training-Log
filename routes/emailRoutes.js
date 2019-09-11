@@ -34,7 +34,7 @@ router.post("/new-coach", (req, res) => {
             "A new coach has requested to sign up! Their name is " + coach.firstName + " " + coach.lastName + " and they would like to join the team: " + coach.team + ".\n\n" +
             "please click the following link to activate: https://" + req.hostname + "/coach/" + key + "\n\n" +
             "if you have any questions for the requester, here is their email: " + coach.email + ".\n\n" +
-            "Click here: " + req.hostname + "/email/coach-deny to deny the request!"
+            "Click here: https://" + req.hostname + "/email/coach-deny to deny the request!"
         };
         sgMail.send(mailOptions);
         return key;
@@ -70,7 +70,7 @@ router.get("/coach-approval/:key?", (req, res) => {
                     from: adminEmail,
                     subject: 'New Coach Request Approved!',
                     text: "Great news! " + newCoach.firstName + " , you have been approved as a coach for " + newCoach.team + ".\n\n" +
-                        "Please go to http://" + req.hostname + "/login to login using your username and password. Your username is " + newCoach.username +
+                        "Please go to https://" + req.hostname + "/login to login using your username and password. Your username is " + newCoach.username +
                         "and your password is the same as the one you signed up with..."
                 };
                 sgMail.send(mailOptions);
@@ -101,8 +101,8 @@ router.post("/reset-password/", (req, res) => {
                 from: adminEmail,
                 subject: 'Password Reset',
                 text: "Hi there " + name + " it looks like you, or somebody else, requested a password reset!\n\n" +
-                    "If you would like to reset your password, please follow this link: http://" + req.hostname + "/reset/" + user.resetKey + "\n\n" +
-                    "Disregard this email if you did not request a reset. " + user.resetKey + " is the key"
+                    "If you would like to reset your password, please follow this link: https://" + req.hostname + "/reset/" + user.resetKey + "\n\n" +
+                    "Disregard this email if you did not request a reset."
             };
             sgMail.send(mailOptions);
             res.json(message);
@@ -115,7 +115,7 @@ router.post("/reset-password/", (req, res) => {
 // req.body includes username and params includes the key. will NOT re-direct to login yet.
 router.post("/reset-password/:key", (req, res) => {
     let {key} = req.params;
-    db.User.findOne({resetKey: key}, {new: true},(err, user) => {
+    db.User.findOne({resetKey: key},(err, user) => {
         if (err) return req.flash("error",err);
         if (!user) {
             return res.json({messageType: "error", message: "Sorry no user exists with that key"});
@@ -123,9 +123,18 @@ router.post("/reset-password/:key", (req, res) => {
             let hashedPassword = user.generateHash(req.body.password);
             user.password = hashedPassword;
             user.resetKey = null;
-            user.save({new: true}, (err, user) => {
+            user.save({new: true}, (err, updatedUser) => {
                 if (err) res.json({messageType: "error", message: err})
-                let name = `${user.firstName} ${user.lastName}`
+                let name = `${updatedUser.firstName} ${updatedUser.lastName}`;
+                // sendgrid email to notify user their password has been changed
+                const mailOptions = {
+                    to: updatedUser.email,
+                    from: adminEmail,
+                    subject: 'Password Reset',
+                    text: "Hi there " + name + " it looks like you have successfully reset your password!\n\n" +
+                    "Please go to https://" + req.hostname + "/login to login using your username and password."
+                };
+                sgMail.send(mailOptions);
                 res.json({messageType: "success", message: name + " you have successfully reset your password!"});
             });
         }
