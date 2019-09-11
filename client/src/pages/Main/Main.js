@@ -32,18 +32,6 @@ class Main extends React.Component {
     loginTest = () => {
         this.props.login(this.state.testUser);
     }
-    componentDidMount() {
-        if (this.props.match.path === "/coach/:key") {
-            let {key} = this.props.match.params;
-            fetch("/email/coach-approval/" + key)
-            .then(message => {
-                console.log(message);
-                this.setState({
-                    message: message
-                });
-            })
-        }
-    }
     render() {
         let {message} = this.state;
         return (

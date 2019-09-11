@@ -2,6 +2,7 @@ import React from 'react';
 import './App.sass';
 import NavBar from './containers/NavBar/NavBar';
 import Main from './pages/Main/Main';
+import Approval from './pages/Approval/Approval';
 import Athlete from './pages/Athlete/Athlete';
 import Coach from './pages/Coach/Coach';
 import Auth from './containers/Auth/Auth';
@@ -126,7 +127,7 @@ class App extends React.Component {
           <Route exact path="/login" render={(props) => <Auth {...props} message={this.state.message} renderLink={this.renderLink} isLoggedIn={this.state.isLoggedIn} submit={this.login} action="login" />} />
           <Route exact path="/signup" render={(props) => <Auth {...props} message={this.state.message} renderLink={this.renderLink} isLoggedIn={this.state.isLoggedIn} submit={this.signup} action="signup" />} />
           <Route path="/reset/:key?" render={(props) => <Auth {...props} message={this.state.message} renderLink={this.renderLink} action="reset" />} />
-          <Route path="/coach/:key" render={(props) => <Main {...props}  message={this.state.message}/>} />
+          <Route path="/coach/:key" render={(props) => <Approval {...props} />} />
         </Switch>
       </Router>
     );

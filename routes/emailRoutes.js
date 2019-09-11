@@ -74,7 +74,7 @@ router.get("/coach-approval/:key?", (req, res) => {
                         "and your password is the same as the one you signed up with..."
                 };
                 sgMail.send(mailOptions);
-                res.json({messageType: "success", message: "success!"});
+                res.json(newCoach);
             });
         } else {
             res.json({messageType: "error", message: "something happened!"});
