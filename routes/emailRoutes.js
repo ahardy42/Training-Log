@@ -32,9 +32,10 @@ router.post("/new-coach", (req, res) => {
             subject: 'New Coach Request',
             text:
             "A new coach has requested to sign up! Their name is " + coach.firstName + " " + coach.lastName + " and they would like to join the team: " + coach.team + ".\n\n" +
-            "please click the following link to activate: https://" + req.hostname + "/coach/" + key + "\n\n" +
+            "please click the following link to activate: https://" + req.hostname + "/coach/approve/" + key + "\n\n" +
             "if you have any questions for the requester, here is their email: " + coach.email + ".\n\n" +
-            "Click here: https://" + req.hostname + "/email/coach-deny to deny the request!"
+            "Click here: https://" + req.hostname + "/coach/deny/" + key + " to deny the request!\n\n" +
+            "Sincerely,\n" + "Stoked On Training Admin"
         };
         sgMail.send(mailOptions);
         return key;
@@ -71,7 +72,8 @@ router.get("/coach-approval/:key?", (req, res) => {
                     subject: 'New Coach Request Approved!',
                     text: "Great news! " + newCoach.firstName + " , you have been approved as a coach for " + newCoach.team + ".\n\n" +
                         "Please go to https://" + req.hostname + "/login to login using your username and password. Your username is " + newCoach.username +
-                        "and your password is the same as the one you signed up with..."
+                        " and your password is the same as the one you signed up with...\n\n" +
+                        "Sincerely,\n" + "Stoked On Training Admin"
                 };
                 sgMail.send(mailOptions);
                 res.json(newCoach);
@@ -80,7 +82,34 @@ router.get("/coach-approval/:key?", (req, res) => {
             res.json({messageType: "error", message: "something happened!"});
         }
     })
+});
 
+router.get("/coach-deny/:key", (req, res) => {
+    // if this gets hit, coach will be deleted in temp users and an email will be sent to the coach telling them they were denied approval.
+    let { key } = req.params;
+    db.Temp.findOneAndDelete({ accessKey: key}, (err, coach) => {
+        if (err) res.json({messageType: "error", message: err});
+        if (coach) {
+            let returnedCoach = {
+                firstName: coach.firstName,
+                lastName: coach.lastName,
+                email: coach.email,
+                team: coach.team
+            }
+            const mailOptions = {
+                to: returnedCoach.email,
+                from: adminEmail,
+                subject: 'New Coach Request Denied',
+                text: "Bad news! " + returnedCoach.firstName + " , you have NOT been approved as a coach for " + returnedCoach.team + ".\n\n" +
+                    "If you feel this decision was made in error, please email " + adminEmail + " and they will be able to answer any questions you may have about the decision. Thanks!\n\n" + 
+                    "Sincerely,\n" + "Stoked On Training Admin"
+            };
+            sgMail.send(mailOptions);
+            res.json(returnedCoach);
+        } else {
+            res.json({messageType: "error", message: "something happened!"});
+        }
+    });
 });
 
 router.post("/reset-password/", (req, res) => {
@@ -102,7 +131,8 @@ router.post("/reset-password/", (req, res) => {
                 subject: 'Password Reset',
                 text: "Hi there " + name + " it looks like you, or somebody else, requested a password reset!\n\n" +
                     "If you would like to reset your password, please follow this link: https://" + req.hostname + "/reset/" + user.resetKey + "\n\n" +
-                    "Disregard this email if you did not request a reset."
+                    "Disregard this email if you did not request a reset.\n\n" +
+                    "Sincerely,\n" + "Stoked On Training Admin" 
             };
             sgMail.send(mailOptions);
             res.json(message);
@@ -132,7 +162,8 @@ router.post("/reset-password/:key", (req, res) => {
                     from: adminEmail,
                     subject: 'Password Reset',
                     text: "Hi there " + name + " it looks like you have successfully reset your password!\n\n" +
-                    "Please go to https://" + req.hostname + "/login to login using your username and password."
+                    "Please go to https://" + req.hostname + "/login to login using your username and password.\n\n" +
+                    "Sincerely,\n" + "Stoked On Training Admin"
                 };
                 sgMail.send(mailOptions);
                 res.json({messageType: "success", message: name + " you have successfully reset your password!"});

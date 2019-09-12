@@ -127,7 +127,7 @@ class App extends React.Component {
           <Route exact path="/login" render={(props) => <Auth {...props} message={this.state.message} renderLink={this.renderLink} isLoggedIn={this.state.isLoggedIn} submit={this.login} action="login" />} />
           <Route exact path="/signup" render={(props) => <Auth {...props} message={this.state.message} renderLink={this.renderLink} isLoggedIn={this.state.isLoggedIn} submit={this.signup} action="signup" />} />
           <Route path="/reset/:key?" render={(props) => <Auth {...props} message={this.state.message} renderLink={this.renderLink} action="reset" />} />
-          <Route path="/coach/:key" render={(props) => <Approval {...props} />} />
+          <Route path="/coach/:response/:key" render={(props) => <Approval {...props} />} />
         </Switch>
       </Router>
     );
