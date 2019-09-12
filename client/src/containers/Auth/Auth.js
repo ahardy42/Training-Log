@@ -154,7 +154,6 @@ class Auth extends React.Component {
         // populates a list below with possible users
         event.preventDefault();
         let {email} = this.state;
-        console.log(email);
         API.getUsersForReset({email: email})
         .then(userArray => this.setState({userArray: userArray}));
     }
@@ -165,9 +164,10 @@ class Auth extends React.Component {
         if (isSamePassword) {
             API.submitResetPassword({password: password}, key)
             .then(message => {
-                this.props.history.push("/reset")
+                this.props.history.push("/login")
                 this.setState({
                     password: "",
+                    email: "",
                     passwordRepeat: "",
                     isSamePassword: false,
                     userArray: [],
@@ -213,7 +213,7 @@ class Auth extends React.Component {
         } else {
             if (this.props.action === "login") {
                 return (
-                    <Login message={this.props.message} handleClick={this.login} handleInputChange={this.handleInputChange} values={this.state}/>
+                    <Login resetMessage={this.state.message} handleClick={this.login} handleInputChange={this.handleInputChange} values={this.state}/>
                 );
             } else if (this.props.action === "signup") {
                 return (
