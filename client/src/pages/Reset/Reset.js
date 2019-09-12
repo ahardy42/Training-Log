@@ -8,7 +8,7 @@ const Reset = ({resetMessage, message, getUsers, getResetKey, handleInputChange,
         return(
                 <div className="container">
                     {message.messageType ? (
-                    <div class={`alert alert-${message.messageType === "error" ? "danger" : "success"}`} role="alert">
+                    <div className={`alert alert-${message.messageType === "error" ? "danger" : "success"}`} role="alert">
                         {message.message}
                     </div>
                 ) : (
@@ -26,14 +26,14 @@ const Reset = ({resetMessage, message, getUsers, getResetKey, handleInputChange,
         return (
             <div className="container">
                 {message.messageType ? (
-                    <div class={`alert alert-${message.messageType === "error" ? "danger" : "success"}`} role="alert">
+                    <div className={`alert alert-${message.messageType === "error" ? "danger" : "success"}`} role="alert">
                         {message.message}
                     </div>
                 ) : (
                     null
                 ) }
                 {resetMessage.messageType ? (
-                    <div class={`alert alert-${resetMessage.messageType === "error" ? "danger" : "success"}`} role="alert">
+                    <div className={`alert alert-${resetMessage.messageType === "error" ? "danger" : "success"}`} role="alert">
                         {resetMessage.message}
                     </div>
                 ) : (
