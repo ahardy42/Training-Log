@@ -154,7 +154,6 @@ class Auth extends React.Component {
         // populates a list below with possible users
         event.preventDefault();
         let {email} = this.state;
-        console.log(email);
         API.getUsersForReset({email: email})
         .then(userArray => this.setState({userArray: userArray}));
     }
@@ -165,9 +164,10 @@ class Auth extends React.Component {
         if (isSamePassword) {
             API.submitResetPassword({password: password}, key)
             .then(message => {
-                this.props.history.push("/reset")
+                this.props.history.push("/login")
                 this.setState({
                     password: "",
+                    email: "",
                     passwordRepeat: "",
                     isSamePassword: false,
                     userArray: [],
@@ -194,8 +194,7 @@ class Auth extends React.Component {
     }
     componentDidMount = () => {
         this.getTeamsForSelect();
-        let {params, path} = this.props.match;
-        this.props.renderLink(path);
+        let {params} = this.props.match;
         if (params.key) {
             API.showUserForReset(params.key)
             .then(user => {
@@ -210,12 +209,10 @@ class Auth extends React.Component {
             return (
                 <Redirect to="/" />
             );
-        } else if (this.state.message.messageType === "success") {
-            return <Redirect to="/" />
         } else {
             if (this.props.action === "login") {
                 return (
-                    <Login message={this.props.message} handleClick={this.login} handleInputChange={this.handleInputChange} values={this.state}/>
+                    <Login resetMessage={this.state.message} handleClick={this.login} handleInputChange={this.handleInputChange} values={this.state}/>
                 );
             } else if (this.props.action === "signup") {
                 return (
@@ -244,7 +241,8 @@ class Auth extends React.Component {
             } else {
                 return (
                     <Reset
-                        message={this.props.message} 
+                        resetMessage={this.props.message}
+                        message={this.state.message} 
                         resetUser={this.state.resetUser}
                         userArray={this.state.userArray}
                         getUsers={this.getUsers}

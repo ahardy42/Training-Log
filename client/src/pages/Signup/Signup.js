@@ -9,7 +9,7 @@ const Signup = ({coachMessage, message, handleClick, handleInputChange, allowSub
     return (
         <div className="container signup">
             {coachMessage.messageType ? (
-                <div class={`alert alert-${coachMessage.messageType === "error" ? "danger" : "success"}`} role="alert">
+                <div className={`alert alert-${coachMessage.messageType === "error" ? "danger" : "success"}`} role="alert">
                     {coachMessage.message}
                 </div>
             ) : (

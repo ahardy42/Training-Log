@@ -128,6 +128,16 @@ const API = {
         });
         let user = await response.json();
         return user;
+    },
+    approveCoach: async key => {
+        let response = await fetch(`../../email/coach-approval/${key}`);
+        let returnedCoach = await response.json();
+        return returnedCoach;
+    },
+    denyCoach: async key => {
+        let response = await fetch(`../../email/coach-deny/${key}`);
+        let returnedCoach = await response.json();
+        return returnedCoach;
     }
 }
 

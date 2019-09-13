@@ -2,6 +2,7 @@ import React from 'react';
 import './App.sass';
 import NavBar from './containers/NavBar/NavBar';
 import Main from './pages/Main/Main';
+import Approval from './pages/Approval/Approval';
 import Athlete from './pages/Athlete/Athlete';
 import Coach from './pages/Coach/Coach';
 import Auth from './containers/Auth/Auth';
@@ -14,7 +15,6 @@ class App extends React.Component {
     this.state = {
       isLoggedIn: false,
       user: {},
-      pathName: "",
       message: {}
     }
   }
@@ -89,14 +89,6 @@ class App extends React.Component {
         });
       });
   }
-  renderLink = path => {
-    this.setState({
-      pathName: path
-    })
-  }
-  getLink = path => {
-    this.renderLink(path);
-  }
   componentDidMount = () => {
     // check if user is logged in and update state
     fetch("/auth/profile")
@@ -120,13 +112,13 @@ class App extends React.Component {
   render() {
     return (
       <Router>
-        <NavBar getLink={this.getLink} pathName={this.state.pathName} user={this.state.user} isLoggedIn={this.state.isLoggedIn} signOut={this.signOut} />
+        <Route path="*" render={props => <NavBar {...props} getLink={this.getLink} pathName={this.state.pathName} user={this.state.user} isLoggedIn={this.state.isLoggedIn} signOut={this.signOut} />}/>
         <Switch>
           <Route exact path="/" render={(props) => this.renderLandingPage(props)} />
-          <Route exact path="/login" render={(props) => <Auth {...props} message={this.state.message} renderLink={this.renderLink} isLoggedIn={this.state.isLoggedIn} submit={this.login} action="login" />} />
-          <Route exact path="/signup" render={(props) => <Auth {...props} message={this.state.message} renderLink={this.renderLink} isLoggedIn={this.state.isLoggedIn} submit={this.signup} action="signup" />} />
-          <Route path="/reset/:key?" render={(props) => <Auth {...props} message={this.state.message} renderLink={this.renderLink} action="reset" />} />
-          <Route path="/coach/:key" render={(props) => <Main {...props}  message={this.state.message}/>} />
+          <Route exact path="/login" render={(props) => <Auth {...props} message={this.state.message} isLoggedIn={this.state.isLoggedIn} submit={this.login} action="login" />} />
+          <Route exact path="/signup" render={(props) => <Auth {...props} message={this.state.message} isLoggedIn={this.state.isLoggedIn} submit={this.signup} action="signup" />} />
+          <Route path="/reset/:key?" render={(props) => <Auth {...props} message={this.state.message} action="reset" />} />
+          <Route path="/coach/:response/:key" render={(props) => <Approval {...props} />} />
         </Switch>
       </Router>
     );
