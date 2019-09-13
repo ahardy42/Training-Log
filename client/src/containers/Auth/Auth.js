@@ -194,8 +194,7 @@ class Auth extends React.Component {
     }
     componentDidMount = () => {
         this.getTeamsForSelect();
-        let {params, path} = this.props.match;
-        this.props.renderLink(path);
+        let {params} = this.props.match;
         if (params.key) {
             API.showUserForReset(params.key)
             .then(user => {

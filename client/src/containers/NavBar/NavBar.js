@@ -14,17 +14,10 @@ class NavBar extends React.Component {
            isLoggedIn: this.props.isLoggedIn
        });
     }
-    componentWillReceiveProps(newProps) {
-        if (newProps.pathName !== this.props.pathName) {
-            this.setState({
-                pathName: newProps.pathName
-            })
-        }
-    }
     render() {
         let name = `${this.props.user.firstName} ${this.props.user.lastName}`;
         return (
-            <Nav type={this.props.user.type} getLink={this.props.getLink} pathName={this.props.pathName} name={name} isLoggedIn={this.props.isLoggedIn} handleSignOut={this.props.signOut}/>
+            <Nav type={this.props.user.type} pathName={this.props.match.url} name={name} isLoggedIn={this.props.isLoggedIn} handleSignOut={this.props.signOut}/>
         );
     }
 }
