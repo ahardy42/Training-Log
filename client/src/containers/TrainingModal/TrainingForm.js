@@ -2,10 +2,21 @@ import React from 'react';
 import './TrainingModal.sass';
 import Input from '../../components/Input/Input';
 import PickerWrapper from "./PickerWrapper";
+import colorFuncs from '../../utils/colorFuncs';
 import "react-datepicker/dist/react-datepicker.css";
 
 const TrainingForm = ({ handleInputChange, state, handleCheck, handleChange, invalidModeSelection, invalidDuration, checkTime, checkDate}) => {
     let {splitActivities, date, comment, hours, minutes, feeling, intensity, mode} = state;
+    const intensitySyleGenerator = intensity => {
+        return {
+            backgroundColor : colorFuncs.intensityColor([{intensity : intensity}])
+        }
+    }
+    const feelingStyleGenerator = feeling => {
+        return {
+            backgroundColor : colorFuncs.feelingColor([{feeling : feeling}])
+        }
+    }
     return (
         <form>
             <div className="form-row justify-content-center">
@@ -42,31 +53,6 @@ const TrainingForm = ({ handleInputChange, state, handleCheck, handleChange, inv
                     </Input>
                 </div>
             </div>
-            <div className="form-row">
-                <div className="col">
-                    <Input
-                        extraClasses="intensity-range"
-                        action="range"
-                        id="intensity"
-                        name="intensity"
-                        value={intensity}
-                        handleInputChange={handleInputChange}
-                    >
-                        How hard did you go?
-                    </Input>
-                </div>
-                <div className="col">
-                    <Input
-                        action="range"
-                        id="feeling"
-                        name="feeling"
-                        value={feeling}
-                        handleInputChange={handleInputChange}
-                    >
-                        How'd you feel?
-                    </Input>
-                </div>
-            </div>
             <p className="text-center mt-1 modal-p">Pick an Activity</p>
             <div className="form-row" id="activities-row">
                 <div className="col">
@@ -93,6 +79,35 @@ const TrainingForm = ({ handleInputChange, state, handleCheck, handleChange, inv
                             </div>
                         )
                     }) : null}
+                </div>
+            </div>
+            <div className="form-row">
+                <div className="col">
+                    <Input
+                        style={intensitySyleGenerator(intensity)}
+                        extraClasses="intensity-range"
+                        action="range"
+                        id="intensity"
+                        name="intensity"
+                        value={intensity}
+                        handleInputChange={handleInputChange}
+                    >
+                        How hard did you go?
+                    </Input>
+                </div>
+            </div>
+            <div className="form-row">
+                <div className="col">
+                    <Input
+                        style={feelingStyleGenerator(feeling)}
+                        action="range"
+                        id="feeling"
+                        name="feeling"
+                        value={feeling}
+                        handleInputChange={handleInputChange}
+                    >
+                        How'd you feel?
+                    </Input>
                 </div>
             </div>
             {invalidModeSelection ? <p className="training-error">Please select a training mode!</p> : null}
