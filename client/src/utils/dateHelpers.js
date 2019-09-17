@@ -43,7 +43,7 @@ const dateHelpers = {
             }, data);
         });
         // add month number into calObject for API searching
-        calObject.monthNum = new Date(`${calObject.month} ${calObject.year}`).getMonth() + 1
+        calObject.monthNum = moment(`${calObject.month} ${calObject.year}`, "MMMM YYYY").month() + 1;
         return calObject;
     },
     insertTrainingIntoCalObject: function (training, calObject) {

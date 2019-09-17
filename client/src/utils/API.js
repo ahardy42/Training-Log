@@ -63,6 +63,7 @@ const API = {
         } else {
             date = year;
         }
+        console.log(`/api/coach/${id}/${date}`);
         let response = await fetch(`/api/coach/${id}/${date}`);
         let trainingArray = await response.json();
         return trainingArray.training; // training is an array even when you only return training...
