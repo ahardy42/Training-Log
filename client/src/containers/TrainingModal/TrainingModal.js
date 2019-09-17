@@ -4,7 +4,7 @@ import TrainingForm from './TrainingForm';
 import TrainingView from './TrainingView';
 import Pagination from './Pagination';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import {faTimesCircle, faSmile, faGrinAlt, faTired, faMeh, faSadCry } from '@fortawesome/free-solid-svg-icons';
+import {faTimesCircle} from '@fortawesome/free-solid-svg-icons';
 import _ from 'lodash';
 import API from '../../utils/API';
 import './TrainingModal.sass';
@@ -18,11 +18,11 @@ class TrainingModal extends React.Component {
             coachComment: "",
             id: "",
             rangeStyle: {},
-            hours: null,
-            minutes: null,
+            hours: 0,
+            minutes: 0,
             intensity: 3,
             feeling: 3,
-            date: null,
+            date: new Date(),
             comment: "",
             mode: "",
             invalidDuration: false,
@@ -170,8 +170,8 @@ class TrainingModal extends React.Component {
         this.setState({
             date: new Date(),
             trainingPage: 0,
-            hours: null,
-            minutes: null,
+            hours: 0,
+            minutes: 0,
             mode: "",
             intensity: 0,
             feeling: 0,
@@ -245,8 +245,7 @@ class TrainingModal extends React.Component {
                                     )
                             }
                         </div>
-                        <div className="modal-footer">
-                            <Button action="button" handleClick={this.modalCloseReset}>Close</Button>
+                        <div className="modal-footer training-modal-footer">
                             {isAdd ?
                                 (<Button action="button" handleClick={this.handleAdd}>Add Training</Button>) 
                                 :

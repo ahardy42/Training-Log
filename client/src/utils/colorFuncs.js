@@ -19,8 +19,8 @@ const colorFuncs = {
         if (training.length) {
             let avgIntensity = this.avgVal(training, "intensity");
             let color = avgIntensity < 2 ? colors.green :
-                avgIntensity < 4 ? colors.yellow :
-                    avgIntensity < 5 ? colors.orange : colors.red;
+                avgIntensity < 3 ? colors.yellow :
+                    avgIntensity < 4 ? colors.orange : colors.red;
             return color;
         } else {
             return "transparent";
@@ -29,7 +29,7 @@ const colorFuncs = {
     feelingColor: function(training) {
         if (training.length) {
             let avgFeeling = this.avgVal(training, "feeling");
-            let color = avgFeeling < 2 ? colors.red :
+            let color = avgFeeling < 1 ? colors.red :
                 avgFeeling < 3 ? colors.orange :
                 avgFeeling < 4 ? colors.yellow : colors.green;
             return color;

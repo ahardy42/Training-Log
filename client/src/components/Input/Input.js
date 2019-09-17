@@ -2,11 +2,6 @@ import React from 'react';
 import './Input.sass';
 
 const Input = ({action, id, children, handleInputChange, validationFunction, ...props}) => {
-    const rangevalues = {
-        min: action => action === "range" ? 0 : null,
-        max: action => action === "range" ? 5 : null,
-        step: action => action === "range" ? 1 : null
-    }
     if (action === "select") {
         return (
             <div className="form-group">
@@ -41,20 +36,43 @@ const Input = ({action, id, children, handleInputChange, validationFunction, ...
                 />
             </div>
         )
-    } else {
+    } else if (action === "range") {
         return (
             <div className={`form-group ${props.extraClasses || ""}`}>
                 <label htmlFor={id}>{children}</label>
                 <input
+                    style={props.style ? props.style : null}
                     type={action}
                     pattern={props.pattern ? props.pattern : ""}
                     className="form-control"
                     value={props.value}
                     name={props.name}
                     id={id}
-                    min={rangevalues.min(action)}
-                    max={rangevalues.max(action)}
-                    step={rangevalues.step(action)}
+                    min="0"
+                    max="5"
+                    step="1"
+                    onChange={(event) => handleInputChange(event, validationFunction)}
+                />
+                <div className="small-group">
+                {/* small for information about slider */}
+                <small id="left-small">{props.name === "intensity" ? "easy" : "felt horrible"}</small>
+                <small id="val-small">{props.value}</small>
+                <small id="right-small">{props.name === "intensity" ? "hard" : "felt great!"}</small>
+                </div>
+            </div>
+        );
+    } else {
+        return(
+            <div className={`form-group ${props.extraClasses || ""}`}>
+                <label htmlFor={id}>{children}</label>
+                <input
+                    style={props.style ? props.style : null}
+                    type={action}
+                    pattern={props.pattern ? props.pattern : ""}
+                    className="form-control"
+                    value={props.value > 0 ? props.value : null}
+                    name={props.name}
+                    id={id}
                     placeholder={`Enter ${action}`}
                     onChange={(event) => handleInputChange(event, validationFunction)}
                 />
