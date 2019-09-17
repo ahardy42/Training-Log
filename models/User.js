@@ -3,6 +3,11 @@ const bcrypt = require('bcrypt');
 const Schema = mongoose.Schema;
 
 const trainingSchema = new Schema({
+    createdAt: {
+        type: Date,
+        required: true,
+        default: new Date()
+    },
     date: {
         type: Date,
         required: true,
@@ -35,6 +40,11 @@ const trainingSchema = new Schema({
 });
 
 const userSchema = new Schema({
+    createdAt: {
+        type: Date,
+        required: true,
+        default: new Date()
+    },
     firstName: {
         type: String,
         required: true
