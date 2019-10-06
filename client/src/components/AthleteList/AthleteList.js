@@ -1,7 +1,7 @@
 import React from 'react';
-import Button from '../Button/Button';
+import Button from 'components/Button/Button';
 import moment from 'moment';
-import colorFuncs from '../../utils/colorFuncs';
+import colorFuncs from 'utils/colorFuncs';
 import { Pie } from 'react-chartjs-2';
 
 const AthleteList = ({athlete, handleClick}) => {

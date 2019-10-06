@@ -1,7 +1,7 @@
 import React from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import {faSmile, faGrinAlt, faTired, faMeh, faSadCry } from '@fortawesome/free-solid-svg-icons';
-import colorFuncs from '../../utils/colorFuncs';
+import colorFuncs from 'utils/colorFuncs';
 import './Calendar.sass';
 
 const TrainingInfo = ({training}) => {

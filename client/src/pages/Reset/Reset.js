@@ -1,6 +1,6 @@
 import React from 'react';
-import Button from '../../components/Button/Button';
-import Input from '../../components/Input/Input';
+import Button from 'components/Button/Button';
+import Input from 'components/Input/Input';
 
 const Reset = ({resetMessage, message, getUsers, getResetKey, handleInputChange, resetUser, submitResetPassword, userArray, checkPassword, checkRepeatPassword}) => {
     if (resetUser._id) {

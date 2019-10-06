@@ -1,9 +1,9 @@
 import React from 'react';
 import {Redirect} from 'react-router-dom';
-import Login from '../../pages/Login/Login';
-import Signup from '../../pages/Signup/Signup';
-import Reset from '../../pages/Reset/Reset';
-import API from '../../utils/API';
+import Login from 'pages/Login/Login';
+import Signup from 'pages/Signup/Signup';
+import Reset from 'pages/Reset/Reset';
+import API from 'utils/API';
 
 class Auth extends React.Component {
     constructor(props) {

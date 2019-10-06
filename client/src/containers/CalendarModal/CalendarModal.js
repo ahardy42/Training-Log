@@ -1,8 +1,8 @@
 import React from 'react';
-import API from '../../utils/API';
-import Calendar from '../../components/Calendar/Calendar';
-import Training from '../../components/Training/Training';
-import Button from '../../components/Button/Button';
+import API from 'utils/API';
+import Calendar from 'components/Calendar/Calendar';
+import Training from 'components/Training/Training';
+import Button from 'components/Button/Button';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faTimesCircle } from '@fortawesome/free-solid-svg-icons';
 import './CalendarModal.sass';

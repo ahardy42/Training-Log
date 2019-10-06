@@ -1,5 +1,5 @@
 import React from 'react';
-import colorFuncs from '../../utils/colorFuncs';
+import colorFuncs from 'utils/colorFuncs';
 import './Stats.sass';
 import { Doughnut, Bar } from 'react-chartjs-2';
 import moment from 'moment';

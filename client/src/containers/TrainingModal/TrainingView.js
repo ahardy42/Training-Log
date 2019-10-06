@@ -1,5 +1,5 @@
 import React from 'react';
-import colorFuncs from '../../utils/colorFuncs';
+import colorFuncs from 'utils/colorFuncs';
 
 
 const TrainingView = ({ trainingArray, index }) => {

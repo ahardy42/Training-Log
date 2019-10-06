@@ -1,10 +1,10 @@
 import React from 'react';
-import Button from '../../components/Button/Button';
-import Calendar from '../../components/Calendar/Calendar';
-import Stats from '../../containers/Stats/Stats';
-import TrainingModal from '../../containers/TrainingModal/TrainingModal';
-import API from '../../utils/API';
-import dateHelpers from '../../utils/dateHelpers';
+import Button from 'components/Button/Button';
+import Calendar from 'components/Calendar/Calendar';
+import Stats from 'containers/Stats/Stats';
+import TrainingModal from 'containers/TrainingModal/TrainingModal';
+import API from 'utils/API';
+import dateHelpers from 'utils/dateHelpers';
 import './Athlete.sass';
 
 class Athlete extends React.Component {

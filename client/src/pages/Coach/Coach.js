@@ -1,8 +1,8 @@
 import React from 'react';
-import AthleteList from '../../components/AthleteList/AthleteList';
-import dateHelpers from '../../utils/dateHelpers';
-import API from '../../utils/API';
-import CalendarModal from '../../containers/CalendarModal/CalendarModal';
+import AthleteList from 'components/AthleteList/AthleteList';
+import dateHelpers from 'utils/dateHelpers';
+import API from 'utils/API';
+import CalendarModal from 'containers/CalendarModal/CalendarModal';
 
 
 class Coach extends React.Component {

@@ -1,12 +1,12 @@
 import React from 'react';
-import Button from '../../components/Button/Button';
+import Button from 'components/Button/Button';
 import TrainingForm from './TrainingForm';
 import TrainingView from './TrainingView';
 import Pagination from './Pagination';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import {faTimesCircle} from '@fortawesome/free-solid-svg-icons';
 import _ from 'lodash';
-import API from '../../utils/API';
+import API from 'utils/API';
 import './TrainingModal.sass';
 
 class TrainingModal extends React.Component {

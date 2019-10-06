@@ -1,8 +1,8 @@
 import React from 'react';
 import './TrainingModal.sass';
-import Input from '../../components/Input/Input';
+import Input from 'components/Input/Input';
 import PickerWrapper from "./PickerWrapper";
-import colorFuncs from '../../utils/colorFuncs';
+import colorFuncs from 'utils/colorFuncs';
 import "react-datepicker/dist/react-datepicker.css";
 
 const TrainingForm = ({ handleInputChange, state, handleCheck, handleChange, invalidModeSelection, invalidDuration, checkTime, checkDate}) => {

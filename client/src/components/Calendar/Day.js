@@ -1,6 +1,6 @@
 import React from 'react';
 import TrainingInfo from './TrainingInfo';
-import colorFuncs from '../../utils/colorFuncs';
+import colorFuncs from 'utils/colorFuncs';
 import "./Calendar.sass";
 
 
