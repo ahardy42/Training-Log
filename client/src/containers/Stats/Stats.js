@@ -3,7 +3,6 @@ import colorFuncs from '../../utils/colorFuncs';
 import './Stats.sass';
 import { Doughnut, Bar } from 'react-chartjs-2';
 import moment from 'moment';
-import { tr } from 'date-fns/esm/locale';
 
 const Stats = (props) => {
     // turn trainingStats into a useful data object
