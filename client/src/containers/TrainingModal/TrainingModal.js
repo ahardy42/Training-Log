@@ -44,15 +44,12 @@ class TrainingModal extends React.Component {
         }
     }
     checkTime = (time, val) => {
-        console.log(time, val);
-        console.log(typeof val)
         if (typeof val !== "number") {
             this.setState({
                 [time]: 0,
                 invalidDuration: true
             });
         } else {
-            console.log("invalid duration is false")
             this.setState({
                 invalidDuration: false
             })
