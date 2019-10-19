@@ -44,7 +44,7 @@ class TrainingModal extends React.Component {
         }
     }
     checkTime = (time, val) => {
-        if (Number.isNaN(val)) {
+        if (typeof val !== "number") {
             this.setState({
                 [time]: 0,
                 invalidDuration: true
@@ -101,12 +101,16 @@ class TrainingModal extends React.Component {
         // input handler for form version of modal!
         event.preventDefault();
         let {name, value} = event.target;
-        let parsedValue = Boolean(parseInt(value)) ? parseInt(value) : value; // return numbers where I need to
+        let parsedValue = Boolean(parseInt(value)) ? Math.abs(parseInt(value)) : value; // return numbers where I need to
         this.setState({
             [name]: parsedValue
         }, () => {
             if (validationFunction) {
-                validationFunction();
+                if (name === "hours" || name === "minutes") {
+                    validationFunction(name, parsedValue);
+                } else {
+                    validationFunction();
+                }
             } else {
                 return;
             }
