@@ -54,9 +54,22 @@ describe("input unit test", () => {
         expect(rangeWrapper.prop("value")).toBe(3);
     });
     it("renders a text input", () => {
+        
         const textInputWrapper = mount(<Input action="username" value="" handleInputChange={inputFunc} validationFunction={validationFunc}>username Yo!</Input>);
         expect(textInputWrapper.find("label").text()).toBe("username Yo!");
         expect(textInputWrapper.find("input").prop("placeholder")).toBe("Enter username");
         expect(textInputWrapper.find("input").prop("type")).toBe("username");
+
+        //simulate an input change for numbers and strings
+        inputFunc.mockImplementationOnce(textInputWrapper.setProps({value: 0}));
+        textInputWrapper.simulate("change");
+        expect(textInputWrapper.find("input").prop("value")).toBe("");
+        inputFunc.mockImplementationOnce(textInputWrapper.setProps({value: 1}));
+        textInputWrapper.simulate("change");
+        expect(textInputWrapper.find("input").prop("value")).toBe(1);
+
+        inputFunc.mockImplementationOnce(textInputWrapper.setProps({value: "d"}));
+        textInputWrapper.simulate("change", {target: {value: "d"}});
+        expect(textInputWrapper.find("input").prop("value")).toBe("d");
     });
 })

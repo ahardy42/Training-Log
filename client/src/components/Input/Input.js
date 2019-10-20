@@ -62,6 +62,14 @@ const Input = ({action, id, children, handleInputChange, validationFunction, ...
             </div>
         );
     } else {
+        // differentiating between text and number inputs for value
+        const returnValue = value => {
+            if (typeof value === "number") {
+                // better user experience not having to overwrite zeros
+                return value > 0 ? value : ""; 
+            }
+            return value;
+        }
         return(
             <div className={`form-group ${props.extraClasses || ""}`}>
                 <label htmlFor={id}>{children}</label>
@@ -70,7 +78,7 @@ const Input = ({action, id, children, handleInputChange, validationFunction, ...
                     type={action}
                     pattern={props.pattern ? props.pattern : ""}
                     className="form-control"
-                    value={props.value > 0 ? props.value : ""}
+                    value={returnValue(props.value)}
                     name={props.name}
                     id={id}
                     placeholder={`Enter ${action}`}
