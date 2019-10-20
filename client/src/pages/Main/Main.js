@@ -17,14 +17,14 @@ class Main extends React.Component {
             },
             splitActivities: [
                 [
-                    {activityType: "run"},
-                    {activityType: "ski"},
-                    {activityType: "rollerski"}
+                    {activityType: "run", _id: "run"},
+                    {activityType: "ski", _id: "ski"},
+                    {activityType: "rollerski", _id: "rollerski"}
                 ],
                 [
-                    {activityType: "bike"},
-                    {activityType: "swim"},
-                    {activityType: "other"}
+                    {activityType: "bike", _id: "bike"},
+                    {activityType: "swim", _id: "swim"},
+                    {activityType: "other", _id: "other"}
                 ]
             ]
         }
@@ -108,7 +108,7 @@ class Main extends React.Component {
                                             handleClick={(e) => console.log(e.target)}
                                             day={4} 
                                             isToday={true} 
-                                            training={[{_id: "", comment: "", mode: "bike", intensity: 2, duration: 50, feeling: 4}]}
+                                            training={[{_id: "", comment: "", mode: "run", intensity: 3, duration: 45, feeling: 4}]}
                                         />
                                     </div>
                                 </div>

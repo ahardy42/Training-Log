@@ -1,6 +1,7 @@
 import React from 'react';
 import Button from '../../components/Button/Button';
 import Input from '../../components/Input/Input';
+import Alert from '../../components/Alert/Alert';
 import './Signup.sass';
 
 
@@ -8,16 +9,10 @@ const Signup = ({coachMessage, message, handleClick, handleInputChange, allowSub
 
     return (
         <div className="container signup">
-            {coachMessage.messageType ? (
-                <div className={`alert alert-${coachMessage.messageType === "error" ? "danger" : "success"}`} role="alert">
-                    {coachMessage.message}
-                </div>
-            ) : (
-                null
-            ) }
+            {coachMessage.messageType ? <Alert messageType={coachMessage.messageType}>{coachMessage.message}</Alert> : null}
             <div className="row">
                 <div className="col">
-                    <h2>Sign Up for Training Log</h2>
+                    <h2>Sign Up for Stoked On Training!</h2>
                 </div>
             </div>
             <form className="signup-form">

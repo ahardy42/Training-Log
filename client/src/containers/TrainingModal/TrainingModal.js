@@ -177,8 +177,8 @@ class TrainingModal extends React.Component {
             hours: 0,
             minutes: 0,
             mode: "",
-            intensity: 0,
-            feeling: 0,
+            intensity: 3,
+            feeling: 3,
             comment: "",
             coachComment: ""
         });

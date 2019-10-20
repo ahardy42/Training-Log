@@ -26,16 +26,33 @@ class App extends React.Component {
         'content-type': 'application/json'
       }
     });
-    let json;
+    console.log(response);
     if (response.ok) {
-      json = await response.json();
-      if (json.messageType === "error") {
-        this.setState({message: json});
-      }
+      let json = await response.json();
       this.setState({
         isLoggedIn: true,
-        user: json
+        user: json,
+        message: {}
       });
+    } else {
+      if (response.status >= 400 && response.status <= 499) {
+        // create a message if login doesn't work
+        this.setState({
+          message: {
+            messageType: "Error",
+            messageText: "Incorrect Username or Password"
+          }
+        });
+      } else if (response.status >= 500 && response.status <= 599) {
+        // create a message if login doesn't work
+        this.setState({
+          message: {
+            messageType: "Error",
+            messageText: "Something is wrong with the server... We are working on a solution, try back later"
+          }
+        });
+      }
+
     } 
     
   }
