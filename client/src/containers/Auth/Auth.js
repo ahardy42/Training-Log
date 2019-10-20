@@ -143,7 +143,6 @@ class Auth extends React.Component {
         let {id} = event.target;
         API.getKeyForReset({id: id})
         .then(message => {
-            console.log(message);
             this.setState({
                 userArray: [],
                 message: message
@@ -212,7 +211,7 @@ class Auth extends React.Component {
         } else {
             if (this.props.action === "login") {
                 return (
-                    <Login resetMessage={this.state.message} handleClick={this.login} handleInputChange={this.handleInputChange} values={this.state}/>
+                    <Login message={this.props.message} handleClick={this.login} handleInputChange={this.handleInputChange} values={this.state}/>
                 );
             } else if (this.props.action === "signup") {
                 return (
